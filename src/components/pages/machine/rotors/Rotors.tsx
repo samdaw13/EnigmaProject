@@ -1,4 +1,4 @@
-import { FunctionComponent, createContext, useState, useEffect } from 'react';
+import { FunctionComponent } from 'react';
 
 import { View } from 'react-native';
 import { Rotor } from './Rotor';

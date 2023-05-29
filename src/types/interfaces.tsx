@@ -1,7 +1,3 @@
-import type { NativeStackScreenProps } from '@react-navigation/native-stack';
-
-export interface MainProps extends NativeStackScreenProps<any, any> {}
-
 export interface RotorSelectModalProps {
   modalVisible: boolean;
   setModalVisible: React.Dispatch<React.SetStateAction<boolean>>;

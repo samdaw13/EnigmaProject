@@ -1,13 +1,12 @@
 import { FunctionComponent, useEffect, useState } from 'react';
 
 import { View } from 'react-native';
-import { Text, Button, Card, Portal, IconButton } from 'react-native-paper';
+import { Button, Card, Portal, IconButton } from 'react-native-paper';
 import { rotorStyles } from '../../../../styles';
 import { RotorSelectModal } from './RotorSelectModal';
 import { RotorState } from '../../../../types';
 import { useDispatch, useSelector } from 'react-redux';
 import { updateRotor } from '../../../../features/rotors/features';
-import { RotorDisplay } from './RotorDisplay';
 import { ChangeIndexModal } from './ChangeIndexModal';
 import { RootState } from '../../../../store/store';
 
