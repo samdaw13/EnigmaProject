@@ -1,11 +1,11 @@
-import {FunctionComponent} from 'react';
-import {View, ScrollView} from 'react-native';
-import {Button, Modal, Text} from 'react-native-paper';
-import {RotorSelectModalProps, RotorState} from '../../../../types';
-import {rotorStyles} from '../../../../styles';
-import {useDispatch, useSelector} from 'react-redux';
-import {RootState} from '../../../../store/store';
-import {updateRotor} from '../../../../features/rotors/features';
+import { FunctionComponent } from 'react';
+import { View, ScrollView } from 'react-native';
+import { Button, Modal, Text } from 'react-native-paper';
+import { RotorSelectModalProps, RotorState } from '../../../../types';
+import { rotorStyles } from '../../../../styles';
+import { useDispatch, useSelector } from 'react-redux';
+import { RootState } from '../../../../store/store';
+import { updateRotor } from '../../../../features/rotors/features';
 
 export const ChangeIndexModal: FunctionComponent<RotorSelectModalProps> = ({
   modalVisible,
@@ -27,7 +27,7 @@ export const ChangeIndexModal: FunctionComponent<RotorSelectModalProps> = ({
           currentIndex: currentRotor.config.displayedLetters.indexOf(letter),
         }),
       );
-    rotors.forEach(rotor => {
+    rotors.forEach((rotor) => {
       if (rotor.id === currentRotor?.id) {
         console.log(rotor?.config.currentIndex);
         const tempRotor = rotor;
@@ -40,16 +40,18 @@ export const ChangeIndexModal: FunctionComponent<RotorSelectModalProps> = ({
     <Modal
       visible={modalVisible}
       onDismiss={closeModal}
-      contentContainerStyle={rotorStyles.selectRotor}>
+      contentContainerStyle={rotorStyles.selectRotor}
+    >
       <View>
         <Text>Select new letter</Text>
         <ScrollView>
           {currentRotor &&
-            currentRotor.config.displayedLetters.map(letter => {
+            currentRotor.config.displayedLetters.map((letter) => {
               return (
                 <Button
                   key={letter + currentRotor.id}
-                  onPress={() => updateIndex(letter)}>
+                  onPress={() => updateIndex(letter)}
+                >
                   {letter}
                 </Button>
               );

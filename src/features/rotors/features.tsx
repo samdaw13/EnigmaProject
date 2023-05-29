@@ -1,7 +1,11 @@
-import {createSlice} from '@reduxjs/toolkit';
-import type {PayloadAction} from '@reduxjs/toolkit';
+import { createSlice } from '@reduxjs/toolkit';
+import type { PayloadAction } from '@reduxjs/toolkit';
 
-import {RotorsState, RotorState, UpdateRotorActionInterface} from '../../types';
+import {
+  RotorsState,
+  RotorState,
+  UpdateRotorActionInterface,
+} from '../../types';
 
 const initialState: RotorsState = {
   rotors: [
@@ -77,6 +81,6 @@ export const rotorsSlice = createSlice({
 });
 
 // Action creators are generated for each case reducer function
-export const {updateRotor} = rotorsSlice.actions;
+export const { updateRotor } = rotorsSlice.actions;
 
 export default rotorsSlice.reducer;

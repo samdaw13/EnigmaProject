@@ -1,4 +1,4 @@
-import {configureStore} from '@reduxjs/toolkit';
+import { configureStore } from '@reduxjs/toolkit';
 import rotorsReducer from '../features/rotors/features';
 
 export const store = configureStore({
