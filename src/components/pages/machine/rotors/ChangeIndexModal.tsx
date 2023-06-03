@@ -29,7 +29,6 @@ export const ChangeIndexModal: FunctionComponent<RotorSelectModalProps> = ({
     }
     rotors.forEach((rotor) => {
       if (rotor.id === currentRotor?.id) {
-        console.log(rotor);
         const tempRotor = rotor;
         setRotor(tempRotor);
       }
