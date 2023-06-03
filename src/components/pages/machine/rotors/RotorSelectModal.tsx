@@ -32,7 +32,7 @@ export const RotorSelectModal: FunctionComponent<RotorSelectModalProps> = ({
       contentContainerStyle={rotorStyles.selectRotor}
     >
       <View>
-        <Text>Choose a rotor</Text>
+        <Text>Select rotor</Text>
         {rotors
           .filter((rotor) => rotor.isAvailable)
           .map((rotor) => {

@@ -62,6 +62,7 @@ export const Rotor: FunctionComponent = () => {
                 ]
               }`}
               subtitle={`Active rotor: ${selectedRotor.id}`}
+              style={rotorStyles.cardComponent}
               right={() => (
                 <IconButton
                   icon="close-circle"
@@ -71,23 +72,22 @@ export const Rotor: FunctionComponent = () => {
                 />
               )}
             />
-            <Card.Actions style={{ paddingHorizontal: 0 }}>
+            <Card.Actions style={rotorStyles.cardComponent}>
               <Button onPress={setRotor}>Replace rotor</Button>
               <Button onPress={updateRotorIndex}>Change current letter</Button>
             </Card.Actions>
           </>
         )}
         {selectedRotor === null && (
-          <>
-            <Card.Title
-              title="No rotor selected"
-              right={() => (
-                <Button mode="contained" onPress={setRotor}>
-                  Select rotor
-                </Button>
-              )}
-            />
-          </>
+          <Card.Title
+            title="No rotor selected"
+            style={rotorStyles.cardComponent}
+            right={() => (
+              <Button mode="contained" onPress={setRotor}>
+                Select rotor
+              </Button>
+            )}
+          />
         )}
       </Card>
     </View>

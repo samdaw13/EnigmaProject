@@ -1,4 +1,4 @@
-import { FunctionComponent } from 'react';
+import React, { FunctionComponent } from 'react';
 import { View, ScrollView } from 'react-native';
 import { Button, Modal, Text } from 'react-native-paper';
 import { RotorSelectModalProps } from '../../../../types';
@@ -19,16 +19,17 @@ export const ChangeIndexModal: FunctionComponent<RotorSelectModalProps> = ({
     setModalVisible(false);
   };
   const updateIndex = (letter: string) => {
-    if (currentRotor)
+    if (currentRotor) {
       dispatch(
         updateRotor({
           id: currentRotor.id,
           currentIndex: currentRotor.config.displayedLetters.indexOf(letter),
         }),
       );
+    }
     rotors.forEach((rotor) => {
       if (rotor.id === currentRotor?.id) {
-        console.log(rotor?.config.currentIndex);
+        console.log(rotor);
         const tempRotor = rotor;
         setRotor(tempRotor);
       }
@@ -48,7 +49,8 @@ export const ChangeIndexModal: FunctionComponent<RotorSelectModalProps> = ({
             currentRotor.config.displayedLetters.map((letter) => {
               return (
                 <Button
-                  key={letter + currentRotor.id.toString()}
+                  key={`${letter}${currentRotor.id.toString()}`}
+                  testID={`button${letter}${currentRotor.id.toString()}`}
                   onPress={() => updateIndex(letter)}
                 >
                   {letter}
