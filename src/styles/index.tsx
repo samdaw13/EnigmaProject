@@ -27,5 +27,5 @@ export const rotorStyles = StyleSheet.create({
   },
   cardComponent: {
     paddingHorizontal: 10,
-  }
+  },
 });

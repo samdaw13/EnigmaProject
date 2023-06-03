@@ -1,51 +1,56 @@
-import React, { ReactElement } from 'react'
-import { Provider } from 'react-redux'
-import { render as rtlRender, RenderOptions } from '@testing-library/react-native'
+import React, { ReactElement } from 'react';
+import { Provider } from 'react-redux';
+import {
+  render as rtlRender,
+  RenderOptions,
+} from '@testing-library/react-native';
 import {
   configureStore,
   EmptyObject,
   EnhancedStore,
   PreloadedState,
-} from '@reduxjs/toolkit'
+} from '@reduxjs/toolkit';
 import rotorsReducer from '../features/rotors/features';
-import type { RootState } from '../store/store'
+import type { RootState } from '../store/store';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
-type ReducerTypes = Pick<RootState, 'rotors'>
-type TStore = EnhancedStore<ReducerTypes>
+type ReducerTypes = Pick<RootState, 'rotors'>;
+type TStore = EnhancedStore<ReducerTypes>;
 
 type CustomRenderOptions = {
-  preloadedState?: PreloadedState<ReducerTypes & EmptyObject>
-  store?: TStore
-} & Omit<RenderOptions, 'wrapper'>
+  preloadedState?: PreloadedState<ReducerTypes & EmptyObject>;
+  store?: TStore;
+} & Omit<RenderOptions, 'wrapper'>;
 
 function render(ui: ReactElement, options?: CustomRenderOptions) {
-  const { preloadedState } = options || { preloadedState: {
-    rotors: {
-      rotors: [
-        {
-          isAvailable: false,
-          config: {
+  const { preloadedState } = options || {
+    preloadedState: {
+      rotors: {
+        rotors: [
+          {
+            isAvailable: false,
+            config: {
               stepIndex: 1,
               displayedLetters: ['A', 'B', 'C'],
               mappedLetters: ['D', 'E', 'F'],
               currentIndex: 0,
+            },
+            id: 1,
           },
-          id: 1,
+          {
+            isAvailable: false,
+            config: {
+              stepIndex: 2,
+              displayedLetters: ['D', 'E', 'F'],
+              mappedLetters: ['G', 'H', 'I'],
+              currentIndex: 0,
+            },
+            id: 2,
+          },
+        ],
       },
-      {
-        isAvailable: false,
-        config: {
-            stepIndex: 2,
-            displayedLetters: ['D', 'E', 'F'],
-            mappedLetters: ['G', 'H', 'I'],
-            currentIndex: 0,
-        },
-        id: 2,
-    }
-      ]
-    }
-  }};
+    },
+  };
   const store =
     options?.store ||
     configureStore({
@@ -53,7 +58,7 @@ function render(ui: ReactElement, options?: CustomRenderOptions) {
         rotors: rotorsReducer,
       },
       preloadedState,
-    })
+    });
 
   function Wrapper({ children }: { children: React.ReactNode }) {
     const inset = {
@@ -67,10 +72,10 @@ function render(ui: ReactElement, options?: CustomRenderOptions) {
     );
   }
 
-  return rtlRender(ui, { wrapper: Wrapper, ...options })
+  return rtlRender(ui, { wrapper: Wrapper, ...options });
 }
 
 // re-export everything
-export * from '@testing-library/react-native'
+export * from '@testing-library/react-native';
 // override render method
-export { render }
+export { render };
