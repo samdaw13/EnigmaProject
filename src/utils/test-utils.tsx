@@ -28,7 +28,7 @@ function render(ui: ReactElement, options?: CustomRenderOptions) {
       rotors: {
         rotors: [
           {
-            isAvailable: false,
+            isAvailable: true,
             config: {
               stepIndex: 1,
               displayedLetters: ['A', 'B', 'C'],
@@ -38,7 +38,7 @@ function render(ui: ReactElement, options?: CustomRenderOptions) {
             id: 1,
           },
           {
-            isAvailable: false,
+            isAvailable: true,
             config: {
               stepIndex: 2,
               displayedLetters: ['D', 'E', 'F'],

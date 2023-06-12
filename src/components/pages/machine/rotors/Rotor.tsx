@@ -1,4 +1,4 @@
-import { FunctionComponent, useEffect, useState } from 'react';
+import React, { FunctionComponent, useEffect, useState } from 'react';
 
 import { View } from 'react-native';
 import { Button, Card, Portal, IconButton } from 'react-native-paper';
@@ -18,9 +18,6 @@ export const Rotor: FunctionComponent = () => {
   const dispatch = useDispatch();
   const setRotor = () => {
     setIsSelectModalOpen(true);
-  };
-  const updateRotorIndex = () => {
-    setIsChangeIndexModalOpen(true);
   };
   const removeRotor = () => {
     if (selectedRotor)
@@ -65,25 +62,37 @@ export const Rotor: FunctionComponent = () => {
               style={rotorStyles.cardComponent}
               right={() => (
                 <IconButton
-                  icon="close-circle"
-                  mode="contained-tonal"
-                  iconColor="#9c2a2a"
+                  testID='removeRotor'
+                  icon='close-circle'
+                  mode='contained-tonal'
+                  iconColor='#9c2a2a'
                   onPress={removeRotor}
                 />
               )}
             />
             <Card.Actions style={rotorStyles.cardComponent}>
-              <Button onPress={setRotor}>Replace rotor</Button>
-              <Button onPress={updateRotorIndex}>Change current letter</Button>
+              <Button testID='replaceRotorBtn' onPress={setRotor}>
+                Replace rotor
+              </Button>
+              <Button
+                testID='changeLetterBtn'
+                onPress={() => setIsChangeIndexModalOpen(true)}
+              >
+                Change current letter
+              </Button>
             </Card.Actions>
           </>
         )}
         {selectedRotor === null && (
           <Card.Title
-            title="No rotor selected"
+            title='No rotor selected'
             style={rotorStyles.cardComponent}
             right={() => (
-              <Button mode="contained" onPress={setRotor}>
+              <Button
+                mode='contained'
+                testID='selectRotorBtn'
+                onPress={setRotor}
+              >
                 Select rotor
               </Button>
             )}

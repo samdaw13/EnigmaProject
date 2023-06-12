@@ -1,4 +1,4 @@
-import { FunctionComponent } from 'react';
+import React, { FunctionComponent } from 'react';
 import { View } from 'react-native';
 import { Button, Modal, Text } from 'react-native-paper';
 import { RotorSelectModalProps, RotorState } from '../../../../types';
@@ -25,11 +25,13 @@ export const RotorSelectModal: FunctionComponent<RotorSelectModalProps> = ({
     setRotor(rotor);
     closeModal();
   };
+
   return (
     <Modal
       visible={modalVisible}
       onDismiss={closeModal}
       contentContainerStyle={rotorStyles.selectRotor}
+      testID='rotorSelectModal'
     >
       <View>
         <Text>Select rotor</Text>
@@ -37,7 +39,11 @@ export const RotorSelectModal: FunctionComponent<RotorSelectModalProps> = ({
           .filter((rotor) => rotor.isAvailable)
           .map((rotor) => {
             return (
-              <Button key={rotor.id} onPress={() => chooseRotor(rotor)}>
+              <Button
+                key={rotor.id}
+                testID={`selectRotorBtn${rotor.id}`}
+                onPress={() => chooseRotor(rotor)}
+              >
                 {rotor.id}
               </Button>
             );

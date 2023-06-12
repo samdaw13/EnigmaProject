@@ -1,7 +1,7 @@
 module.exports = {
   preset: '@testing-library/react-native',
   transform: {
-    '^.+\\.jsx$': 'babel-jest',
+    '^.+\\.jsx$': 'ts-jest',
     '^.+\\.tsx?$': [
       'ts-jest',
       {
@@ -9,7 +9,11 @@ module.exports = {
       },
     ],
   },
+  transformIgnorePatterns: [
+    '<rootDir>/node_modules/(?!@react-native|react-native)',
+  ],
   moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx', 'json', 'node'],
   collectCoverage: false,
-  collectCoverageFrom: ['src/**/*.tsx']
+  collectCoverageFrom: ['src/**/*.tsx'],
+  coverageReporters: ['text']
 }

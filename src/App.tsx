@@ -8,24 +8,24 @@ const App: FunctionComponent = () => {
   const Drawer = createDrawerNavigator();
   return (
     <NavigationContainer>
-      <Drawer.Navigator initialRouteName="Enigma">
+      <Drawer.Navigator initialRouteName='Enigma'>
         <Drawer.Screen
-          name="Enigma"
+          name='Enigma'
           component={Machine}
           options={{ title: 'Enigma machine' }}
         />
         <Drawer.Screen
-          name="Break"
+          name='Break'
           component={BreakCipher}
           options={{ title: 'Break a cipher' }}
         />
         <Drawer.Screen
-          name="About"
+          name='About'
           component={About}
           options={{ title: 'About Enigma' }}
         />
         <Drawer.Screen
-          name="Settings"
+          name='Settings'
           component={Settings}
           options={{ title: 'Settings' }}
         />
