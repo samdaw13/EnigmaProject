@@ -1,3 +1,5 @@
+import { ReactNode } from 'react';
+
 export interface RotorSelectModalProps {
   modalVisible: boolean;
   setModalVisible: React.Dispatch<React.SetStateAction<boolean>>;
@@ -37,4 +39,25 @@ export interface UpdateRotorActionInterface {
   id: number;
   isAvailable?: boolean;
   currentIndex?: number;
+}
+
+export interface PlugboardCable {
+  [plugLetter: string]: string;
+}
+
+export interface PlugboardActionInterface {
+  inputLetter: string;
+  outputLetter: string;
+}
+
+export interface AddCableModalProps {
+  modalVisible: boolean;
+  setModalVisible: React.Dispatch<React.SetStateAction<boolean>>;
+}
+
+export interface SelectLetterProps {
+  setLetter: React.Dispatch<React.SetStateAction<string | null>>;
+  availableLetters: string[];
+  setAvailableLetters: React.Dispatch<React.SetStateAction<string[]>>;
+  displayText: string;
 }

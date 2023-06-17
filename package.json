@@ -10,7 +10,8 @@
     "start": "react-native start",
     "test": "jest",
     "prettier": "prettier src/**/*.{ts,tsx}",
-    "prettier:fix": "prettier --write src/**/*.{ts,tsx}"
+    "prettier:fix": "prettier --write src/**/*.{ts,tsx}",
+    "format": "npm run prettier:fix && npm run lint:fix"
   },
   "dependencies": {
     "@react-navigation/drawer": "^6.6.2",
