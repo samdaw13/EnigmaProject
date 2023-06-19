@@ -1,5 +1,3 @@
-import { ReactNode } from 'react';
-
 export interface RotorSelectModalProps {
   modalVisible: boolean;
   setModalVisible: React.Dispatch<React.SetStateAction<boolean>>;

@@ -26,8 +26,7 @@ function render(ui: ReactElement, options?: CustomRenderOptions) {
   const { preloadedState } = options || {
     preloadedState: {
       rotors: {
-        rotors: [
-          {
+        1: {
             isAvailable: true,
             config: {
               stepIndex: 1,
@@ -37,7 +36,7 @@ function render(ui: ReactElement, options?: CustomRenderOptions) {
             },
             id: 1,
           },
-          {
+        2:{
             isAvailable: true,
             config: {
               stepIndex: 2,
@@ -47,7 +46,6 @@ function render(ui: ReactElement, options?: CustomRenderOptions) {
             },
             id: 2,
           },
-        ],
       },
     },
   };
