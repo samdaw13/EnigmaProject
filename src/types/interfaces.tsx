@@ -27,7 +27,7 @@ export interface RotorState {
 }
 
 export interface RotorsState {
-  rotors: Array<RotorState>;
+  [id: number]: RotorState;
 }
 
 export interface RotorContextInterface {
@@ -35,10 +35,14 @@ export interface RotorContextInterface {
   updateRotors: (id: number, isAvailable: boolean) => void;
 }
 
-export interface UpdateRotorActionInterface {
+export interface UpdateRotorAvailabilityInterface {
   id: number;
-  isAvailable?: boolean;
-  currentIndex?: number;
+  isAvailable: boolean;
+}
+
+export interface UpdateRotorCurrentIndexInterface {
+  id: number;
+  currentIndex: number;
 }
 
 export interface PlugboardCable {

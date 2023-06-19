@@ -2,16 +2,16 @@ import React, { FunctionComponent, useEffect, useState } from 'react';
 
 import { View } from 'react-native';
 import { Button, Card, Portal, IconButton } from 'react-native-paper';
-import { rotorStyles } from '../../../../styles';
+import { rotorStyles } from '../../../../../styles';
 import { RotorSelectModal } from './RotorSelectModal';
-import { RotorState } from '../../../../types';
+import { RotorState } from '../../../../../types';
 import { useDispatch, useSelector } from 'react-redux';
-import { updateRotor } from '../../../../features/rotors/features';
+import { updateRotorAvailability } from '../../../../../features/rotors/features';
 import { ChangeIndexModal } from './ChangeIndexModal';
-import { RootState } from '../../../../store/store';
+import { RootState } from '../../../../../store/store';
 
 export const Rotor: FunctionComponent = () => {
-  const rotors = useSelector((state: RootState) => state.rotors.rotors);
+  const rotors = useSelector((state: RootState) => state.rotors);
   const [selectedRotor, setSelectedRotor] = useState<RotorState | null>(null);
   const [isSelectModalOpen, setIsSelectModalOpen] = useState(false);
   const [isChangeIndexModalOpen, setIsChangeIndexModalOpen] = useState(false);
@@ -21,14 +21,14 @@ export const Rotor: FunctionComponent = () => {
   };
   const removeRotor = () => {
     if (selectedRotor)
-      dispatch(updateRotor({ id: selectedRotor.id, isAvailable: true }));
+      dispatch(
+        updateRotorAvailability({ id: selectedRotor.id, isAvailable: true }),
+      );
     setSelectedRotor(null);
   };
   useEffect(() => {
     if (selectedRotor) {
-      setSelectedRotor(
-        rotors.filter((rotor) => rotor.id === selectedRotor.id)[0],
-      );
+      setSelectedRotor(rotors[selectedRotor.id]);
     }
   }, [rotors]);
   return (

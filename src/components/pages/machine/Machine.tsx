@@ -1,15 +1,18 @@
-import { FunctionComponent } from 'react';
+import React, { FunctionComponent } from 'react';
 
-import { View, Text } from 'react-native';
-import { Rotors } from './rotors';
-import { Plugboard } from './plugboard';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { Settings } from './settings';
+
+const Stack = createNativeStackNavigator();
 
 export const Machine: FunctionComponent = () => {
   return (
-    <View>
-      <Rotors />
-      <Plugboard />
-      <Text>Enigma machine</Text>
-    </View>
+    <Stack.Navigator>
+      <Stack.Screen
+        name='Settings'
+        component={Settings}
+        options={{ headerShown: false }}
+      />
+    </Stack.Navigator>
   );
 };

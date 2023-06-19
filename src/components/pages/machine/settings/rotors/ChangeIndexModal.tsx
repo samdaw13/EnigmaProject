@@ -1,11 +1,11 @@
 import React, { FunctionComponent } from 'react';
 import { View, ScrollView } from 'react-native';
 import { Button, Modal, Text } from 'react-native-paper';
-import { RotorSelectModalProps } from '../../../../types';
-import { rotorStyles } from '../../../../styles';
+import { RotorSelectModalProps } from '../../../../../types';
+import { rotorStyles } from '../../../../../styles';
 import { useDispatch, useSelector } from 'react-redux';
-import { RootState } from '../../../../store/store';
-import { updateRotor } from '../../../../features/rotors/features';
+import { RootState } from '../../../../../store/store';
+import { updateRotorCurrentIndex } from '../../../../../features/rotors/features';
 
 export const ChangeIndexModal: FunctionComponent<RotorSelectModalProps> = ({
   modalVisible,
@@ -13,7 +13,7 @@ export const ChangeIndexModal: FunctionComponent<RotorSelectModalProps> = ({
   currentRotor,
   setRotor,
 }) => {
-  const rotors = useSelector((state: RootState) => state.rotors.rotors);
+  const rotors = useSelector((state: RootState) => state.rotors);
   const dispatch = useDispatch();
   const closeModal = () => {
     setModalVisible(false);
@@ -21,18 +21,13 @@ export const ChangeIndexModal: FunctionComponent<RotorSelectModalProps> = ({
   const updateIndex = (letter: string) => {
     if (currentRotor) {
       dispatch(
-        updateRotor({
+        updateRotorCurrentIndex({
           id: currentRotor.id,
           currentIndex: currentRotor.config.displayedLetters.indexOf(letter),
         }),
       );
+      setRotor(rotors[currentRotor.id]);
     }
-    rotors.forEach((rotor) => {
-      if (rotor.id === currentRotor?.id) {
-        const tempRotor = rotor;
-        setRotor(tempRotor);
-      }
-    });
     closeModal();
   };
   return (

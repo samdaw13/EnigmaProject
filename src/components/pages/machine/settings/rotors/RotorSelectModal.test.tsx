@@ -1,9 +1,9 @@
 import React from 'react';
-import { render, screen, fireEvent } from '../../../../utils/test-utils';
-import { ChangeIndexModal } from './ChangeIndexModal';
-import { RotorState } from '../../../../types';
+import { render, screen, fireEvent } from '../../../../../utils/test-utils';
+import { RotorSelectModal } from './RotorSelectModal';
+import { RotorState } from '../../../../../types';
 
-describe(`ChangeIndexModal`, () => {
+describe(`RotorSelectModal`, () => {
   const mockRotorState: RotorState = {
     isAvailable: true,
     config: {
@@ -21,7 +21,7 @@ describe(`ChangeIndexModal`, () => {
     setRotor: React.Dispatch<React.SetStateAction<RotorState | null>>,
   ) => {
     render(
-      <ChangeIndexModal
+      <RotorSelectModal
         modalVisible={modalVisible}
         setModalVisible={setModalVisible}
         currentRotor={currentRotor}
@@ -29,11 +29,11 @@ describe(`ChangeIndexModal`, () => {
       />,
     );
   };
-  it(`selects a letter and closes the modal`, () => {
+  it(`selects a rotor and closes the modal`, () => {
     const setModalMock = jest.fn();
     const setRotorMock = jest.fn();
     renderComponent(true, setModalMock, mockRotorState, setRotorMock);
-    fireEvent.press(screen.getByTestId('buttonB1'));
+    fireEvent.press(screen.getByTestId('selectRotorBtn1'));
     expect(setRotorMock).toHaveBeenCalledWith(mockRotorState);
     expect(setModalMock).toHaveBeenCalledWith(false);
   });

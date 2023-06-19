@@ -1,5 +1,5 @@
 import React, { FunctionComponent } from 'react';
-import { SelectLetterProps } from '../../../../types';
+import { SelectLetterProps } from '../../../../../types';
 import { View, ScrollView } from 'react-native';
 import { Button, Text } from 'react-native-paper';
 

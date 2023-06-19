@@ -4,7 +4,7 @@ import { View } from 'react-native';
 import { Button, Chip, Portal } from 'react-native-paper';
 import { AddCableModal } from './addCableModal';
 import { useSelector } from 'react-redux';
-import { RootState } from '../../../../store/store';
+import { RootState } from '../../../../../store/store';
 
 export const Plugboard: FunctionComponent = () => {
   const plugboard = useSelector((state: RootState) => state.plugboard);

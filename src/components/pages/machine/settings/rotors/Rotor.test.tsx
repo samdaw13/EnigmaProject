@@ -1,5 +1,5 @@
 import React, { PropsWithChildren } from 'react';
-import { render, screen, fireEvent } from '../../../../utils/test-utils';
+import { render, screen, fireEvent } from '../../../../../utils/test-utils';
 import { Rotor } from './Rotor';
 import { View } from 'react-native';
 

@@ -3,84 +3,85 @@ import type { PayloadAction } from '@reduxjs/toolkit';
 
 import {
   RotorsState,
-  RotorState,
-  UpdateRotorActionInterface,
+  UpdateRotorAvailabilityInterface,
+  UpdateRotorCurrentIndexInterface,
 } from '../../types';
 
 const initialState: RotorsState = {
-  rotors: [
-    {
-      isAvailable: true,
-      config: {
-        stepIndex: 2,
-        displayedLetters: 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split(''),
-        mappedLetters: 'JGDQOXUSCAMIFRVTPNEWKBLZYH'.split(''),
-        currentIndex: 0,
-      },
-      id: 1,
+  1: {
+    isAvailable: true,
+    config: {
+      stepIndex: 2,
+      displayedLetters: 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split(''),
+      mappedLetters: 'JGDQOXUSCAMIFRVTPNEWKBLZYH'.split(''),
+      currentIndex: 0,
     },
-    {
-      isAvailable: true,
-      config: {
-        stepIndex: 2,
-        displayedLetters: 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split(''),
-        mappedLetters: 'NTZPSFBOKMWRCJDIVLAEYUXHGQ'.split(''),
-        currentIndex: 0,
-      },
-      id: 2,
+    id: 1,
+  },
+  2: {
+    isAvailable: true,
+    config: {
+      stepIndex: 2,
+      displayedLetters: 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split(''),
+      mappedLetters: 'NTZPSFBOKMWRCJDIVLAEYUXHGQ'.split(''),
+      currentIndex: 0,
     },
-    {
-      isAvailable: true,
-      config: {
-        stepIndex: 2,
-        displayedLetters: 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split(''),
-        mappedLetters: 'JVIUBHTCDYAKEQZPOSGXNRMWFL'.split(''),
-        currentIndex: 0,
-      },
-      id: 3,
+    id: 2,
+  },
+  3: {
+    isAvailable: true,
+    config: {
+      stepIndex: 2,
+      displayedLetters: 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split(''),
+      mappedLetters: 'JVIUBHTCDYAKEQZPOSGXNRMWFL'.split(''),
+      currentIndex: 0,
     },
-    {
-      isAvailable: true,
-      config: {
-        stepIndex: 2,
-        displayedLetters: 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split(''),
-        mappedLetters: 'QYHOGNECVPUZTFDJAXWMKISRBL'.split(''),
-        currentIndex: 0,
-      },
-      id: 4,
+    id: 3,
+  },
+  4: {
+    isAvailable: true,
+    config: {
+      stepIndex: 2,
+      displayedLetters: 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split(''),
+      mappedLetters: 'QYHOGNECVPUZTFDJAXWMKISRBL'.split(''),
+      currentIndex: 0,
     },
-    {
-      isAvailable: true,
-      config: {
-        stepIndex: 2,
-        displayedLetters: 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split(''),
-        mappedLetters: 'QWERTZUIOASDFGHJKPYXCVBNML'.split(''),
-        currentIndex: 0,
-      },
-      id: 5,
+    id: 4,
+  },
+  5: {
+    isAvailable: true,
+    config: {
+      stepIndex: 2,
+      displayedLetters: 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split(''),
+      mappedLetters: 'QWERTZUIOASDFGHJKPYXCVBNML'.split(''),
+      currentIndex: 0,
     },
-  ],
+    id: 5,
+  },
 };
 
 export const rotorsSlice = createSlice({
   name: 'rotors',
   initialState,
   reducers: {
-    updateRotor: (state, action: PayloadAction<UpdateRotorActionInterface>) => {
-      state.rotors.filter((rotor: RotorState) => {
-        if (rotor.id === action.payload.id) {
-          rotor.isAvailable = action.payload.isAvailable ?? rotor.isAvailable;
-          rotor.config.currentIndex =
-            action.payload.currentIndex ?? rotor.config.currentIndex;
-          state.rotors = [...state.rotors];
-        }
-      });
-      return state;
+    updateRotorAvailability: (
+      state,
+      action: PayloadAction<UpdateRotorAvailabilityInterface>,
+    ) => {
+      state[action.payload.id].isAvailable = action.payload.isAvailable;
+    },
+    updateRotorCurrentIndex: (
+      state,
+      action: PayloadAction<UpdateRotorCurrentIndexInterface>,
+    ) => {
+      state[action.payload.id].config.currentIndex =
+        action.payload.currentIndex;
     },
   },
 });
 
 // Action creators are generated for each case reducer function
-export const { updateRotor } = rotorsSlice.actions;
+export const { updateRotorAvailability, updateRotorCurrentIndex } =
+  rotorsSlice.actions;
 
 export default rotorsSlice.reducer;

@@ -1,11 +1,11 @@
 import React, { FunctionComponent } from 'react';
 import { View } from 'react-native';
 import { Button, Modal, Text } from 'react-native-paper';
-import { RotorSelectModalProps, RotorState } from '../../../../types';
-import { rotorStyles } from '../../../../styles';
+import { RotorSelectModalProps, RotorState } from '../../../../../types';
+import { rotorStyles } from '../../../../../styles';
 import { useDispatch, useSelector } from 'react-redux';
-import { RootState } from '../../../../store/store';
-import { updateRotor } from '../../../../features/rotors/features';
+import { RootState } from '../../../../../store/store';
+import { updateRotorAvailability } from '../../../../../features/rotors/features';
 
 export const RotorSelectModal: FunctionComponent<RotorSelectModalProps> = ({
   modalVisible,
@@ -13,15 +13,17 @@ export const RotorSelectModal: FunctionComponent<RotorSelectModalProps> = ({
   setRotor,
   currentRotor,
 }) => {
-  const rotors = useSelector((state: RootState) => state.rotors.rotors);
+  const rotors = useSelector((state: RootState) => state.rotors);
   const dispatch = useDispatch();
   const closeModal = () => {
     setModalVisible(false);
   };
   const chooseRotor = (rotor: RotorState) => {
-    dispatch(updateRotor({ id: rotor.id, isAvailable: false }));
+    dispatch(updateRotorAvailability({ id: rotor.id, isAvailable: false }));
     if (currentRotor)
-      dispatch(updateRotor({ id: currentRotor.id, isAvailable: true }));
+      dispatch(
+        updateRotorAvailability({ id: currentRotor.id, isAvailable: true }),
+      );
     setRotor(rotor);
     closeModal();
   };
@@ -35,9 +37,10 @@ export const RotorSelectModal: FunctionComponent<RotorSelectModalProps> = ({
     >
       <View>
         <Text>Select rotor</Text>
-        {rotors
-          .filter((rotor) => rotor.isAvailable)
-          .map((rotor) => {
+        {Object.keys(rotors)
+          .filter((key) => rotors[parseInt(key)].isAvailable)
+          .map((key) => {
+            const rotor = rotors[parseInt(key)];
             return (
               <Button
                 key={rotor.id}
