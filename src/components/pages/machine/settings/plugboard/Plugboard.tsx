@@ -1,10 +1,10 @@
 import React, { FunctionComponent, useState } from 'react';
-
 import { View } from 'react-native';
 import { Button, Chip, Portal } from 'react-native-paper';
-import { AddCableModal } from './addCableModal';
 import { useSelector } from 'react-redux';
+
 import { RootState } from '../../../../../store/store';
+import { AddCableModal } from './addCableModal';
 
 export const Plugboard: FunctionComponent = () => {
   const plugboard = useSelector((state: RootState) => state.plugboard);

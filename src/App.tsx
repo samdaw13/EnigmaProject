@@ -1,7 +1,7 @@
+import { createDrawerNavigator } from '@react-navigation/drawer';
+import { NavigationContainer } from '@react-navigation/native';
 import React, { FunctionComponent } from 'react';
 
-import { NavigationContainer } from '@react-navigation/native';
-import { createDrawerNavigator } from '@react-navigation/drawer';
 import { About, BreakCipher, Machine, Settings } from './components';
 
 const App: FunctionComponent = () => {

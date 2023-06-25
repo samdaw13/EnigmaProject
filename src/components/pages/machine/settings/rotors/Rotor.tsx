@@ -1,14 +1,25 @@
 import React, { FunctionComponent, useEffect, useState } from 'react';
-
 import { View } from 'react-native';
-import { Button, Card, Portal, IconButton } from 'react-native-paper';
-import { rotorStyles } from '../../../../../styles';
-import { RotorSelectModal } from './RotorSelectModal';
-import { RotorState } from '../../../../../types';
+import { Button, Card, IconButton, Portal } from 'react-native-paper';
 import { useDispatch, useSelector } from 'react-redux';
+
+import {
+  CHANGE_CURRENT_LETTER,
+  CHANGE_LETTER_BUTTON,
+  NO_ROTOR_SELECTED,
+  REMOVE_ROTOR_BUTTON,
+  REPLACE_ROTOR,
+  REPLACE_ROTOR_BUTTON,
+  SELECT_ROTOR,
+  SET_ROTOR_BUTTON,
+} from '../../../../../constants';
 import { updateRotorAvailability } from '../../../../../features/rotors/features';
-import { ChangeIndexModal } from './ChangeIndexModal';
 import { RootState } from '../../../../../store/store';
+import { rotorStyles } from '../../../../../styles';
+import { RotorState } from '../../../../../types';
+import { currentLetter, currentRotor } from '../../../../../utils';
+import { ChangeIndexModal } from './ChangeIndexModal';
+import { RotorSelectModal } from './RotorSelectModal';
 
 export const Rotor: FunctionComponent = () => {
   const rotors = useSelector((state: RootState) => state.rotors);
@@ -53,16 +64,16 @@ export const Rotor: FunctionComponent = () => {
         {selectedRotor && (
           <>
             <Card.Title
-              title={`Current letter: ${
+              title={currentLetter(
                 selectedRotor.config.displayedLetters[
                   selectedRotor.config.currentIndex
-                ]
-              }`}
-              subtitle={`Active rotor: ${selectedRotor.id}`}
+                ],
+              )}
+              subtitle={currentRotor(selectedRotor.id)}
               style={rotorStyles.cardComponent}
               right={() => (
                 <IconButton
-                  testID='removeRotor'
+                  testID={REMOVE_ROTOR_BUTTON}
                   icon='close-circle'
                   mode='contained-tonal'
                   iconColor='#9c2a2a'
@@ -71,29 +82,29 @@ export const Rotor: FunctionComponent = () => {
               )}
             />
             <Card.Actions style={rotorStyles.cardComponent}>
-              <Button testID='replaceRotorBtn' onPress={setRotor}>
-                Replace rotor
+              <Button testID={REPLACE_ROTOR_BUTTON} onPress={setRotor}>
+                {REPLACE_ROTOR}
               </Button>
               <Button
-                testID='changeLetterBtn'
+                testID={CHANGE_LETTER_BUTTON}
                 onPress={() => setIsChangeIndexModalOpen(true)}
               >
-                Change current letter
+                {CHANGE_CURRENT_LETTER}
               </Button>
             </Card.Actions>
           </>
         )}
         {selectedRotor === null && (
           <Card.Title
-            title='No rotor selected'
+            title={NO_ROTOR_SELECTED}
             style={rotorStyles.cardComponent}
             right={() => (
               <Button
                 mode='contained'
-                testID='selectRotorBtn'
+                testID={SET_ROTOR_BUTTON}
                 onPress={setRotor}
               >
-                Select rotor
+                {SELECT_ROTOR}
               </Button>
             )}
           />

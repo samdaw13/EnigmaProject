@@ -1,7 +1,8 @@
 import React from 'react';
-import { render, screen, fireEvent } from '../../../../../utils/test-utils';
-import { RotorSelectModal } from './RotorSelectModal';
+
 import { RotorState } from '../../../../../types';
+import { fireEvent, render, screen } from '../../../../../utils/test-utils';
+import { RotorSelectModal } from './RotorSelectModal';
 
 describe(`RotorSelectModal`, () => {
   const mockRotorState: RotorState = {

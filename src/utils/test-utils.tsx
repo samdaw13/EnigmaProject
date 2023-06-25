@@ -1,18 +1,19 @@
-import React, { ReactElement } from 'react';
-import { Provider } from 'react-redux';
-import {
-  render as rtlRender,
-  RenderOptions,
-} from '@testing-library/react-native';
 import {
   configureStore,
   EmptyObject,
   EnhancedStore,
   PreloadedState,
 } from '@reduxjs/toolkit';
+import {
+  render as rtlRender,
+  RenderOptions,
+} from '@testing-library/react-native';
+import React, { ReactElement } from 'react';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
+import { Provider } from 'react-redux';
+
 import rotorsReducer from '../features/rotors/features';
 import type { RootState } from '../store/store';
-import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 type ReducerTypes = Pick<RootState, 'rotors'>;
 type TStore = EnhancedStore<ReducerTypes>;
@@ -27,25 +28,25 @@ function render(ui: ReactElement, options?: CustomRenderOptions) {
     preloadedState: {
       rotors: {
         1: {
-            isAvailable: true,
-            config: {
-              stepIndex: 1,
-              displayedLetters: ['A', 'B', 'C'],
-              mappedLetters: ['D', 'E', 'F'],
-              currentIndex: 0,
-            },
-            id: 1,
+          isAvailable: true,
+          config: {
+            stepIndex: 1,
+            displayedLetters: ['A', 'B', 'C'],
+            mappedLetters: ['D', 'E', 'F'],
+            currentIndex: 0,
           },
-        2:{
-            isAvailable: true,
-            config: {
-              stepIndex: 2,
-              displayedLetters: ['D', 'E', 'F'],
-              mappedLetters: ['G', 'H', 'I'],
-              currentIndex: 0,
-            },
-            id: 2,
+          id: 1,
+        },
+        2: {
+          isAvailable: true,
+          config: {
+            stepIndex: 2,
+            displayedLetters: ['D', 'E', 'F'],
+            mappedLetters: ['G', 'H', 'I'],
+            currentIndex: 0,
           },
+          id: 2,
+        },
       },
     },
   };

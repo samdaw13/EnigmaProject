@@ -7,7 +7,7 @@ module.exports = {
     'plugin:jest/recommended',
   ],
   parser: '@typescript-eslint/parser',
-  plugins: ['@typescript-eslint', 'jest', 'testing-library', 'prettier'],
+  plugins: ['@typescript-eslint', 'jest', 'testing-library', 'prettier', 'simple-import-sort', 'import'],
   parserOptions: {
     project: true,
     tsconfigRootDir: __dirname,
@@ -23,6 +23,11 @@ module.exports = {
 		'testing-library/no-await-sync-query': 'error',
 		'testing-library/no-debugging-utils': 'warn',
 		'testing-library/no-dom-import': 'off',
-    'jsx-quotes': ['error', 'prefer-single']
+    'jsx-quotes': ['error', 'prefer-single'],
+    'simple-import-sort/imports': 'error',
+    'simple-import-sort/exports': 'error',
+    "import/first": "error",
+    "import/newline-after-import": "error",
+    "import/no-duplicates": "error"
   },
 };

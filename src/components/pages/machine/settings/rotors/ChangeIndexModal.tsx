@@ -1,11 +1,12 @@
 import React, { FunctionComponent } from 'react';
-import { View, ScrollView } from 'react-native';
+import { ScrollView, View } from 'react-native';
 import { Button, Modal, Text } from 'react-native-paper';
-import { RotorSelectModalProps } from '../../../../../types';
-import { rotorStyles } from '../../../../../styles';
 import { useDispatch, useSelector } from 'react-redux';
-import { RootState } from '../../../../../store/store';
+
 import { updateRotorCurrentIndex } from '../../../../../features/rotors/features';
+import { RootState } from '../../../../../store/store';
+import { rotorStyles } from '../../../../../styles';
+import { RotorSelectModalProps } from '../../../../../types';
 
 export const ChangeIndexModal: FunctionComponent<RotorSelectModalProps> = ({
   modalVisible,

@@ -1,7 +1,8 @@
 import React, { PropsWithChildren } from 'react';
-import { render, screen, fireEvent } from '../../../../../utils/test-utils';
-import { Rotor } from './Rotor';
 import { View } from 'react-native';
+
+import { fireEvent, render, screen } from '../../../../../utils/test-utils';
+import { Rotor } from './Rotor';
 
 jest.mock('react-native-paper', () => {
   const RealModule = jest.requireActual<object>('react-native-paper');

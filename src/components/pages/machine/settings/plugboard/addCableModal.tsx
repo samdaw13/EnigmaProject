@@ -1,11 +1,12 @@
-import React, { FunctionComponent, useState, useEffect } from 'react';
+import React, { FunctionComponent, useEffect, useState } from 'react';
 import { View } from 'react-native';
 import { Modal } from 'react-native-paper';
-import { AddCableModalProps } from '../../../../../types';
 import { useDispatch, useSelector } from 'react-redux';
-import { RootState } from '../../../../../store/store';
-import { SelectLetterButton } from './SelectLetterButton';
+
 import { addCable } from '../../../../../features/plugboard';
+import { RootState } from '../../../../../store/store';
+import { AddCableModalProps } from '../../../../../types';
+import { SelectLetterButton } from './SelectLetterButton';
 
 export const AddCableModal: FunctionComponent<AddCableModalProps> = ({
   modalVisible,

@@ -1,6 +1,6 @@
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import React, { FunctionComponent } from 'react';
 
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { Settings } from './settings';
 
 const Stack = createNativeStackNavigator();

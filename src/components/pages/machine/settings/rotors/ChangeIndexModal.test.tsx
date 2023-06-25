@@ -1,7 +1,8 @@
 import React from 'react';
-import { render, screen, fireEvent } from '../../../../../utils/test-utils';
-import { ChangeIndexModal } from './ChangeIndexModal';
+
 import { RotorState } from '../../../../../types';
+import { fireEvent, render, screen } from '../../../../../utils/test-utils';
+import { ChangeIndexModal } from './ChangeIndexModal';
 
 describe(`ChangeIndexModal`, () => {
   const mockRotorState: RotorState = {
