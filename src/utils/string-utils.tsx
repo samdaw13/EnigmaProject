@@ -8,4 +8,5 @@ export const selectRotorButton = (id: number): string =>
   `${SET_ROTOR_BUTTON}${id}`;
 export const letterButton = (letter: string, rotorId: number): string =>
   `${BUTTON}${letter}${rotorId};`;
-export const plugboardChipText = (input: string, output: string): string => `${input} -> ${output}`;
+export const plugboardChipText = (input: string, output: string): string =>
+  `${input} -> ${output}`;
