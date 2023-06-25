@@ -4,3 +4,6 @@ export const REMOVE_ROTOR_BUTTON = 'removeRotor';
 export const SET_ROTOR_BUTTON = 'selectRotorBtn';
 export const ROTOR_SELECT_MODAL = 'rotorSelectModal';
 export const BUTTON = 'button';
+export const SELECT_INPUT_LETTER = 'inputLetter';
+export const SELECT_OUTPUT_LETTER = 'outputLetter';
+export const ADD_CABLE_MODAL_BUTTON = 'addCableModal';

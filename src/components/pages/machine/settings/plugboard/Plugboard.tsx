@@ -5,6 +5,8 @@ import { useSelector } from 'react-redux';
 
 import { RootState } from '../../../../../store/store';
 import { AddCableModal } from './addCableModal';
+import { ADD_CABLE, ADD_CABLE_MODAL_BUTTON } from '../../../../../constants';
+import { plugboardChipText } from '../../../../../utils';
 
 export const Plugboard: FunctionComponent = () => {
   const plugboard = useSelector((state: RootState) => state.plugboard);
@@ -17,14 +19,15 @@ export const Plugboard: FunctionComponent = () => {
           setModalVisible={setAddCableModalOpen}
         />
       </Portal>
-      <Button onPress={() => setAddCableModalOpen(true)}>
-        Add cable to plugboard
+      <Button testID={ADD_CABLE_MODAL_BUTTON} onPress={() => setAddCableModalOpen(true)}>
+        {ADD_CABLE}
       </Button>
       {Object.keys(plugboard).map((cable, index) => {
         return (
           <Chip
             key={`${cable}${index}`}
-          >{`${cable} -> ${plugboard[cable]}`}</Chip>
+            testID={`${cable}${plugboard[cable]}`}
+          >{plugboardChipText(cable, plugboard[cable])}</Chip>
         );
       })}
     </View>

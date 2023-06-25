@@ -9,6 +9,7 @@ export const SelectLetterButton: FunctionComponent<SelectLetterProps> = ({
   displayText,
   availableLetters,
   setAvailableLetters,
+  testID,
 }) => {
   const updateLetter = (letter: string) => {
     setLetter(letter);
@@ -25,6 +26,7 @@ export const SelectLetterButton: FunctionComponent<SelectLetterProps> = ({
             <Button
               key={`${letter}${index}`}
               onPress={() => updateLetter(letter)}
+              testID={`${testID}${index}`}
             >
               {letter}
             </Button>

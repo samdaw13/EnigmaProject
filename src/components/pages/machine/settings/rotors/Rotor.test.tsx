@@ -1,10 +1,20 @@
 import React, { PropsWithChildren } from 'react';
 import { View } from 'react-native';
 
+import {
+  CHANGE_LETTER_BUTTON,
+  REMOVE_ROTOR_BUTTON,
+  REPLACE_ROTOR_BUTTON,
+  SELECT_ROTOR,
+  SET_ROTOR_BUTTON,
+} from '../../../../../constants';
+import {
+  currentLetter,
+  letterButton,
+  selectRotorButton,
+} from '../../../../../utils';
 import { fireEvent, render, screen } from '../../../../../utils/test-utils';
 import { Rotor } from './Rotor';
-import { CHANGE_LETTER_BUTTON, REMOVE_ROTOR_BUTTON, REPLACE_ROTOR_BUTTON, SELECT_ROTOR, SET_ROTOR_BUTTON } from '../../../../../constants';
-import { currentLetter, letterButton, selectRotorButton } from '../../../../../utils';
 
 jest.mock('react-native-paper', () => {
   const RealModule = jest.requireActual<object>('react-native-paper');

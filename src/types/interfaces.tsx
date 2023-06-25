@@ -62,4 +62,5 @@ export interface SelectLetterProps {
   availableLetters: string[];
   setAvailableLetters: React.Dispatch<React.SetStateAction<string[]>>;
   displayText: string;
+  testID?: string;
 }

@@ -1,9 +1,14 @@
 import React from 'react';
 
 import { RotorState } from '../../../../../types';
-import { ROTOR_1, fireEvent, letterButton, render, screen } from '../../../../../utils';
+import {
+  fireEvent,
+  letterButton,
+  render,
+  ROTOR_1,
+  screen,
+} from '../../../../../utils';
 import { ChangeIndexModal } from './ChangeIndexModal';
-
 
 describe(`ChangeIndexModal`, () => {
   const renderComponent = (

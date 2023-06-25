@@ -12,6 +12,7 @@ import React, { ReactElement } from 'react';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { Provider } from 'react-redux';
 
+import plugboardReducer from '../features/plugboard';
 import rotorsReducer from '../features/rotors/features';
 import type { RootState } from '../store/store';
 import { RotorState } from '../types';
@@ -53,6 +54,7 @@ function render(ui: ReactElement, options?: CustomRenderOptions) {
         1: ROTOR_1,
         2: ROTOR_2,
       },
+      plugboard: {},
     },
   };
   const store =
@@ -60,6 +62,7 @@ function render(ui: ReactElement, options?: CustomRenderOptions) {
     configureStore({
       reducer: {
         rotors: rotorsReducer,
+        plugboard: plugboardReducer,
       },
       preloadedState,
     });

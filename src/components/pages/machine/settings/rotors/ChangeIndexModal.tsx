@@ -3,11 +3,11 @@ import { ScrollView, View } from 'react-native';
 import { Button, Modal, Text } from 'react-native-paper';
 import { useDispatch, useSelector } from 'react-redux';
 
+import { SELECT_NEW_LETTER } from '../../../../../constants';
 import { updateRotorCurrentIndex } from '../../../../../features/rotors/features';
 import { RootState } from '../../../../../store/store';
 import { rotorStyles } from '../../../../../styles';
 import { RotorSelectModalProps } from '../../../../../types';
-import { SELECT_NEW_LETTER } from '../../../../../constants';
 import { letterButton } from '../../../../../utils';
 
 export const ChangeIndexModal: FunctionComponent<RotorSelectModalProps> = ({

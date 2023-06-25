@@ -3,6 +3,12 @@ import { View } from 'react-native';
 import { Modal } from 'react-native-paper';
 import { useDispatch, useSelector } from 'react-redux';
 
+import {
+  SELECT_INPUT_LETTER,
+  SELECT_INPUT_LETTER_DISPLAY,
+  SELECT_OUTPUT_LETTER,
+  SELECT_OUTPUT_LETTER_DISPLAY,
+} from '../../../../../constants';
 import { addCable } from '../../../../../features/plugboard';
 import { RootState } from '../../../../../store/store';
 import { AddCableModalProps } from '../../../../../types';
@@ -40,17 +46,19 @@ export const AddCableModal: FunctionComponent<AddCableModalProps> = ({
         {inputLetter === null && (
           <SelectLetterButton
             setLetter={setInputLetter}
-            displayText='Select input letter'
+            displayText={SELECT_INPUT_LETTER_DISPLAY}
             availableLetters={availableLetters}
             setAvailableLetters={setAvailableLetters}
+            testID={SELECT_INPUT_LETTER}
           />
         )}
         {inputLetter !== null && (
           <SelectLetterButton
             setLetter={setOutputLetter}
-            displayText='Select output letter'
+            displayText={SELECT_OUTPUT_LETTER_DISPLAY}
             availableLetters={availableLetters}
             setAvailableLetters={setAvailableLetters}
+            testID={SELECT_OUTPUT_LETTER}
           />
         )}
       </View>

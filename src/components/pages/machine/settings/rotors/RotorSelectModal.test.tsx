@@ -1,7 +1,13 @@
 import React from 'react';
 
 import { RotorState } from '../../../../../types';
-import { ROTOR_1, fireEvent, render, screen, selectRotorButton } from '../../../../../utils';
+import {
+  fireEvent,
+  render,
+  ROTOR_1,
+  screen,
+  selectRotorButton,
+} from '../../../../../utils';
 import { RotorSelectModal } from './RotorSelectModal';
 
 describe(`RotorSelectModal`, () => {
