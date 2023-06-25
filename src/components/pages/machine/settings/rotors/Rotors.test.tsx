@@ -3,6 +3,7 @@ import { View } from 'react-native';
 
 import { render, screen } from '../../../../../utils/test-utils';
 import { Rotors } from './Rotors';
+import { NO_ROTOR_SELECTED } from '../../../../../constants';
 
 jest.mock('react-native-paper', () => {
   const RealModule = jest.requireActual<object>('react-native-paper');
@@ -19,6 +20,6 @@ describe(`Rotors`, () => {
   };
   it(`displays all rotors`, () => {
     renderComponent();
-    expect(screen.getAllByText('No rotor selected')).toHaveLength(3);
+    expect(screen.getAllByText(NO_ROTOR_SELECTED)).toHaveLength(3);
   });
 });

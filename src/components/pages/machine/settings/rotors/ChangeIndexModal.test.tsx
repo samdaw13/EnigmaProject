@@ -1,20 +1,11 @@
 import React from 'react';
 
 import { RotorState } from '../../../../../types';
-import { fireEvent, render, screen } from '../../../../../utils/test-utils';
+import { ROTOR_1, fireEvent, letterButton, render, screen } from '../../../../../utils';
 import { ChangeIndexModal } from './ChangeIndexModal';
 
+
 describe(`ChangeIndexModal`, () => {
-  const mockRotorState: RotorState = {
-    isAvailable: true,
-    config: {
-      stepIndex: 1,
-      displayedLetters: ['A', 'B', 'C'],
-      mappedLetters: ['D', 'E', 'F'],
-      currentIndex: 0,
-    },
-    id: 1,
-  };
   const renderComponent = (
     modalVisible: boolean,
     setModalVisible: React.Dispatch<React.SetStateAction<boolean>>,
@@ -33,9 +24,9 @@ describe(`ChangeIndexModal`, () => {
   it(`selects a letter and closes the modal`, () => {
     const setModalMock = jest.fn();
     const setRotorMock = jest.fn();
-    renderComponent(true, setModalMock, mockRotorState, setRotorMock);
-    fireEvent.press(screen.getByTestId('buttonB1'));
-    expect(setRotorMock).toHaveBeenCalledWith(mockRotorState);
+    renderComponent(true, setModalMock, ROTOR_1, setRotorMock);
+    fireEvent.press(screen.getByTestId(letterButton('B', 1)));
+    expect(setRotorMock).toHaveBeenCalledWith(ROTOR_1);
     expect(setModalMock).toHaveBeenCalledWith(false);
   });
 });

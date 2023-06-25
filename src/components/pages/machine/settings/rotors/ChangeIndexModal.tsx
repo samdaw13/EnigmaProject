@@ -7,6 +7,8 @@ import { updateRotorCurrentIndex } from '../../../../../features/rotors/features
 import { RootState } from '../../../../../store/store';
 import { rotorStyles } from '../../../../../styles';
 import { RotorSelectModalProps } from '../../../../../types';
+import { SELECT_NEW_LETTER } from '../../../../../constants';
+import { letterButton } from '../../../../../utils';
 
 export const ChangeIndexModal: FunctionComponent<RotorSelectModalProps> = ({
   modalVisible,
@@ -38,14 +40,14 @@ export const ChangeIndexModal: FunctionComponent<RotorSelectModalProps> = ({
       contentContainerStyle={rotorStyles.selectRotor}
     >
       <View>
-        <Text>Select new letter</Text>
+        <Text>{SELECT_NEW_LETTER}</Text>
         <ScrollView>
           {currentRotor &&
             currentRotor.config.displayedLetters.map((letter) => {
               return (
                 <Button
                   key={`${letter}${currentRotor.id.toString()}`}
-                  testID={`button${letter}${currentRotor.id.toString()}`}
+                  testID={letterButton(letter, currentRotor.id)}
                   onPress={() => updateIndex(letter)}
                 >
                   {letter}

@@ -7,6 +7,8 @@ import { updateRotorAvailability } from '../../../../../features/rotors/features
 import { RootState } from '../../../../../store/store';
 import { rotorStyles } from '../../../../../styles';
 import { RotorSelectModalProps, RotorState } from '../../../../../types';
+import { ROTOR_SELECT_MODAL, SELECT_ROTOR } from '../../../../../constants';
+import { selectRotorButton } from '../../../../../utils';
 
 export const RotorSelectModal: FunctionComponent<RotorSelectModalProps> = ({
   modalVisible,
@@ -34,10 +36,10 @@ export const RotorSelectModal: FunctionComponent<RotorSelectModalProps> = ({
       visible={modalVisible}
       onDismiss={closeModal}
       contentContainerStyle={rotorStyles.selectRotor}
-      testID='rotorSelectModal'
+      testID={ROTOR_SELECT_MODAL}
     >
       <View>
-        <Text>Select rotor</Text>
+        <Text>{SELECT_ROTOR}</Text>
         {Object.keys(rotors)
           .filter((key) => rotors[parseInt(key)].isAvailable)
           .map((key) => {
@@ -45,7 +47,7 @@ export const RotorSelectModal: FunctionComponent<RotorSelectModalProps> = ({
             return (
               <Button
                 key={rotor.id}
-                testID={`selectRotorBtn${rotor.id}`}
+                testID={selectRotorButton(rotor.id)}
                 onPress={() => chooseRotor(rotor)}
               >
                 {rotor.id}

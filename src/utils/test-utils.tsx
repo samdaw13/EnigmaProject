@@ -14,6 +14,7 @@ import { Provider } from 'react-redux';
 
 import rotorsReducer from '../features/rotors/features';
 import type { RootState } from '../store/store';
+import { RotorState } from '../types';
 
 type ReducerTypes = Pick<RootState, 'rotors'>;
 type TStore = EnhancedStore<ReducerTypes>;
@@ -23,30 +24,34 @@ type CustomRenderOptions = {
   store?: TStore;
 } & Omit<RenderOptions, 'wrapper'>;
 
+export const ROTOR_1: RotorState = {
+  isAvailable: true,
+  config: {
+    stepIndex: 1,
+    displayedLetters: ['A', 'B', 'C'],
+    mappedLetters: ['D', 'E', 'F'],
+    currentIndex: 0,
+  },
+  id: 1,
+};
+
+export const ROTOR_2: RotorState = {
+  isAvailable: true,
+  config: {
+    stepIndex: 2,
+    displayedLetters: ['D', 'E', 'F'],
+    mappedLetters: ['G', 'H', 'I'],
+    currentIndex: 0,
+  },
+  id: 2,
+};
+
 function render(ui: ReactElement, options?: CustomRenderOptions) {
   const { preloadedState } = options || {
     preloadedState: {
       rotors: {
-        1: {
-          isAvailable: true,
-          config: {
-            stepIndex: 1,
-            displayedLetters: ['A', 'B', 'C'],
-            mappedLetters: ['D', 'E', 'F'],
-            currentIndex: 0,
-          },
-          id: 1,
-        },
-        2: {
-          isAvailable: true,
-          config: {
-            stepIndex: 2,
-            displayedLetters: ['D', 'E', 'F'],
-            mappedLetters: ['G', 'H', 'I'],
-            currentIndex: 0,
-          },
-          id: 2,
-        },
+        1: ROTOR_1,
+        2: ROTOR_2,
       },
     },
   };
