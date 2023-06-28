@@ -13,6 +13,7 @@ import { addCable } from '../../../../../features/plugboard';
 import { RootState } from '../../../../../store/store';
 import { AddCableModalProps } from '../../../../../types';
 import { SelectLetterButton } from './SelectLetterButton';
+import { rotorStyles } from '../../../../../styles';
 
 export const AddCableModal: FunctionComponent<AddCableModalProps> = ({
   modalVisible,
@@ -40,8 +41,17 @@ export const AddCableModal: FunctionComponent<AddCableModalProps> = ({
       setOutputLetter(null);
     }
   }, [inputLetter, outputLetter]);
+  useEffect(() => {
+    setAvailableLetters([...'ABCDEFGHIJKLMNOPQRSTUVWXYZ'].filter(
+      (letter) => !JSON.stringify(plugboard).includes(letter),
+    ))
+  }, [plugboard])
   return (
-    <Modal visible={modalVisible} onDismiss={() => setModalVisible(false)}>
+    <Modal
+      visible={modalVisible}
+      onDismiss={() => setModalVisible(false)}
+      contentContainerStyle={rotorStyles.selectRotor}
+    >
       <View>
         {inputLetter === null && (
           <SelectLetterButton

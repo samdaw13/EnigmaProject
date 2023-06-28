@@ -24,8 +24,14 @@ export const rotorStyles = StyleSheet.create({
   selectRotor: {
     backgroundColor: 'white',
     padding: 20,
+    marginHorizontal: 50,
+    marginVertical: 30,
   },
   cardComponent: {
     paddingHorizontal: 10,
+  },
+  chip: {
+    flexDirection: 'row',
+    flexWrap: 'wrap'
   },
 });
