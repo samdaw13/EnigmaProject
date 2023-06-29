@@ -6,7 +6,12 @@ import {
   SELECT_INPUT_LETTER,
   SELECT_OUTPUT_LETTER,
 } from '../../../../../constants';
-import { fireEvent, render, screen, within } from '../../../../../utils/test-utils';
+import {
+  fireEvent,
+  render,
+  screen,
+  within,
+} from '../../../../../utils/test-utils';
 import { Plugboard } from './Plugboard';
 
 jest.mock('react-native-paper', () => {
@@ -30,10 +35,14 @@ describe(`Plugboard`, () => {
     fireEvent.press(screen.getByTestId(`${SELECT_OUTPUT_LETTER}1`));
     expect(screen.queryAllByTestId(`BC`)).toHaveLength(1);
     fireEvent.press(screen.getByTestId(ADD_CABLE_MODAL_BUTTON));
-    expect(within(screen.getByTestId(`${SELECT_INPUT_LETTER}1`)).queryAllByText('D')).toHaveLength(1);
+    expect(
+      within(screen.getByTestId(`${SELECT_INPUT_LETTER}1`)).queryAllByText('D'),
+    ).toHaveLength(1);
     fireEvent.press(screen.getByLabelText('Close'));
     expect(screen.queryAllByTestId(`BC`)).toHaveLength(0);
     fireEvent.press(screen.getByTestId(ADD_CABLE_MODAL_BUTTON));
-    expect(within(screen.getByTestId(`${SELECT_INPUT_LETTER}1`)).queryAllByText('B')).toHaveLength(1);
+    expect(
+      within(screen.getByTestId(`${SELECT_INPUT_LETTER}1`)).queryAllByText('B'),
+    ).toHaveLength(1);
   });
 });

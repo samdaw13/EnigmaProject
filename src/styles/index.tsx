@@ -32,6 +32,6 @@ export const rotorStyles = StyleSheet.create({
   },
   chip: {
     flexDirection: 'row',
-    flexWrap: 'wrap'
+    flexWrap: 'wrap',
   },
 });

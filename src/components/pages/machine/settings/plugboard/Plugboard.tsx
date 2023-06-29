@@ -4,11 +4,11 @@ import { Button, Chip, Portal } from 'react-native-paper';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { ADD_CABLE, ADD_CABLE_MODAL_BUTTON } from '../../../../../constants';
+import { removeCable } from '../../../../../features/plugboard';
 import { RootState } from '../../../../../store/store';
+import { rotorStyles } from '../../../../../styles';
 import { plugboardChipText } from '../../../../../utils';
 import { AddCableModal } from './addCableModal';
-import { rotorStyles } from '../../../../../styles';
-import { removeCable } from '../../../../../features/plugboard';
 
 export const Plugboard: FunctionComponent = () => {
   const plugboard = useSelector((state: RootState) => state.plugboard);
@@ -30,18 +30,24 @@ export const Plugboard: FunctionComponent = () => {
       </Button>
       <View style={rotorStyles.chip}>
         {Object.keys(plugboard).map((cable, index) => (
-            <Chip 
-              key={`${cable}${index}`}
-              testID={`${cable}${plugboard[cable]}`}
-              mode='outlined'
-              onClose={() => dispatch(removeCable({inputLetter: cable, outputLetter: plugboard[cable]}))}
-              closeIcon={'close-circle'}
-              style={{margin: 4}}
-            >
-              {plugboardChipText(cable, plugboard[cable])}
-            </Chip>
-          )
-        )}
+          <Chip
+            key={`${cable}${index}`}
+            testID={`${cable}${plugboard[cable]}`}
+            mode='outlined'
+            onClose={() =>
+              dispatch(
+                removeCable({
+                  inputLetter: cable,
+                  outputLetter: plugboard[cable],
+                }),
+              )
+            }
+            closeIcon={'close-circle'}
+            style={{ margin: 4 }}
+          >
+            {plugboardChipText(cable, plugboard[cable])}
+          </Chip>
+        ))}
       </View>
     </View>
   );

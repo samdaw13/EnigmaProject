@@ -11,9 +11,9 @@ import {
 } from '../../../../../constants';
 import { addCable } from '../../../../../features/plugboard';
 import { RootState } from '../../../../../store/store';
+import { rotorStyles } from '../../../../../styles';
 import { AddCableModalProps } from '../../../../../types';
 import { SelectLetterButton } from './SelectLetterButton';
-import { rotorStyles } from '../../../../../styles';
 
 export const AddCableModal: FunctionComponent<AddCableModalProps> = ({
   modalVisible,
@@ -42,10 +42,12 @@ export const AddCableModal: FunctionComponent<AddCableModalProps> = ({
     }
   }, [inputLetter, outputLetter]);
   useEffect(() => {
-    setAvailableLetters([...'ABCDEFGHIJKLMNOPQRSTUVWXYZ'].filter(
-      (letter) => !JSON.stringify(plugboard).includes(letter),
-    ))
-  }, [plugboard])
+    setAvailableLetters(
+      [...'ABCDEFGHIJKLMNOPQRSTUVWXYZ'].filter(
+        (letter) => !JSON.stringify(plugboard).includes(letter),
+      ),
+    );
+  }, [plugboard]);
   return (
     <Modal
       visible={modalVisible}

@@ -1,8 +1,10 @@
+import { NavigationProp, useNavigation } from '@react-navigation/native';
 import { FunctionComponent } from 'react';
 import { View } from 'react-native';
 import { Button } from 'react-native-paper';
-import { useNavigation, NavigationProp } from '@react-navigation/native';
 
+import { Plugboard } from './plugboard';
+import { Rotors } from './rotors';
 
 // Define your stack navigation param list
 type StackParamList = {
@@ -11,11 +13,6 @@ type StackParamList = {
 
 // Define the type of the navigation prop
 type NextScreenNavigationProp = NavigationProp<StackParamList, 'Keyboard'>;
-
-
-
-import { Plugboard } from './plugboard';
-import { Rotors } from './rotors';
 
 export const Settings: FunctionComponent = () => {
   const navigation = useNavigation<NextScreenNavigationProp>();
@@ -26,7 +23,7 @@ export const Settings: FunctionComponent = () => {
     <View>
       <Rotors />
       <Plugboard />
-      <Button onPress={navigateToNextItem} >Encrypt a message</Button>
+      <Button onPress={navigateToNextItem}>Encrypt a message</Button>
     </View>
   );
 };

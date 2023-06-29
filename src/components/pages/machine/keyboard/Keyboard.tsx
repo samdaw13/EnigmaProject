@@ -1,7 +1,7 @@
 import { NavigationProp, useNavigation } from '@react-navigation/native';
 import { FunctionComponent } from 'react';
-import { Button } from 'react-native-paper';
 import { Text, View } from 'react-native';
+import { Button } from 'react-native-paper';
 
 type StackParamList = {
   Keyboard: undefined;
