@@ -1,3 +1,5 @@
+import { NavigationProp } from '@react-navigation/native';
+
 export interface RotorSelectModalProps {
   modalVisible: boolean;
   setModalVisible: React.Dispatch<React.SetStateAction<boolean>>;
@@ -64,3 +66,12 @@ export interface SelectLetterProps {
   displayText: string;
   testID?: string;
 }
+
+export type MachineStackParamList = {
+  Keyboard: undefined;
+};
+
+export type NextScreenNavigationProp = NavigationProp<
+  MachineStackParamList,
+  'Keyboard'
+>;

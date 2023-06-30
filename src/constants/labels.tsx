@@ -6,3 +6,6 @@ export const SELECT_NEW_LETTER = 'Select new letter';
 export const SELECT_INPUT_LETTER_DISPLAY = 'Select input letter';
 export const SELECT_OUTPUT_LETTER_DISPLAY = 'Select output letter';
 export const ADD_CABLE = 'Add cable to plugboard';
+export const ENCRYPT_MESSAGE = 'Encrypt a message';
+export const KEYBOARD = 'Keyboard';
+export const GO_BACK = 'Go back';
