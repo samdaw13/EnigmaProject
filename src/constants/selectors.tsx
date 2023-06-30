@@ -7,3 +7,4 @@ export const BUTTON = 'button';
 export const SELECT_INPUT_LETTER = 'inputLetter';
 export const SELECT_OUTPUT_LETTER = 'outputLetter';
 export const ADD_CABLE_MODAL_BUTTON = 'addCableModal';
+export const KEYBOARD_GO_BACK_BUTTON = 'goBackSettings';
