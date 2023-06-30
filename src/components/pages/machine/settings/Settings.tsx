@@ -3,7 +3,7 @@ import React, { FunctionComponent } from 'react';
 import { View } from 'react-native';
 import { Button } from 'react-native-paper';
 
-import { ENCRYPT_MESSAGE } from '../../../../constants';
+import { ENCRYPT_MESSAGE, ENCRYPT_MESSAGE_BUTTON } from '../../../../constants';
 import { NextScreenNavigationProp } from '../../../../types';
 import { Plugboard } from './plugboard';
 import { Rotors } from './rotors';
@@ -17,7 +17,9 @@ export const Settings: FunctionComponent = () => {
     <View>
       <Rotors />
       <Plugboard />
-      <Button onPress={navigateToNextItem}>{ENCRYPT_MESSAGE}</Button>
+      <Button onPress={navigateToNextItem} testID={ENCRYPT_MESSAGE_BUTTON}>
+        {ENCRYPT_MESSAGE}
+      </Button>
     </View>
   );
 };
