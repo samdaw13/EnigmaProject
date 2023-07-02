@@ -35,3 +35,21 @@ export const rotorStyles = StyleSheet.create({
     flexWrap: 'wrap',
   },
 });
+
+export const keyboardStyles = StyleSheet.create({
+  horizontalRow: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignContent: 'flex-end',
+  },
+  verticalRow: {
+    flexDirection: 'column',
+    justifyContent: 'space-evenly',
+    position: 'absolute',
+    bottom: 0,
+  },
+  key: {
+    justifyContent: 'center',
+    minWidth: '10%',
+  },
+});
