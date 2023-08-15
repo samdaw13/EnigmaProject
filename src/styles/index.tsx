@@ -37,19 +37,31 @@ export const rotorStyles = StyleSheet.create({
 });
 
 export const keyboardStyles = StyleSheet.create({
-  horizontalRow: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignContent: 'flex-end',
-  },
-  verticalRow: {
+  container: {
+    display: 'flex',
     flexDirection: 'column',
-    justifyContent: 'space-evenly',
+    alignItems: 'center',
+    justifyContent: 'flex-end',
+    // backgroundColor: '#080403', TODO: pick a color
     position: 'absolute',
     bottom: 0,
+    right: 0,
+    left: 0,
+    height: 200,
+  },
+  horizontalRow: {
+    display: 'flex',
+    flex: 1,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    
+    
   },
   key: {
+    flexBasis: 37,
+    margin: '0.5%',
     justifyContent: 'center',
-    minWidth: '10%',
+    borderColor: '#525252',
+    borderWidth: 2,
   },
 });
