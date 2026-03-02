@@ -75,3 +75,22 @@ export type NextScreenNavigationProp = NavigationProp<
   MachineStackParamList,
   'Keyboard'
 >;
+
+export interface ReflectorConfig {
+  mapping: string[];
+}
+
+export interface ReflectorState {
+  id: number;
+  name: string;
+  config: ReflectorConfig;
+}
+
+export interface ReflectorsState {
+  reflectors: { [id: number]: ReflectorState };
+  selectedReflectorId: number;
+}
+
+export interface UpdateSelectedReflectorInterface {
+  id: number;
+}
