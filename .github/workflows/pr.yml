@@ -1,0 +1,9 @@
+name: PR Checks
+
+on:
+  pull_request:
+
+jobs:
+  pre-merge-validations:
+    name: Pre-Merge Validations
+    uses: ./.github/workflows/pre-merge-validations.yml
