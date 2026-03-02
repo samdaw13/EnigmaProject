@@ -137,14 +137,24 @@ describe('encryptLetter', () => {
 
   it('symmetry: encrypting the output returns the original letter', () => {
     const encrypted = encryptLetter('A', rotors, emptyPlugboard, reflectorB);
-    const decrypted = encryptLetter(encrypted, rotors, emptyPlugboard, reflectorB);
+    const decrypted = encryptLetter(
+      encrypted,
+      rotors,
+      emptyPlugboard,
+      reflectorB,
+    );
     expect(decrypted).toBe('A');
   });
 
   it('a letter never encrypts to itself', () => {
     // Test all 26 letters
     for (const letter of 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('')) {
-      const encrypted = encryptLetter(letter, rotors, emptyPlugboard, reflectorB);
+      const encrypted = encryptLetter(
+        letter,
+        rotors,
+        emptyPlugboard,
+        reflectorB,
+      );
       expect(encrypted).not.toBe(letter);
     }
   });
@@ -152,7 +162,12 @@ describe('encryptLetter', () => {
   it('plugboard affects the encryption', () => {
     const cables: PlugboardCable = { A: 'B' };
     const withPlugboard = encryptLetter('A', rotors, cables, reflectorB);
-    const withoutPlugboard = encryptLetter('A', rotors, emptyPlugboard, reflectorB);
+    const withoutPlugboard = encryptLetter(
+      'A',
+      rotors,
+      emptyPlugboard,
+      reflectorB,
+    );
     // With plugboard A→B swap, encrypting A should give a different result
     expect(withPlugboard).not.toBe(withoutPlugboard);
   });
@@ -203,7 +218,11 @@ describe('stepRotors', () => {
   });
 
   it('right rotor always steps', () => {
-    const rotors = [makeRotor(1, 16, 0), makeRotor(2, 4, 0), makeRotor(3, 21, 0)];
+    const rotors = [
+      makeRotor(1, 16, 0),
+      makeRotor(2, 4, 0),
+      makeRotor(3, 21, 0),
+    ];
     const result = stepRotors(rotors);
     expect(result[0].config.currentIndex).toBe(1);
     expect(result[1].config.currentIndex).toBe(0);
@@ -211,7 +230,11 @@ describe('stepRotors', () => {
   });
 
   it('middle rotor steps when right rotor is at its notch', () => {
-    const rotors = [makeRotor(1, 16, 16), makeRotor(2, 4, 0), makeRotor(3, 21, 0)];
+    const rotors = [
+      makeRotor(1, 16, 16),
+      makeRotor(2, 4, 0),
+      makeRotor(3, 21, 0),
+    ];
     const result = stepRotors(rotors);
     expect(result[0].config.currentIndex).toBe(17);
     expect(result[1].config.currentIndex).toBe(1);
@@ -219,7 +242,11 @@ describe('stepRotors', () => {
   });
 
   it('left rotor steps when middle rotor is at its notch', () => {
-    const rotors = [makeRotor(1, 16, 0), makeRotor(2, 4, 4), makeRotor(3, 21, 0)];
+    const rotors = [
+      makeRotor(1, 16, 0),
+      makeRotor(2, 4, 4),
+      makeRotor(3, 21, 0),
+    ];
     const result = stepRotors(rotors);
     expect(result[0].config.currentIndex).toBe(1);
     expect(result[1].config.currentIndex).toBe(5);
@@ -228,7 +255,11 @@ describe('stepRotors', () => {
 
   it('double-stepping: middle rotor steps on two consecutive keypresses', () => {
     // First keypress: right rotor reaches its notch, middle rotor steps to its own notch
-    const rotors = [makeRotor(1, 16, 16), makeRotor(2, 4, 3), makeRotor(3, 21, 0)];
+    const rotors = [
+      makeRotor(1, 16, 16),
+      makeRotor(2, 4, 3),
+      makeRotor(3, 21, 0),
+    ];
     const afterFirst = stepRotors(rotors);
     expect(afterFirst[0].config.currentIndex).toBe(17);
     expect(afterFirst[1].config.currentIndex).toBe(4);
@@ -242,13 +273,21 @@ describe('stepRotors', () => {
   });
 
   it('wraps around from 25 to 0', () => {
-    const rotors = [makeRotor(1, 16, 25), makeRotor(2, 4, 0), makeRotor(3, 21, 0)];
+    const rotors = [
+      makeRotor(1, 16, 25),
+      makeRotor(2, 4, 0),
+      makeRotor(3, 21, 0),
+    ];
     const result = stepRotors(rotors);
     expect(result[0].config.currentIndex).toBe(0);
   });
 
   it('does not mutate the original array', () => {
-    const rotors = [makeRotor(1, 16, 0), makeRotor(2, 4, 0), makeRotor(3, 21, 0)];
+    const rotors = [
+      makeRotor(1, 16, 0),
+      makeRotor(2, 4, 0),
+      makeRotor(3, 21, 0),
+    ];
     const originalRight = rotors[0].config.currentIndex;
     stepRotors(rotors);
     expect(rotors[0].config.currentIndex).toBe(originalRight);

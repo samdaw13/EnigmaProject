@@ -13,33 +13,29 @@ export const Keyboard: FunctionComponent = () => {
     ['Y', 'X', 'C', 'V', 'B', 'N', 'M'],
   ];
   return (
-    <View style={{flex: 1}}>
+    <View style={{ flex: 1 }}>
       <Text>{KEYBOARD}</Text>
       <BackButton />
-      
 
-      
-      
-        <View style={keyboardStyles.container}>
-          {keyboardLayout.map((row, rowIndex) => (
-            <View key={rowIndex} style={keyboardStyles.horizontalRow}>
-              {row.map((key, keyIndex) => (
-                <Button
-                  key={keyIndex}
-                  mode='outlined'
-                  compact={true}
-                  style={keyboardStyles.key}
-                  theme={{ roundness: 2 }}
-                  textColor='white'
-                  buttonColor='#8C857F'
-                >
-                  {key}
-                </Button>
-              ))}
-            </View>
-          ))}
-        </View>
-      
+      <View style={keyboardStyles.container}>
+        {keyboardLayout.map((row, rowIndex) => (
+          <View key={rowIndex} style={keyboardStyles.horizontalRow}>
+            {row.map((key, keyIndex) => (
+              <Button
+                key={keyIndex}
+                mode='outlined'
+                compact={true}
+                style={keyboardStyles.key}
+                theme={{ roundness: 2 }}
+                textColor='white'
+                buttonColor='#8C857F'
+              >
+                {key}
+              </Button>
+            ))}
+          </View>
+        ))}
+      </View>
     </View>
   );
 };

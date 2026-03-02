@@ -37,27 +37,33 @@ const applyOffset = (index: number, offset: number, size: number): number =>
 const removeOffset = (index: number, offset: number, size: number): number =>
   (index - offset + size) % size;
 
-const forwardPassThroughRotor = (
-  letter: string,
-  rotor: RotorState,
-): string => {
+const forwardPassThroughRotor = (letter: string, rotor: RotorState): string => {
   const { mappedLetters, currentIndex } = rotor.config;
   const size = mappedLetters.length;
 
-  const shiftedIndex = applyOffset(ALPHABET.indexOf(letter), currentIndex, size);
+  const shiftedIndex = applyOffset(
+    ALPHABET.indexOf(letter),
+    currentIndex,
+    size,
+  );
   const outputLetter = mappedLetters[shiftedIndex];
-  const adjustedIndex = removeOffset(ALPHABET.indexOf(outputLetter), currentIndex, size);
+  const adjustedIndex = removeOffset(
+    ALPHABET.indexOf(outputLetter),
+    currentIndex,
+    size,
+  );
   return ALPHABET[adjustedIndex];
 };
 
-const reversePassThroughRotor = (
-  letter: string,
-  rotor: RotorState,
-): string => {
+const reversePassThroughRotor = (letter: string, rotor: RotorState): string => {
   const { mappedLetters, currentIndex } = rotor.config;
   const size = mappedLetters.length;
 
-  const shiftedIndex = applyOffset(ALPHABET.indexOf(letter), currentIndex, size);
+  const shiftedIndex = applyOffset(
+    ALPHABET.indexOf(letter),
+    currentIndex,
+    size,
+  );
   const letterAtShifted = ALPHABET[shiftedIndex];
   const mappedIndex = mappedLetters.indexOf(letterAtShifted);
   const adjustedIndex = removeOffset(mappedIndex, currentIndex, size);
@@ -106,11 +112,19 @@ export const stepRotors = (rotors: RotorState[]): RotorState[] => {
   return [advanceRotor(right), middle, left];
 };
 
-const passForwardThroughRotors = (signal: string, rotors: RotorState[]): string =>
+const passForwardThroughRotors = (
+  signal: string,
+  rotors: RotorState[],
+): string =>
   rotors.reduce((s, rotor) => passThroughRotor(s, rotor, false), signal);
 
-const passReverseThroughRotors = (signal: string, rotors: RotorState[]): string =>
-  [...rotors].reverse().reduce((s, rotor) => passThroughRotor(s, rotor, true), signal);
+const passReverseThroughRotors = (
+  signal: string,
+  rotors: RotorState[],
+): string =>
+  [...rotors]
+    .reverse()
+    .reduce((s, rotor) => passThroughRotor(s, rotor, true), signal);
 
 export const encryptLetter = (
   letter: string,
