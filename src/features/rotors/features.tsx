@@ -11,7 +11,7 @@ const initialState: RotorsState = {
   1: {
     isAvailable: true,
     config: {
-      stepIndex: 2,
+      stepIndex: 16,
       displayedLetters: 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split(''),
       mappedLetters: 'JGDQOXUSCAMIFRVTPNEWKBLZYH'.split(''),
       currentIndex: 0,
@@ -21,7 +21,7 @@ const initialState: RotorsState = {
   2: {
     isAvailable: true,
     config: {
-      stepIndex: 2,
+      stepIndex: 4,
       displayedLetters: 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split(''),
       mappedLetters: 'NTZPSFBOKMWRCJDIVLAEYUXHGQ'.split(''),
       currentIndex: 0,
@@ -31,7 +31,7 @@ const initialState: RotorsState = {
   3: {
     isAvailable: true,
     config: {
-      stepIndex: 2,
+      stepIndex: 21,
       displayedLetters: 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split(''),
       mappedLetters: 'JVIUBHTCDYAKEQZPOSGXNRMWFL'.split(''),
       currentIndex: 0,
@@ -41,7 +41,7 @@ const initialState: RotorsState = {
   4: {
     isAvailable: true,
     config: {
-      stepIndex: 2,
+      stepIndex: 9,
       displayedLetters: 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split(''),
       mappedLetters: 'QYHOGNECVPUZTFDJAXWMKISRBL'.split(''),
       currentIndex: 0,
@@ -51,7 +51,7 @@ const initialState: RotorsState = {
   5: {
     isAvailable: true,
     config: {
-      stepIndex: 2,
+      stepIndex: 25,
       displayedLetters: 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split(''),
       mappedLetters: 'QWERTZUIOASDFGHJKPYXCVBNML'.split(''),
       currentIndex: 0,
