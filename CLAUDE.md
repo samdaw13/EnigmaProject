@@ -49,3 +49,37 @@ React Native TypeScript app simulating a historical Enigma cipher machine. Users
 - Import sorting enforced via `simple-import-sort` ESLint plugin
 - Single quotes, trailing commas everywhere, arrow parens always
 - Keyboard layout follows German Enigma: `QWERTZUIOP / ASDFGHJKL / YXCVBNM`
+
+### Self-Documenting Code
+- **Never use explanatory comments for code blocks**: If you need a comment to explain what a block of code does, extract it into a well-named function/method instead
+- Function and method names should clearly communicate their purpose
+- Comments should explain *why*, not *what*
+
+### Examples
+
+❌ **Bad:**
+```typescript
+// Check if letter exists as a value in cables and return the key
+let result = letter;
+for (const key in cables) {
+  if (cables[key] === letter) {
+    result = key;
+    break;
+  }
+}
+return result;
+```
+
+✅ **Good:**
+```typescript
+const findReverseCableMapping = (letter: string, cables: PlugboardCable): string | undefined => {
+  for (const key in cables) {
+    if (cables[key] === letter) {
+      return key;
+    }
+  }
+  return undefined;
+};
+
+return findReverseCableMapping(letter, cables) ?? letter;
+```
