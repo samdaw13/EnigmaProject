@@ -13,11 +13,12 @@ import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { Provider } from 'react-redux';
 
 import plugboardReducer from '../features/plugboard';
+import reflectorReducer from '../features/reflector';
 import rotorsReducer from '../features/rotors/features';
 import type { RootState } from '../store/store';
 import { RotorState } from '../types';
 
-type ReducerTypes = Pick<RootState, 'rotors'>;
+type ReducerTypes = Pick<RootState, 'rotors' | 'reflector'>;
 type TStore = EnhancedStore<ReducerTypes>;
 
 type CustomRenderOptions = {
@@ -63,6 +64,7 @@ function render(ui: ReactElement, options?: CustomRenderOptions) {
       reducer: {
         rotors: rotorsReducer,
         plugboard: plugboardReducer,
+        reflector: reflectorReducer,
       },
       preloadedState,
     });
