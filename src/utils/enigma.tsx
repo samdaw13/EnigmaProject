@@ -6,52 +6,72 @@ import {
 
 const ALPHABET = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
 
-export const passThroughPlugboard = (
+const findDirectCableMapping = (
   letter: string,
   cables: PlugboardCable,
-): string => {
-  // Check if letter is a key in the cables
-  if (cables[letter]) {
-    return cables[letter];
-  }
-  // Check if letter is a value in the cables (bidirectional)
+): string | undefined => (cables[letter] ? cables[letter] : undefined);
+
+const findReverseCableMapping = (
+  letter: string,
+  cables: PlugboardCable,
+): string | undefined => {
   for (const key in cables) {
     if (cables[key] === letter) {
       return key;
     }
   }
-  return letter;
+  return undefined;
+};
+
+export const passThroughPlugboard = (
+  letter: string,
+  cables: PlugboardCable,
+): string =>
+  findDirectCableMapping(letter, cables) ??
+  findReverseCableMapping(letter, cables) ??
+  letter;
+
+const applyOffset = (index: number, offset: number, size: number): number =>
+  (index + offset) % size;
+
+const removeOffset = (index: number, offset: number, size: number): number =>
+  (index - offset + size) % size;
+
+const forwardPassThroughRotor = (
+  letter: string,
+  rotor: RotorState,
+): string => {
+  const { mappedLetters, currentIndex } = rotor.config;
+  const size = mappedLetters.length;
+
+  const shiftedIndex = applyOffset(ALPHABET.indexOf(letter), currentIndex, size);
+  const outputLetter = mappedLetters[shiftedIndex];
+  const adjustedIndex = removeOffset(ALPHABET.indexOf(outputLetter), currentIndex, size);
+  return ALPHABET[adjustedIndex];
+};
+
+const reversePassThroughRotor = (
+  letter: string,
+  rotor: RotorState,
+): string => {
+  const { mappedLetters, currentIndex } = rotor.config;
+  const size = mappedLetters.length;
+
+  const shiftedIndex = applyOffset(ALPHABET.indexOf(letter), currentIndex, size);
+  const letterAtShifted = ALPHABET[shiftedIndex];
+  const mappedIndex = mappedLetters.indexOf(letterAtShifted);
+  const adjustedIndex = removeOffset(mappedIndex, currentIndex, size);
+  return ALPHABET[adjustedIndex];
 };
 
 export const passThroughRotor = (
   letter: string,
   rotor: RotorState,
   reverse: boolean,
-): string => {
-  const { displayedLetters, mappedLetters, currentIndex } = rotor.config;
-  const size = displayedLetters.length;
-
-  // Get the index of the input letter in the alphabet
-  const inputIndex = ALPHABET.indexOf(letter);
-
-  // Apply the rotor's current position offset
-  const shiftedIndex = (inputIndex + currentIndex) % size;
-
-  if (!reverse) {
-    // Forward: displayedLetters → mappedLetters
-    const outputLetter = mappedLetters[shiftedIndex];
-    // Remove the offset from the output
-    const outputIndex = ALPHABET.indexOf(outputLetter);
-    const adjustedIndex = (outputIndex - currentIndex + size) % size;
-    return ALPHABET[adjustedIndex];
-  } else {
-    // Reverse: mappedLetters → displayedLetters
-    const letterAtShifted = ALPHABET[shiftedIndex];
-    const mappedIndex = mappedLetters.indexOf(letterAtShifted);
-    const adjustedIndex = (mappedIndex - currentIndex + size) % size;
-    return ALPHABET[adjustedIndex];
-  }
-};
+): string =>
+  reverse
+    ? reversePassThroughRotor(letter, rotor)
+    : forwardPassThroughRotor(letter, rotor);
 
 export const passThroughReflector = (
   letter: string,
@@ -61,30 +81,47 @@ export const passThroughReflector = (
   return reflector.config.mapping[index];
 };
 
+const advanceRotor = (rotor: RotorState): RotorState => ({
+  ...rotor,
+  config: {
+    ...rotor.config,
+    currentIndex: (rotor.config.currentIndex + 1) % 26,
+  },
+});
+
+const isAtNotch = (rotor: RotorState): boolean =>
+  rotor.config.currentIndex === rotor.config.stepIndex;
+
+export const stepRotors = (rotors: RotorState[]): RotorState[] => {
+  const [right, middle, left] = rotors;
+
+  if (isAtNotch(middle)) {
+    return [advanceRotor(right), advanceRotor(middle), advanceRotor(left)];
+  }
+
+  if (isAtNotch(right)) {
+    return [advanceRotor(right), advanceRotor(middle), left];
+  }
+
+  return [advanceRotor(right), middle, left];
+};
+
+const passForwardThroughRotors = (signal: string, rotors: RotorState[]): string =>
+  rotors.reduce((s, rotor) => passThroughRotor(s, rotor, false), signal);
+
+const passReverseThroughRotors = (signal: string, rotors: RotorState[]): string =>
+  [...rotors].reverse().reduce((s, rotor) => passThroughRotor(s, rotor, true), signal);
+
 export const encryptLetter = (
   letter: string,
   rotors: RotorState[],
   plugboard: PlugboardCable,
   reflector: ReflectorState,
 ): string => {
-  // Signal path: plugboard → rotors forward (right to left) → reflector → rotors reverse (left to right) → plugboard
   let signal = passThroughPlugboard(letter, plugboard);
-
-  // Forward pass through rotors (right to left: index 0 is rightmost)
-  for (let i = 0; i < rotors.length; i++) {
-    signal = passThroughRotor(signal, rotors[i], false);
-  }
-
-  // Through reflector
+  signal = passForwardThroughRotors(signal, rotors);
   signal = passThroughReflector(signal, reflector);
-
-  // Reverse pass through rotors (left to right: last rotor first)
-  for (let i = rotors.length - 1; i >= 0; i--) {
-    signal = passThroughRotor(signal, rotors[i], true);
-  }
-
-  // Back through plugboard
+  signal = passReverseThroughRotors(signal, rotors);
   signal = passThroughPlugboard(signal, plugboard);
-
   return signal;
 };

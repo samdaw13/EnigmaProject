@@ -8,13 +8,14 @@ import {
   passThroughPlugboard,
   passThroughReflector,
   passThroughRotor,
+  stepRotors,
 } from './enigma';
 
 // Rotor I from the app's initial state
 const rotorI: RotorState = {
   isAvailable: true,
   config: {
-    stepIndex: 2,
+    stepIndex: 16,
     displayedLetters: 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split(''),
     mappedLetters: 'JGDQOXUSCAMIFRVTPNEWKBLZYH'.split(''),
     currentIndex: 0,
@@ -26,7 +27,7 @@ const rotorI: RotorState = {
 const rotorII: RotorState = {
   isAvailable: true,
   config: {
-    stepIndex: 2,
+    stepIndex: 4,
     displayedLetters: 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split(''),
     mappedLetters: 'NTZPSFBOKMWRCJDIVLAEYUXHGQ'.split(''),
     currentIndex: 0,
@@ -38,7 +39,7 @@ const rotorII: RotorState = {
 const rotorIII: RotorState = {
   isAvailable: true,
   config: {
-    stepIndex: 2,
+    stepIndex: 21,
     displayedLetters: 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split(''),
     mappedLetters: 'JVIUBHTCDYAKEQZPOSGXNRMWFL'.split(''),
     currentIndex: 0,
@@ -182,5 +183,74 @@ describe('encryptLetter', () => {
       reflectorB,
     );
     expect(decrypted).toBe('H');
+  });
+});
+
+describe('stepRotors', () => {
+  const makeRotor = (
+    id: number,
+    stepIndex: number,
+    currentIndex: number,
+  ): RotorState => ({
+    isAvailable: true,
+    config: {
+      stepIndex,
+      displayedLetters: 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split(''),
+      mappedLetters: 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split(''),
+      currentIndex,
+    },
+    id,
+  });
+
+  it('right rotor always steps', () => {
+    const rotors = [makeRotor(1, 16, 0), makeRotor(2, 4, 0), makeRotor(3, 21, 0)];
+    const result = stepRotors(rotors);
+    expect(result[0].config.currentIndex).toBe(1);
+    expect(result[1].config.currentIndex).toBe(0);
+    expect(result[2].config.currentIndex).toBe(0);
+  });
+
+  it('middle rotor steps when right rotor is at its notch', () => {
+    const rotors = [makeRotor(1, 16, 16), makeRotor(2, 4, 0), makeRotor(3, 21, 0)];
+    const result = stepRotors(rotors);
+    expect(result[0].config.currentIndex).toBe(17);
+    expect(result[1].config.currentIndex).toBe(1);
+    expect(result[2].config.currentIndex).toBe(0);
+  });
+
+  it('left rotor steps when middle rotor is at its notch', () => {
+    const rotors = [makeRotor(1, 16, 0), makeRotor(2, 4, 4), makeRotor(3, 21, 0)];
+    const result = stepRotors(rotors);
+    expect(result[0].config.currentIndex).toBe(1);
+    expect(result[1].config.currentIndex).toBe(5);
+    expect(result[2].config.currentIndex).toBe(1);
+  });
+
+  it('double-stepping: middle rotor steps on two consecutive keypresses', () => {
+    // First keypress: right rotor reaches its notch, middle rotor steps to its own notch
+    const rotors = [makeRotor(1, 16, 16), makeRotor(2, 4, 3), makeRotor(3, 21, 0)];
+    const afterFirst = stepRotors(rotors);
+    expect(afterFirst[0].config.currentIndex).toBe(17);
+    expect(afterFirst[1].config.currentIndex).toBe(4);
+    expect(afterFirst[2].config.currentIndex).toBe(0);
+
+    // Second keypress: middle rotor is at its notch, so it steps again (double-step) along with left
+    const afterSecond = stepRotors(afterFirst);
+    expect(afterSecond[0].config.currentIndex).toBe(18);
+    expect(afterSecond[1].config.currentIndex).toBe(5);
+    expect(afterSecond[2].config.currentIndex).toBe(1);
+  });
+
+  it('wraps around from 25 to 0', () => {
+    const rotors = [makeRotor(1, 16, 25), makeRotor(2, 4, 0), makeRotor(3, 21, 0)];
+    const result = stepRotors(rotors);
+    expect(result[0].config.currentIndex).toBe(0);
+  });
+
+  it('does not mutate the original array', () => {
+    const rotors = [makeRotor(1, 16, 0), makeRotor(2, 4, 0), makeRotor(3, 21, 0)];
+    const originalRight = rotors[0].config.currentIndex;
+    stepRotors(rotors);
+    expect(rotors[0].config.currentIndex).toBe(originalRight);
   });
 });
