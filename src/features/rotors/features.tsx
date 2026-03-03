@@ -82,10 +82,7 @@ export const rotorsSlice = createSlice({
       state.available[action.payload.id].config.currentIndex =
         action.payload.currentIndex;
     },
-    setSelectedRotor: (
-      state,
-      action: PayloadAction<SelectedRotorAction>,
-    ) => {
+    setSelectedRotor: (state, action: PayloadAction<SelectedRotorAction>) => {
       state.selectedSlots[action.payload.slotIndex] = action.payload.rotorId;
     },
     clearSelectedRotor: (

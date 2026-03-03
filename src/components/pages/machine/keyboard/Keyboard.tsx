@@ -3,14 +3,16 @@ import { Text, View } from 'react-native';
 import { Button, Chip } from 'react-native-paper';
 import { useDispatch, useSelector } from 'react-redux';
 
-import {
-  MESSAGE_DISPLAY,
-  OUTPUT_LETTER_DISPLAY,
-} from '../../../../constants';
+import { MESSAGE_DISPLAY, OUTPUT_LETTER_DISPLAY } from '../../../../constants';
 import { updateRotorCurrentIndex } from '../../../../features/rotors/features';
 import { RootState } from '../../../../store/store';
 import { keyboardStyles } from '../../../../styles';
-import { encryptLetter, keyboardLetterButton, plugboardChipText, stepRotors } from '../../../../utils';
+import {
+  encryptLetter,
+  keyboardLetterButton,
+  plugboardChipText,
+  stepRotors,
+} from '../../../../utils';
 import { BackButton } from './BackButton';
 
 export const Keyboard: FunctionComponent = () => {
@@ -41,9 +43,7 @@ export const Keyboard: FunctionComponent = () => {
       return;
     }
 
-    const orderedRotors = selectedRotorIds.map(
-      (id) => rotors[id as number],
-    );
+    const orderedRotors = selectedRotorIds.map((id) => rotors[id as number]);
     const steppedRotors = stepRotors(orderedRotors);
 
     steppedRotors.forEach((rotor, index) => {
@@ -82,7 +82,10 @@ export const Keyboard: FunctionComponent = () => {
       </View>
 
       <View style={keyboardStyles.outputContainer}>
-        <Text testID={OUTPUT_LETTER_DISPLAY} style={keyboardStyles.outputLetter}>
+        <Text
+          testID={OUTPUT_LETTER_DISPLAY}
+          style={keyboardStyles.outputLetter}
+        >
           {outputLetter ?? ''}
         </Text>
         <Text testID={MESSAGE_DISPLAY} style={keyboardStyles.messageText}>

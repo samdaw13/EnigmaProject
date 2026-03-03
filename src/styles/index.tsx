@@ -4,7 +4,9 @@ const KEYS_IN_TOP_ROW = 10;
 const KEY_MARGIN = 2;
 const ROW_PADDING = 4;
 const KEY_SIZE =
-  (Dimensions.get('window').width - ROW_PADDING * 2 - KEY_MARGIN * 2 * KEYS_IN_TOP_ROW) /
+  (Dimensions.get('window').width -
+    ROW_PADDING * 2 -
+    KEY_MARGIN * 2 * KEYS_IN_TOP_ROW) /
   KEYS_IN_TOP_ROW;
 
 export const buttonStyles = StyleSheet.create({
