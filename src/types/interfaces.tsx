@@ -27,7 +27,8 @@ export interface RotorState {
 }
 
 export interface RotorsState {
-  [id: number]: RotorState;
+  available: { [id: number]: RotorState };
+  selectedSlots: (number | null)[];
 }
 
 export interface RotorContextInterface {
@@ -93,4 +94,9 @@ export interface ReflectorsState {
 
 export interface UpdateSelectedReflectorInterface {
   id: number;
+}
+
+export interface SelectedRotorAction {
+  slotIndex: number;
+  rotorId: number;
 }

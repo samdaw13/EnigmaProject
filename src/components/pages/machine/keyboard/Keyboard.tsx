@@ -1,9 +1,16 @@
-import React, { FunctionComponent } from 'react';
+import React, { FunctionComponent, useState } from 'react';
 import { Text, View } from 'react-native';
-import { Button } from 'react-native-paper';
+import { Button, Chip } from 'react-native-paper';
+import { useDispatch, useSelector } from 'react-redux';
 
-import { KEYBOARD } from '../../../../constants';
+import {
+  MESSAGE_DISPLAY,
+  OUTPUT_LETTER_DISPLAY,
+} from '../../../../constants';
+import { updateRotorCurrentIndex } from '../../../../features/rotors/features';
+import { RootState } from '../../../../store/store';
 import { keyboardStyles } from '../../../../styles';
+import { encryptLetter, keyboardLetterButton, plugboardChipText, stepRotors } from '../../../../utils';
 import { BackButton } from './BackButton';
 
 export const Keyboard: FunctionComponent = () => {
@@ -12,23 +19,107 @@ export const Keyboard: FunctionComponent = () => {
     ['A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L'],
     ['Y', 'X', 'C', 'V', 'B', 'N', 'M'],
   ];
+
+  const selectedRotorIds = useSelector(
+    (state: RootState) => state.rotors.selectedSlots,
+  );
+  const rotors = useSelector((state: RootState) => state.rotors.available);
+  const plugboard = useSelector((state: RootState) => state.plugboard);
+  const { reflectors, selectedReflectorId } = useSelector(
+    (state: RootState) => state.reflector,
+  );
+  const dispatch = useDispatch();
+
+  const [outputLetter, setOutputLetter] = useState<string | null>(null);
+  const [message, setMessage] = useState('');
+
+  const allRotorsSelected = (): boolean =>
+    selectedRotorIds.every((id) => id !== null);
+
+  const handleKeyPress = (key: string) => {
+    if (!allRotorsSelected()) {
+      return;
+    }
+
+    const orderedRotors = selectedRotorIds.map(
+      (id) => rotors[id as number],
+    );
+    const steppedRotors = stepRotors(orderedRotors);
+
+    steppedRotors.forEach((rotor, index) => {
+      dispatch(
+        updateRotorCurrentIndex({
+          id: selectedRotorIds[index] as number,
+          currentIndex: rotor.config.currentIndex,
+        }),
+      );
+    });
+
+    const reflector = reflectors[selectedReflectorId];
+    const encrypted = encryptLetter(key, steppedRotors, plugboard, reflector);
+    setOutputLetter(encrypted);
+    setMessage((prev) => prev + encrypted);
+  };
+
+  const currentRotorLetter = (slotId: number | null): string => {
+    if (slotId === null) return '-';
+    const rotor = rotors[slotId];
+    return rotor.config.displayedLetters[rotor.config.currentIndex];
+  };
+
   return (
-    <View style={{ flex: 1 }}>
-      <Text>{KEYBOARD}</Text>
+    <View style={keyboardStyles.screen}>
       <BackButton />
+
+      <View style={keyboardStyles.rotorDisplayRow}>
+        {selectedRotorIds.map((slotId, index) => (
+          <View key={index} style={keyboardStyles.rotorWindow}>
+            <Text style={keyboardStyles.rotorWindowText}>
+              {currentRotorLetter(slotId)}
+            </Text>
+          </View>
+        ))}
+      </View>
+
+      <View style={keyboardStyles.outputContainer}>
+        <Text testID={OUTPUT_LETTER_DISPLAY} style={keyboardStyles.outputLetter}>
+          {outputLetter ?? ''}
+        </Text>
+        <Text testID={MESSAGE_DISPLAY} style={keyboardStyles.messageText}>
+          {message}
+        </Text>
+      </View>
+
+      {Object.keys(plugboard).length > 0 && (
+        <View style={keyboardStyles.plugboardRow}>
+          {Object.keys(plugboard).map((cable) => (
+            <Chip
+              key={cable}
+              mode='flat'
+              textStyle={{ color: '#F5F0E8' }}
+              style={keyboardStyles.plugboardChip}
+              theme={{ colors: { secondaryContainer: '#3a3530' } }}
+            >
+              {plugboardChipText(cable, plugboard[cable])}
+            </Chip>
+          ))}
+        </View>
+      )}
 
       <View style={keyboardStyles.container}>
         {keyboardLayout.map((row, rowIndex) => (
           <View key={rowIndex} style={keyboardStyles.horizontalRow}>
-            {row.map((key, keyIndex) => (
+            {row.map((key) => (
               <Button
-                key={keyIndex}
+                key={key}
+                testID={keyboardLetterButton(key)}
                 mode='outlined'
                 compact={true}
                 style={keyboardStyles.key}
-                theme={{ roundness: 2 }}
-                textColor='white'
-                buttonColor='#8C857F'
+                theme={{ roundness: 10 }}
+                textColor='#F5F0E8'
+                buttonColor='#3a3530'
+                onPress={() => handleKeyPress(key)}
               >
                 {key}
               </Button>

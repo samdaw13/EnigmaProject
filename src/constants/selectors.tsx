@@ -9,3 +9,6 @@ export const SELECT_OUTPUT_LETTER = 'outputLetter';
 export const ADD_CABLE_MODAL_BUTTON = 'addCableModal';
 export const KEYBOARD_GO_BACK_BUTTON = 'goBackSettings';
 export const ENCRYPT_MESSAGE_BUTTON = 'goToKeyboardButton';
+export const KEYBOARD_LETTER_BUTTON = 'keyboardLetter';
+export const OUTPUT_LETTER_DISPLAY = 'outputLetterDisplay';
+export const MESSAGE_DISPLAY = 'messageDisplay';

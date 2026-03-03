@@ -18,7 +18,7 @@ import rotorsReducer from '../features/rotors/features';
 import type { RootState } from '../store/store';
 import { RotorState } from '../types';
 
-type ReducerTypes = Pick<RootState, 'rotors' | 'reflector'>;
+type ReducerTypes = Pick<RootState, 'rotors' | 'reflector' | 'plugboard'>;
 type TStore = EnhancedStore<ReducerTypes>;
 
 type CustomRenderOptions = {
@@ -52,8 +52,11 @@ function render(ui: ReactElement, options?: CustomRenderOptions) {
   const { preloadedState } = options || {
     preloadedState: {
       rotors: {
-        1: ROTOR_1,
-        2: ROTOR_2,
+        available: {
+          1: ROTOR_1,
+          2: ROTOR_2,
+        },
+        selectedSlots: [null, null, null],
       },
       plugboard: {},
     },
