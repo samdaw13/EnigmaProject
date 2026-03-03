@@ -16,7 +16,7 @@ export const RotorSelectModal: FunctionComponent<RotorSelectModalProps> = ({
   setRotor,
   currentRotor,
 }) => {
-  const rotors = useSelector((state: RootState) => state.rotors);
+  const rotors = useSelector((state: RootState) => state.rotors.available);
   const dispatch = useDispatch();
   const closeModal = () => {
     setModalVisible(false);

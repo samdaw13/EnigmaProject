@@ -1,4 +1,4 @@
-import { BUTTON, SET_ROTOR_BUTTON } from '../constants';
+import { BUTTON, KEYBOARD_LETTER_BUTTON, SET_ROTOR_BUTTON } from '../constants';
 
 export const currentLetter = (letter: string): string =>
   `Current letter: ${letter}`;
@@ -10,3 +10,5 @@ export const letterButton = (letter: string, rotorId: number): string =>
   `${BUTTON}${letter}${rotorId};`;
 export const plugboardChipText = (input: string, output: string): string =>
   `${input} -> ${output}`;
+export const keyboardLetterButton = (letter: string): string =>
+  `${KEYBOARD_LETTER_BUTTON}_${letter}`;

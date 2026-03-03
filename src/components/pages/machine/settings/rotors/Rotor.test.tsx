@@ -27,7 +27,7 @@ jest.mock('react-native-paper', () => {
 
 describe(`Rotor`, () => {
   const renderComponent = () => {
-    render(<Rotor />);
+    render(<Rotor slotIndex={0} />);
   };
   it(`selects a rotor button updates component with rotor`, () => {
     renderComponent();

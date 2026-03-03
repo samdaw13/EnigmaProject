@@ -7,9 +7,9 @@ import { Rotor } from './Rotor';
 export const Rotors: FunctionComponent = () => {
   return (
     <View style={rotorStyles.container}>
-      <Rotor />
-      <Rotor />
-      <Rotor />
+      <Rotor slotIndex={0} />
+      <Rotor slotIndex={1} />
+      <Rotor slotIndex={2} />
     </View>
   );
 };

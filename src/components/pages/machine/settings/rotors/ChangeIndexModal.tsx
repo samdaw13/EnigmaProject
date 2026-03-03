@@ -16,7 +16,7 @@ export const ChangeIndexModal: FunctionComponent<RotorSelectModalProps> = ({
   currentRotor,
   setRotor,
 }) => {
-  const rotors = useSelector((state: RootState) => state.rotors);
+  const rotors = useSelector((state: RootState) => state.rotors.available);
   const dispatch = useDispatch();
   const closeModal = () => {
     setModalVisible(false);

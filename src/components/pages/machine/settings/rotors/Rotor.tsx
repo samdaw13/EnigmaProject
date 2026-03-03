@@ -13,7 +13,11 @@ import {
   SELECT_ROTOR,
   SET_ROTOR_BUTTON,
 } from '../../../../../constants';
-import { updateRotorAvailability } from '../../../../../features/rotors/features';
+import {
+  clearSelectedRotor,
+  setSelectedRotor as setSelectedRotorAction,
+  updateRotorAvailability,
+} from '../../../../../features/rotors/features';
 import { RootState } from '../../../../../store/store';
 import { rotorStyles } from '../../../../../styles';
 import { RotorState } from '../../../../../types';
@@ -21,8 +25,12 @@ import { currentLetter, currentRotor } from '../../../../../utils';
 import { ChangeIndexModal } from './ChangeIndexModal';
 import { RotorSelectModal } from './RotorSelectModal';
 
-export const Rotor: FunctionComponent = () => {
-  const rotors = useSelector((state: RootState) => state.rotors);
+interface RotorProps {
+  slotIndex: number;
+}
+
+export const Rotor: FunctionComponent<RotorProps> = ({ slotIndex }) => {
+  const rotors = useSelector((state: RootState) => state.rotors.available);
   const [selectedRotor, setSelectedRotor] = useState<RotorState | null>(null);
   const [isSelectModalOpen, setIsSelectModalOpen] = useState(false);
   const [isChangeIndexModalOpen, setIsChangeIndexModalOpen] = useState(false);
@@ -36,7 +44,15 @@ export const Rotor: FunctionComponent = () => {
         updateRotorAvailability({ id: selectedRotor.id, isAvailable: true }),
       );
     setSelectedRotor(null);
+    dispatch(clearSelectedRotor({ slotIndex }));
   };
+  useEffect(() => {
+    if (selectedRotor) {
+      dispatch(
+        setSelectedRotorAction({ slotIndex, rotorId: selectedRotor.id }),
+      );
+    }
+  }, [selectedRotor?.id]);
   useEffect(() => {
     if (selectedRotor) {
       setSelectedRotor(rotors[selectedRotor.id]);
