@@ -8,7 +8,7 @@ import {
   UpdateRotorCurrentIndexInterface,
 } from '../../types';
 
-const initialState: RotorsState = {
+export const initialRotorState: RotorsState = {
   available: {
     1: {
       isAvailable: true,
@@ -66,7 +66,7 @@ const initialState: RotorsState = {
 
 export const rotorsSlice = createSlice({
   name: 'rotors',
-  initialState,
+  initialState: initialRotorState,
   reducers: {
     updateRotorAvailability: (
       state,
