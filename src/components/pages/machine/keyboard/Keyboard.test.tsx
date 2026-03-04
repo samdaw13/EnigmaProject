@@ -1,3 +1,4 @@
+/* eslint-disable testing-library/no-await-sync-events */
 import React from 'react';
 
 import {
@@ -5,8 +6,8 @@ import {
   MESSAGE_DISPLAY,
   OUTPUT_LETTER_DISPLAY,
 } from '../../../../constants';
-import { fireEvent, render, screen } from '../../../../utils';
 import { keyboardLetterButton } from '../../../../utils/string-utils';
+import { fireEvent, render, screen } from '../../../../utils/test-utils';
 import { Keyboard } from './Keyboard';
 
 const mockGoBack = jest.fn();
@@ -22,12 +23,12 @@ jest.mock('@react-navigation/native', () => {
 });
 
 describe('Keyboard', () => {
-  const renderComponent = () => {
-    render(<Keyboard />);
+  const renderComponent = async () => {
+    await render(<Keyboard />);
   };
 
-  const renderWithRotorsSelected = () => {
-    render(<Keyboard />, {
+  const renderWithRotorsSelected = async () => {
+    await render(<Keyboard />, {
       preloadedState: {
         rotors: {
           available: {
@@ -65,42 +66,54 @@ describe('Keyboard', () => {
           selectedSlots: [3, 2, 1],
         },
         plugboard: {},
+        reflector: {
+          reflectors: {
+            1: {
+              id: 1,
+              name: 'Reflector A',
+              config: {
+                mapping: [],
+              },
+            },
+          },
+          selectedReflectorId: 1,
+        },
       },
     });
   };
 
-  it('goes back to previous stack item', () => {
-    renderComponent();
-    fireEvent.press(screen.getByTestId(KEYBOARD_GO_BACK_BUTTON));
+  it('goes back to previous stack item', async () => {
+    await renderComponent();
+    await fireEvent.press(screen.getByTestId(KEYBOARD_GO_BACK_BUTTON));
     expect(mockGoBack).toHaveBeenCalledTimes(1);
   });
 
-  it('does not encrypt when rotors are not selected', () => {
-    renderComponent();
-    fireEvent.press(screen.getByTestId(keyboardLetterButton('A')));
+  it('does not encrypt when rotors are not selected', async () => {
+    await renderComponent();
+    await fireEvent.press(screen.getByTestId(keyboardLetterButton('A')));
     expect(screen.getByTestId(OUTPUT_LETTER_DISPLAY).props.children).toBe('');
     expect(screen.getByTestId(MESSAGE_DISPLAY).props.children).toBe('');
   });
 
-  it('encrypts a letter when all 3 rotors are selected', () => {
-    renderWithRotorsSelected();
-    fireEvent.press(screen.getByTestId(keyboardLetterButton('A')));
+  it('encrypts a letter when all 3 rotors are selected', async () => {
+    await renderWithRotorsSelected();
+    await fireEvent.press(screen.getByTestId(keyboardLetterButton('A')));
     const output = screen.getByTestId(OUTPUT_LETTER_DISPLAY);
     expect(output.props.children).toMatch(/^[A-Z]$/);
     expect(output.props.children).not.toBe('A');
   });
 
-  it('accumulates encrypted letters in the message', () => {
-    renderWithRotorsSelected();
-    fireEvent.press(screen.getByTestId(keyboardLetterButton('A')));
-    fireEvent.press(screen.getByTestId(keyboardLetterButton('A')));
+  it('accumulates encrypted letters in the message', async () => {
+    await renderWithRotorsSelected();
+    await fireEvent.press(screen.getByTestId(keyboardLetterButton('A')));
+    await fireEvent.press(screen.getByTestId(keyboardLetterButton('A')));
     const message = screen.getByTestId(MESSAGE_DISPLAY);
     expect(message.props.children as string).toHaveLength(2);
   });
 
-  it('a letter never encrypts to itself', () => {
-    renderWithRotorsSelected();
-    fireEvent.press(screen.getByTestId(keyboardLetterButton('A')));
+  it('a letter never encrypts to itself', async () => {
+    await renderWithRotorsSelected();
+    await fireEvent.press(screen.getByTestId(keyboardLetterButton('A')));
     const output = screen.getByTestId(OUTPUT_LETTER_DISPLAY);
     expect(output.props.children).not.toBe('A');
   });

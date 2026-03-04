@@ -53,7 +53,7 @@ export const Rotor: FunctionComponent<RotorProps> = ({ slotIndex }) => {
         setSelectedRotorAction({ slotIndex, rotorId: selectedRotor.id }),
       );
     }
-  }, [selectedRotor?.id]);
+  }, [dispatch, selectedRotor, selectedRotor?.id, slotIndex]);
   useEffect(() => {
     if (selectedRotor) {
       setSelectedRotor(rotors[selectedRotor.id]);

@@ -1,5 +1,6 @@
-import React, { PropsWithChildren } from 'react';
-import { View } from 'react-native';
+/* eslint-disable testing-library/no-await-sync-events */
+// THis is due to ESLint both demanding an await and no await for the fireEvents
+import React from 'react';
 
 import {
   CHANGE_LETTER_BUTTON,
@@ -16,53 +17,44 @@ import {
 import { fireEvent, render, screen } from '../../../../../utils/test-utils';
 import { Rotor } from './Rotor';
 
-jest.mock('react-native-paper', () => {
-  const RealModule = jest.requireActual<object>('react-native-paper');
-  const MockedModule = {
-    ...RealModule,
-    Portal: (props: PropsWithChildren) => <View>{props.children}</View>,
-  };
-  return MockedModule;
-});
-
 describe(`Rotor`, () => {
-  const renderComponent = () => {
-    render(<Rotor slotIndex={0} />);
+  const renderComponent = async () => {
+    await render(<Rotor slotIndex={0} />);
   };
-  it(`selects a rotor button updates component with rotor`, () => {
-    renderComponent();
+  it(`selects a rotor button updates component with rotor`, async () => {
+    await renderComponent();
     expect(screen.getAllByText(SELECT_ROTOR)).toHaveLength(1);
-    fireEvent.press(screen.getByTestId(SET_ROTOR_BUTTON));
+    await fireEvent.press(screen.getByTestId(SET_ROTOR_BUTTON));
     expect(screen.getAllByText(SELECT_ROTOR)).toHaveLength(2);
-    fireEvent.press(screen.getByTestId(selectRotorButton(1)));
+    await fireEvent.press(screen.getByTestId(selectRotorButton(1)));
     expect(screen.getAllByText(SELECT_ROTOR)).toHaveLength(1);
     expect(screen.getByText(currentLetter('A'))).toBeTruthy();
   });
-  it(`replaces rotor with different one`, () => {
-    renderComponent();
-    fireEvent.press(screen.getByTestId(SET_ROTOR_BUTTON));
-    fireEvent.press(screen.getByTestId(selectRotorButton(1)));
-    fireEvent.press(screen.getByTestId(REPLACE_ROTOR_BUTTON));
+  it(`replaces rotor with different one`, async () => {
+    await renderComponent();
+    await fireEvent.press(screen.getByTestId(SET_ROTOR_BUTTON));
+    await fireEvent.press(screen.getByTestId(selectRotorButton(1)));
+    await fireEvent.press(screen.getByTestId(REPLACE_ROTOR_BUTTON));
     expect(screen.queryByTestId(selectRotorButton(1))).toBeFalsy();
     expect(screen.getByTestId(selectRotorButton(2))).toBeTruthy();
   });
   it(`updates rotor current letter`, async () => {
-    renderComponent();
-    fireEvent.press(screen.getByTestId(SET_ROTOR_BUTTON));
-    fireEvent.press(screen.getByTestId(selectRotorButton(1)));
+    await renderComponent();
+    await fireEvent.press(screen.getByTestId(SET_ROTOR_BUTTON));
+    await fireEvent.press(screen.getByTestId(selectRotorButton(1)));
     expect(screen.getByText(currentLetter('A'))).toBeTruthy();
-    fireEvent.press(screen.getByTestId(CHANGE_LETTER_BUTTON));
+    await fireEvent.press(screen.getByTestId(CHANGE_LETTER_BUTTON));
     const newLetterBtn = await screen.findByTestId(letterButton('C', 1));
-    fireEvent.press(newLetterBtn);
+    await fireEvent.press(newLetterBtn);
     expect(screen.getByText(currentLetter('C'))).toBeTruthy();
   });
-  it(`removes rotor`, () => {
-    renderComponent();
+  it(`removes rotor`, async () => {
+    await renderComponent();
     expect(screen.queryByText(currentLetter('A'))).toBeFalsy();
-    fireEvent.press(screen.getByTestId(SET_ROTOR_BUTTON));
-    fireEvent.press(screen.getByTestId(selectRotorButton(1)));
+    await fireEvent.press(screen.getByTestId(SET_ROTOR_BUTTON));
+    await fireEvent.press(screen.getByTestId(selectRotorButton(1)));
     expect(screen.getByText(currentLetter('A'))).toBeTruthy();
-    fireEvent.press(screen.getByTestId(REMOVE_ROTOR_BUTTON));
+    await fireEvent.press(screen.getByTestId(REMOVE_ROTOR_BUTTON));
     expect(screen.queryByText(currentLetter('A'))).toBeFalsy();
   });
 });
