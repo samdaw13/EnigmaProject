@@ -1,14 +1,10 @@
-import {
-  configureStore,
-  EmptyObject,
-  EnhancedStore,
-  PreloadedState,
-} from '@reduxjs/toolkit';
+import { configureStore, EnhancedStore } from '@reduxjs/toolkit';
 import {
   render as rtlRender,
   RenderOptions,
 } from '@testing-library/react-native';
 import React, { ReactElement } from 'react';
+import { PaperProvider } from 'react-native-paper';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { Provider } from 'react-redux';
 
@@ -22,7 +18,7 @@ type ReducerTypes = Pick<RootState, 'rotors' | 'reflector' | 'plugboard'>;
 type TStore = EnhancedStore<ReducerTypes>;
 
 type CustomRenderOptions = {
-  preloadedState?: PreloadedState<ReducerTypes & EmptyObject>;
+  preloadedState?: ReducerTypes;
   store?: TStore;
 } & Omit<RenderOptions, 'wrapper'>;
 
@@ -48,7 +44,7 @@ export const ROTOR_2: RotorState = {
   id: 2,
 };
 
-function render(ui: ReactElement, options?: CustomRenderOptions) {
+async function render(ui: ReactElement, options?: CustomRenderOptions) {
   const { preloadedState } = options || {
     preloadedState: {
       rotors: {
@@ -79,12 +75,15 @@ function render(ui: ReactElement, options?: CustomRenderOptions) {
     };
     return (
       <SafeAreaProvider initialMetrics={inset}>
-        <Provider store={store}>{children}</Provider>
+        <Provider store={store}>
+          <PaperProvider>{children}</PaperProvider>
+        </Provider>
       </SafeAreaProvider>
     );
   }
 
-  return rtlRender(ui, { wrapper: Wrapper, ...options });
+  const { preloadedState: _ps, store: _s, ...rtlOptions } = options || {};
+  return await rtlRender(ui, { wrapper: Wrapper, ...rtlOptions });
 }
 
 // re-export everything

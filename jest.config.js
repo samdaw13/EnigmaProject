@@ -1,19 +1,28 @@
 module.exports = {
-  preset: '@testing-library/react-native',
-  transform: {
-    '^.+\\.jsx$': 'ts-jest',
-    '^.+\\.tsx?$': [
-      'ts-jest',
-      {
-        tsconfig: 'tsconfig.spec.json',
-      },
-    ],
-  },
+  preset: 'react-native',
+
   transformIgnorePatterns: [
-    '<rootDir>/node_modules/(?!@react-native|react-native)',
+    'node_modules/(?!(react-native' +
+      '|@react-native' +
+      '|@react-navigation' +
+      '|@reduxjs' +
+      '|react-redux' +
+      '|immer' +
+      '|react-native-paper' +
+      '|react-native-vector-icons' +
+      '|react-native-worklets' +
+      '|react-native-reanimated' +
+      '|react-native-gesture-handler' +
+      '|react-native-screens' +
+      '|react-native-safe-area-context',
+      ')/)',
   ],
+
   moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx', 'json', 'node'],
+
+  setupFiles: ['./jest.setup.js'],
+
   collectCoverage: false,
   collectCoverageFrom: ['src/**/*.tsx'],
-  coverageReporters: ['text']
-}
+  coverageReporters: ['text'],
+};

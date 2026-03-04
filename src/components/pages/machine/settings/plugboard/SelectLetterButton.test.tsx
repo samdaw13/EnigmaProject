@@ -4,14 +4,14 @@ import {
   SELECT_INPUT_LETTER,
   SELECT_INPUT_LETTER_DISPLAY,
 } from '../../../../../constants';
-import { fireEvent, render, screen } from '../../../../../utils';
+import { fireEvent, render, screen } from '../../../../../utils/test-utils';
 import { SelectLetterButton } from './SelectLetterButton';
 
 describe(`SelectLetterButton`, () => {
   const mockSetLetter = jest.fn();
   const mockSetAvailableLetteres = jest.fn();
-  const renderComponent = () => {
-    render(
+  const renderComponent = async () => {
+    await render(
       <SelectLetterButton
         setLetter={mockSetLetter}
         displayText={SELECT_INPUT_LETTER_DISPLAY}
@@ -21,9 +21,10 @@ describe(`SelectLetterButton`, () => {
       />,
     );
   };
-  it(`calls updateLetter function`, () => {
-    renderComponent();
-    fireEvent.press(screen.getByTestId(`${SELECT_INPUT_LETTER}1`));
+  it(`calls updateLetter function`, async () => {
+    await renderComponent();
+    // eslint-disable-next-line testing-library/no-await-sync-events
+    await fireEvent.press(screen.getByTestId(`${SELECT_INPUT_LETTER}1`));
     expect(mockSetLetter).toHaveBeenCalledWith('B');
     expect(mockSetAvailableLetteres).toHaveBeenCalledWith([
       ...'ACDEFGHIJKLMNOPQRSTUVWXYZ',

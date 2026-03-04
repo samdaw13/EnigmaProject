@@ -1,8 +1,7 @@
-import React, { PropsWithChildren } from 'react';
-import { View } from 'react-native';
+import React from 'react';
 
 import { ENCRYPT_MESSAGE_BUTTON } from '../../../../constants';
-import { fireEvent, render, screen } from '../../../../utils';
+import { fireEvent, render, screen } from '../../../../utils/test-utils';
 import { Settings } from './Settings';
 
 const mockNavigate = jest.fn();
@@ -17,22 +16,14 @@ jest.mock('@react-navigation/native', () => {
   };
 });
 
-jest.mock('react-native-paper', () => {
-  const RealModule = jest.requireActual<object>('react-native-paper');
-  const MockedModule = {
-    ...RealModule,
-    Portal: (props: PropsWithChildren) => <View>{props.children}</View>,
-  };
-  return MockedModule;
-});
-
 describe(`Settings`, () => {
-  const renderComponent = () => {
-    render(<Settings />);
+  const renderComponent = async () => {
+    await render(<Settings />);
   };
-  it(`navigates to keyboard`, () => {
-    renderComponent();
-    fireEvent.press(screen.getByTestId(ENCRYPT_MESSAGE_BUTTON));
+  it(`navigates to keyboard`, async () => {
+    await renderComponent();
+    // eslint-disable-next-line testing-library/no-await-sync-events
+    await fireEvent.press(screen.getByTestId(ENCRYPT_MESSAGE_BUTTON));
     expect(mockNavigate).toHaveBeenCalledTimes(1);
     expect(mockNavigate).toHaveBeenCalledWith('Keyboard');
   });
