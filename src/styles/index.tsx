@@ -1,5 +1,7 @@
 import { Dimensions, StyleSheet } from 'react-native';
 
+import { colors } from '../theme/colors';
+
 const KEYS_IN_TOP_ROW = 10;
 const KEY_MARGIN = 2;
 const ROW_PADDING = 4;
@@ -31,7 +33,7 @@ export const rotorStyles = StyleSheet.create({
     paddingHorizontal: 0,
   },
   selectRotor: {
-    backgroundColor: 'white',
+    backgroundColor: colors.surface,
     padding: 20,
     marginHorizontal: 50,
     marginVertical: 30,
@@ -48,7 +50,7 @@ export const rotorStyles = StyleSheet.create({
 export const keyboardStyles = StyleSheet.create({
   screen: {
     flex: 1,
-    backgroundColor: '#1a1a1a',
+    backgroundColor: colors.background,
   },
   container: {
     flexDirection: 'column',
@@ -70,7 +72,7 @@ export const keyboardStyles = StyleSheet.create({
     marginVertical: 3,
     justifyContent: 'center',
     paddingHorizontal: 0,
-    borderColor: '#5a534d',
+    borderColor: colors.border,
     borderWidth: 1.5,
   },
   outputContainer: {
@@ -82,11 +84,11 @@ export const keyboardStyles = StyleSheet.create({
   outputLetter: {
     fontSize: 48,
     fontWeight: 'bold',
-    color: '#FFD700',
+    color: colors.accent,
   },
   messageText: {
     fontSize: 16,
-    color: '#E0E0E0',
+    color: colors.textSecondary,
     letterSpacing: 2,
     paddingHorizontal: 10,
     marginTop: 12,
@@ -101,14 +103,14 @@ export const keyboardStyles = StyleSheet.create({
     width: 36,
     height: 36,
     borderRadius: 6,
-    backgroundColor: '#2a2a2a',
-    borderColor: '#5a534d',
+    backgroundColor: colors.surface,
+    borderColor: colors.border,
     borderWidth: 1,
     alignItems: 'center',
     justifyContent: 'center',
   },
   rotorWindowText: {
-    color: '#F5F0E8',
+    color: colors.textPrimary,
     fontWeight: 'bold',
     fontSize: 18,
   },
@@ -121,7 +123,7 @@ export const keyboardStyles = StyleSheet.create({
   },
   plugboardChip: {
     margin: 3,
-    borderColor: '#5a534d',
+    borderColor: colors.border,
     borderWidth: 1,
   },
 });

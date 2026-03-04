@@ -7,6 +7,7 @@ import { MESSAGE_DISPLAY, OUTPUT_LETTER_DISPLAY } from '../../../../constants';
 import { updateRotorCurrentIndex } from '../../../../features/rotors/features';
 import { RootState } from '../../../../store/store';
 import { keyboardStyles } from '../../../../styles';
+import { colors } from '../../../../theme/colors';
 import {
   encryptLetter,
   keyboardLetterButton,
@@ -99,9 +100,9 @@ export const Keyboard: FunctionComponent = () => {
             <Chip
               key={cable}
               mode='flat'
-              textStyle={{ color: '#F5F0E8' }}
+              textStyle={{ color: colors.textPrimary }}
               style={keyboardStyles.plugboardChip}
-              theme={{ colors: { secondaryContainer: '#3a3530' } }}
+              theme={{ colors: { secondaryContainer: colors.surfaceAlt } }}
             >
               {plugboardChipText(cable, plugboard[cable])}
             </Chip>
@@ -120,8 +121,8 @@ export const Keyboard: FunctionComponent = () => {
                 compact={true}
                 style={keyboardStyles.key}
                 theme={{ roundness: 10 }}
-                textColor='#F5F0E8'
-                buttonColor='#3a3530'
+                textColor={colors.textPrimary}
+                buttonColor={colors.surfaceAlt}
                 onPress={() => handleKeyPress(key)}
               >
                 {key}

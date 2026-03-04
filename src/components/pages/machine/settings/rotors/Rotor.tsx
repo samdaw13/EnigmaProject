@@ -20,6 +20,7 @@ import {
 } from '../../../../../features/rotors/features';
 import { RootState } from '../../../../../store/store';
 import { rotorStyles } from '../../../../../styles';
+import { colors } from '../../../../../theme/colors';
 import { RotorState } from '../../../../../types';
 import { currentLetter, currentRotor } from '../../../../../utils';
 import { ChangeIndexModal } from './ChangeIndexModal';
@@ -92,7 +93,7 @@ export const Rotor: FunctionComponent<RotorProps> = ({ slotIndex }) => {
                   testID={REMOVE_ROTOR_BUTTON}
                   icon='close-circle'
                   mode='contained-tonal'
-                  iconColor='#9c2a2a'
+                  iconColor={colors.destructive}
                   onPress={removeRotor}
                 />
               )}

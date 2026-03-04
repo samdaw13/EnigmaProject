@@ -1,10 +1,23 @@
 import { FunctionComponent } from 'react';
-import { Text, View } from 'react-native';
+import { StyleSheet, Text, View } from 'react-native';
+
+import { colors } from '../../../theme/colors';
+
+const styles = StyleSheet.create({
+  screen: {
+    flex: 1,
+    backgroundColor: colors.background,
+    padding: 16,
+  },
+  text: {
+    color: colors.textPrimary,
+  },
+});
 
 export const BreakCipher: FunctionComponent = () => {
   return (
-    <View>
-      <Text>Break a cipher</Text>
+    <View style={styles.screen}>
+      <Text style={styles.text}>Break a cipher</Text>
     </View>
   );
 };
