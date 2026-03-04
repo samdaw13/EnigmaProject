@@ -3,7 +3,7 @@ import { createSlice } from '@reduxjs/toolkit';
 
 import { ReflectorsState, UpdateSelectedReflectorInterface } from '../../types';
 
-const initialState: ReflectorsState = {
+export const initialReflectorState: ReflectorsState = {
   reflectors: {
     1: {
       id: 1,
@@ -32,7 +32,7 @@ const initialState: ReflectorsState = {
 
 export const reflectorSlice = createSlice({
   name: 'reflector',
-  initialState,
+  initialState: initialReflectorState,
   reducers: {
     selectReflector: (
       state,

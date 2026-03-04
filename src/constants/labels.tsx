@@ -9,3 +9,24 @@ export const ADD_CABLE = 'Add cable to plugboard';
 export const ENCRYPT_MESSAGE = 'Encrypt a message';
 export const KEYBOARD = 'Keyboard';
 export const GO_BACK = 'Go back';
+
+export const BREAK_CIPHER_TITLE = 'Break Cipher';
+export const BRUTE_FORCE_TAB = 'Brute Force';
+export const CRIB_ANALYSIS_TAB = 'Crib Analysis';
+export const CIPHERTEXT_LABEL = 'Ciphertext';
+export const KNOWN_PLAINTEXT_LABEL = 'Known plaintext';
+export const CRIB_LABEL = 'Crib (suspected word)';
+export const RUN_ANALYSIS = 'Run';
+export const RUNNING_ANALYSIS = 'Running...';
+export const NO_RESULTS = 'No results found';
+export const SEARCHING_LABEL = 'Searching...';
+export const RESULTS_TITLE = 'Results';
+export const ROTOR_ORDER_LABEL = 'Rotors';
+export const REFLECTOR_LABEL = 'Reflector';
+export const POSITIONS_LABEL = 'Positions';
+export const VALID_POSITIONS_LABEL = 'Valid crib positions';
+export const POSITION_LABEL = 'Position';
+export const KNOWN_PLAINTEXT_HINT =
+  'Both methods require some known or suspected plaintext';
+export const COMMON_CRIBS_HINT = 'Common cribs: WETTER, KEINE, OBERKOMMANDO';
+export const TAP_TO_EXPAND = 'Tap a position to see alignment';

@@ -12,3 +12,14 @@ export const ENCRYPT_MESSAGE_BUTTON = 'goToKeyboardButton';
 export const KEYBOARD_LETTER_BUTTON = 'keyboardLetter';
 export const OUTPUT_LETTER_DISPLAY = 'outputLetterDisplay';
 export const MESSAGE_DISPLAY = 'messageDisplay';
+
+export const CIPHERTEXT_INPUT = 'ciphertextInput';
+export const PLAINTEXT_INPUT = 'plaintextInput';
+export const CRIB_INPUT = 'cribInput';
+export const RUN_ANALYSIS_BUTTON = 'runAnalysisButton';
+export const BRUTE_FORCE_TAB_BUTTON = 'bruteForceTab';
+export const CRIB_ANALYSIS_TAB_BUTTON = 'cribAnalysisTab';
+export const RESULTS_CONTAINER = 'resultsContainer';
+export const SEARCHING_INDICATOR = 'searchingIndicator';
+export const PROGRESS_BAR = 'progressBar';
+export const CRIB_POSITION_CARD = 'cribPositionCard';
