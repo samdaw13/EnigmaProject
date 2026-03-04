@@ -7,6 +7,7 @@ import { ADD_CABLE, ADD_CABLE_MODAL_BUTTON } from '../../../../../constants';
 import { removeCable } from '../../../../../features/plugboard';
 import { RootState } from '../../../../../store/store';
 import { rotorStyles } from '../../../../../styles';
+import { colors } from '../../../../../theme/colors';
 import { plugboardChipText } from '../../../../../utils';
 import { AddCableModal } from './addCableModal';
 
@@ -43,7 +44,8 @@ export const Plugboard: FunctionComponent = () => {
               )
             }
             closeIcon={'close-circle'}
-            style={{ margin: 4 }}
+            style={{ margin: 4, borderColor: colors.border }}
+            textStyle={{ color: colors.textPrimary }}
           >
             {plugboardChipText(cable, plugboard[cable])}
           </Chip>
