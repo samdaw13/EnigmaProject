@@ -2,6 +2,8 @@ import js from '@eslint/js';
 import importPlugin from 'eslint-plugin-import';
 import jest from 'eslint-plugin-jest';
 import prettier from 'eslint-plugin-prettier/recommended';
+import react from 'eslint-plugin-react';
+import reactHooks from 'eslint-plugin-react-hooks';
 import simpleImportSort from 'eslint-plugin-simple-import-sort';
 import testingLibrary from 'eslint-plugin-testing-library';
 import tseslint from 'typescript-eslint';
@@ -41,6 +43,17 @@ export default tseslint.config(
       'testing-library/no-await-sync-queries': 'error',
       'testing-library/no-debugging-utils': 'warn',
       'testing-library/no-dom-import': 'off',
+    },
+  },
+  react.configs.flat.recommended,
+  reactHooks.configs.flat['recommended-latest'],
+  {
+    settings: {
+      react: { version: 'detect' },
+    },
+    rules: {
+      'react/no-unstable-nested-components': ['error', { allowAsProps: true }],
+      'react-hooks/set-state-in-effect': 'warn',
     },
   },
   {
