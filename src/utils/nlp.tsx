@@ -366,11 +366,46 @@ const QUADGRAMS: Record<string, number> = {
   INSI: -8.8,
   INST: -8.82,
   INTA: -8.84,
+
+  // Gap-fill: common English quadgrams missing from the original table
+  HERE: -3.2,
+  OTHE: -3.1,
+  EVER: -3.3,
+  NDER: -3.6,
+  INTE: -3.5,
+  ATHE: -3.7,
+  LAND: -3.9,
+  HAND: -3.8,
+  HELL: -3.9,
+  NATI: -3.8,
+  ELLO: -4.3,
+  EATH: -4.1,
+  ATER: -3.9,
+  IVER: -4.5,
+  STAN: -4.2,
+  TAND: -4.3,
+  IEVE: -5.0,
+  LIEV: -5.1,
+  COMM: -4.5,
+  MAND: -4.7,
+  LLOW: -4.9,
+  WORL: -5.1,
+  ORLD: -5.5,
+  RESS: -5.0,
+  EFOR: -5.0,
+  AFTE: -5.0,
+  FTER: -5.1,
+  ENOU: -5.2,
+  NOWN: -5.3,
+  HAVI: -5.4,
+  ATTA: -5.5,
 };
 
-const QUADGRAM_FLOOR = -9.0;
+const QUADGRAM_FLOOR = -6.5;
 const NLP_SCORE_BEST = -2.5;
 const NLP_SCORE_WORST = -9.0;
+const IOC_WORST = 0.038;
+const IOC_BEST = 0.07;
 
 export const computeIoC = (text: string): number => {
   if (text.length < 2) return 0;
@@ -399,8 +434,20 @@ export const scoreQuadgrams = (text: string): number => {
 };
 
 export const nlpConfidence = (text: string): number => {
-  const score = scoreQuadgrams(text);
-  const normalized =
-    (score - NLP_SCORE_WORST) / (NLP_SCORE_BEST - NLP_SCORE_WORST);
-  return Math.round(Math.min(1, Math.max(0, normalized)) * 100);
+  const ioc = computeIoC(text);
+  const iocScore = Math.min(
+    1,
+    Math.max(0, (ioc - IOC_WORST) / (IOC_BEST - IOC_WORST)),
+  );
+
+  const quadgramScore = scoreQuadgrams(text);
+  const qScore = Math.min(
+    1,
+    Math.max(
+      0,
+      (quadgramScore - NLP_SCORE_WORST) / (NLP_SCORE_BEST - NLP_SCORE_WORST),
+    ),
+  );
+
+  return Math.round((0.4 * iocScore + 0.6 * qScore) * 100);
 };

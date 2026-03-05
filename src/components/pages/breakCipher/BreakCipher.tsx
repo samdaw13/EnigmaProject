@@ -100,18 +100,35 @@ const RunButton: FunctionComponent<{
   disabled: boolean;
   onPress: () => void;
 }> = ({ isSearching, progress, disabled, onPress }) => {
+  const [buttonWidth, setButtonWidth] = useState(0);
+
   if (isSearching) {
     const statusLabel = progress >= 1 ? RANKING_RESULTS_LABEL : SEARCHING_LABEL;
+    const fillWidth = Math.min(Math.round(progress * buttonWidth), buttonWidth);
     return (
-      <View testID={RUN_ANALYSIS_BUTTON} style={styles.progressButton}>
+      <View
+        testID={RUN_ANALYSIS_BUTTON}
+        style={styles.progressButton}
+        onLayout={(e) => setButtonWidth(e.nativeEvent.layout.width)}
+      >
+        <Text
+          style={[styles.progressButtonLabel, { color: colors.textPrimary }]}
+        >
+          {statusLabel}
+        </Text>
         <View
           testID={PROGRESS_BAR}
-          style={[
-            styles.progressButtonFill,
-            { width: `${Math.min(Math.round(progress * 100), 100)}%` },
-          ]}
+          style={[styles.progressButtonFill, { width: fillWidth }]}
         />
-        <Text style={styles.progressButtonLabel}>{statusLabel}</Text>
+        <View style={[styles.progressButtonTextClip, { width: fillWidth }]}>
+          <View style={{ width: buttonWidth, alignItems: 'center' }}>
+            <Text
+              style={[styles.progressButtonLabel, { color: colors.background }]}
+            >
+              {statusLabel}
+            </Text>
+          </View>
+        </View>
       </View>
     );
   }
@@ -535,10 +552,17 @@ const styles = StyleSheet.create({
     backgroundColor: colors.accent,
   },
   progressButtonLabel: {
-    color: colors.textPrimary,
     fontSize: 13,
     fontWeight: 'bold',
     letterSpacing: 0.5,
+  },
+  progressButtonTextClip: {
+    position: 'absolute',
+    left: 0,
+    top: 0,
+    bottom: 0,
+    overflow: 'hidden',
+    justifyContent: 'center',
   },
   cancelButton: {
     marginTop: 4,
