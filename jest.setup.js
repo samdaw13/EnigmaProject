@@ -12,6 +12,11 @@ jest.mock('@react-native-async-storage/async-storage', () =>
   require('@react-native-async-storage/async-storage/jest/async-storage-mock'),
 );
 
+jest.mock('@react-native-clipboard/clipboard', () => ({
+  __esModule: true,
+  default: { setString: jest.fn() },
+}));
+
 jest.mock('react-native-paper', () => {
   const RealModule = jest.requireActual('react-native-paper');
   const React = require('react');

@@ -15,6 +15,7 @@ import {
   plugboardChipText,
   stepRotors,
 } from '../../../../utils';
+import { CopyButton } from '../../../common';
 import { BackButton } from './BackButton';
 
 export const Keyboard: FunctionComponent = () => {
@@ -95,6 +96,7 @@ export const Keyboard: FunctionComponent = () => {
         <Text testID={MESSAGE_DISPLAY} style={keyboardStyles.messageText}>
           {message}
         </Text>
+        {message.length > 0 && <CopyButton text={message} />}
       </View>
 
       {Object.keys(plugboard).length > 0 && (

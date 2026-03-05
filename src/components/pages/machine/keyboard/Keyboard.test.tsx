@@ -1,6 +1,7 @@
 import React from 'react';
 
 import {
+  COPY_MESSAGE_BUTTON,
   KEYBOARD_GO_BACK_BUTTON,
   MESSAGE_DISPLAY,
   OUTPUT_LETTER_DISPLAY,
@@ -115,5 +116,16 @@ describe('Keyboard', () => {
     await fireEvent.press(screen.getByTestId(keyboardLetterButton('A')));
     const output = screen.getByTestId(OUTPUT_LETTER_DISPLAY);
     expect(output.props.children).not.toBe('A');
+  });
+
+  it('does not show copy button when message is empty', async () => {
+    await renderComponent();
+    expect(screen.queryByTestId(COPY_MESSAGE_BUTTON)).toBeNull();
+  });
+
+  it('shows copy button after a letter is encrypted', async () => {
+    await renderWithRotorsSelected();
+    await fireEvent.press(screen.getByTestId(keyboardLetterButton('A')));
+    expect(screen.getByTestId(COPY_MESSAGE_BUTTON)).toBeTruthy();
   });
 });

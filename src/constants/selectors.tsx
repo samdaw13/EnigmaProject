@@ -27,3 +27,4 @@ export const BRUTE_FORCE_RESULT_CARD = 'bruteForceResultCard';
 export const DECRYPTED_TEXT_DISPLAY = 'decryptedTextDisplay';
 export const NLP_SCORE_DISPLAY = 'nlpScoreDisplay';
 export const CANCEL_SEARCH_BUTTON = 'cancelSearchButton';
+export const COPY_MESSAGE_BUTTON = 'copyMessageButton';
