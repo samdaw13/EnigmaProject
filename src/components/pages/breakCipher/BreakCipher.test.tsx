@@ -299,4 +299,29 @@ describe('BreakCipher', () => {
     await fireEvent.press(screen.getByTestId(RUN_ANALYSIS_BUTTON));
     expect(mockBruteForceSearchAsync).not.toHaveBeenCalled();
   });
+
+  it('sanitizes ciphertext input to uppercase alpha only', async () => {
+    await render(<BreakCipher />);
+    await fireEvent.changeText(
+      screen.getByTestId(CIPHERTEXT_INPUT),
+      'abc 123!',
+    );
+    expect(screen.getByTestId(CIPHERTEXT_INPUT).props.value).toBe('ABC');
+  });
+
+  it('sanitizes plaintext input to uppercase alpha only', async () => {
+    await render(<BreakCipher />);
+    await fireEvent.changeText(
+      screen.getByTestId(PLAINTEXT_INPUT),
+      'hello world',
+    );
+    expect(screen.getByTestId(PLAINTEXT_INPUT).props.value).toBe('HELLOWORLD');
+  });
+
+  it('sanitizes crib input to uppercase alpha only', async () => {
+    await render(<BreakCipher />);
+    await fireEvent.press(screen.getByTestId(CRIB_ANALYSIS_TAB_BUTTON));
+    await fireEvent.changeText(screen.getByTestId(CRIB_INPUT), 'cr1b!');
+    expect(screen.getByTestId(CRIB_INPUT).props.value).toBe('CRB');
+  });
 });

@@ -557,7 +557,7 @@ export const BreakCipher: FunctionComponent = () => {
         testID={CIPHERTEXT_INPUT}
         label={CIPHERTEXT_LABEL}
         value={ciphertext}
-        onChangeText={setCiphertext}
+        onChangeText={(text) => setCiphertext(sanitizeInput(text))}
         mode='outlined'
         autoCapitalize='characters'
         style={styles.input}
@@ -572,7 +572,7 @@ export const BreakCipher: FunctionComponent = () => {
           testID={PLAINTEXT_INPUT}
           label={KNOWN_PLAINTEXT_LABEL}
           value={plaintext}
-          onChangeText={setPlaintext}
+          onChangeText={(text) => setPlaintext(sanitizeInput(text))}
           mode='outlined'
           autoCapitalize='characters'
           style={styles.input}
@@ -586,7 +586,7 @@ export const BreakCipher: FunctionComponent = () => {
           testID={CRIB_INPUT}
           label={CRIB_LABEL}
           value={crib}
-          onChangeText={setCrib}
+          onChangeText={(text) => setCrib(sanitizeInput(text))}
           mode='outlined'
           autoCapitalize='characters'
           style={styles.input}
