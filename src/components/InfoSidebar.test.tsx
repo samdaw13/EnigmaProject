@@ -28,7 +28,7 @@ describe('InfoSidebar', () => {
     await render(
       <InfoSidebar {...defaultProps} visible onDismiss={onDismiss} />,
     );
-    fireEvent.press(screen.getByTestId(INFO_SIDEBAR_CLOSE));
+    await fireEvent.press(screen.getByTestId(INFO_SIDEBAR_CLOSE));
     await waitFor(() => expect(onDismiss).toHaveBeenCalledTimes(1));
   });
 });

@@ -67,8 +67,8 @@ import {
   cribSearchAsync,
   findCribPositions,
 } from '../../../utils/codebreaking';
-import { InfoSidebar } from '../../InfoSidebar';
 import { CopyButton } from '../../common';
+import { InfoSidebar } from '../../InfoSidebar';
 
 type Tab = 'bruteForce' | 'cribAnalysis';
 
