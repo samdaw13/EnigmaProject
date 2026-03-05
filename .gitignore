@@ -63,3 +63,5 @@ yarn-error.log
 .metro-health-check*
 
 **settings.local.json
+
+.env
