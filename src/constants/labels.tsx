@@ -9,6 +9,8 @@ export const ADD_CABLE = 'Add cable to plugboard';
 export const ENCRYPT_MESSAGE = 'Encrypt a message';
 export const KEYBOARD = 'Keyboard';
 export const GO_BACK = 'Go back';
+export const COPY_MESSAGE = 'Copy';
+export const COPIED_MESSAGE = 'Copied!';
 
 export const BREAK_CIPHER_TITLE = 'Break Cipher';
 export const BRUTE_FORCE_TAB = 'Brute Force';
