@@ -1,6 +1,6 @@
 import { Dimensions, StyleSheet } from 'react-native';
 
-import { ColorPalette } from '../theme/colors';
+import type { ColorPalette } from '../theme/colors';
 
 const KEYS_IN_TOP_ROW = 10;
 const KEY_MARGIN = 2;

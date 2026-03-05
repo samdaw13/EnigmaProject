@@ -45,7 +45,7 @@ import {
 } from '../../../constants/selectors';
 import { initialReflectorState } from '../../../features/reflector';
 import { initialRotorState } from '../../../features/rotors/features';
-import { ColorPalette } from '../../../theme/colors';
+import type { ColorPalette } from '../../../theme/colors';
 import { useThemeColors } from '../../../theme/useThemeColors';
 import type {
   BruteForceResult,

@@ -11,7 +11,7 @@ import {
   ABOUT_HOW_IT_WORKS_HEADING,
   ABOUT_TITLE,
 } from '../../../constants/labels';
-import { ColorPalette } from '../../../theme/colors';
+import type { ColorPalette } from '../../../theme/colors';
 import { useThemeColors } from '../../../theme/useThemeColors';
 
 const makeStyles = (colors: ColorPalette) =>

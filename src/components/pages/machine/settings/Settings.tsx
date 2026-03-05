@@ -5,7 +5,7 @@ import { StyleSheet, View } from 'react-native';
 import { Button } from 'react-native-paper';
 
 import { ENCRYPT_MESSAGE, ENCRYPT_MESSAGE_BUTTON } from '../../../../constants';
-import { ColorPalette } from '../../../../theme/colors';
+import type { ColorPalette } from '../../../../theme/colors';
 import { useThemeColors } from '../../../../theme/useThemeColors';
 import type { NextScreenNavigationProp } from '../../../../types';
 import { Plugboard } from './plugboard';

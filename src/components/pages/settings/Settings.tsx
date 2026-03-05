@@ -21,7 +21,7 @@ import { clearPlugboard } from '../../../features/plugboard';
 import { resetRotors } from '../../../features/rotors/features';
 import { persistSettings, setTheme } from '../../../features/settings';
 import type { AppDispatch, RootState } from '../../../store/store';
-import { ColorPalette } from '../../../theme/colors';
+import type { ColorPalette } from '../../../theme/colors';
 import { useThemeColors } from '../../../theme/useThemeColors';
 import type { Theme } from '../../../types';
 

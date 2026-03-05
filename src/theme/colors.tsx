@@ -1,4 +1,4 @@
-import { Theme } from '../types';
+import type { Theme } from '../types';
 
 export interface ColorPalette {
   background: string;

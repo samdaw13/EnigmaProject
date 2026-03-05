@@ -1,9 +1,9 @@
 import { useSelector } from 'react-redux';
 
-import { RootState } from '../store/store';
-import { ColorPalette, getColors } from './colors';
+import type { RootState } from '../store/store';
+import { getColors } from './colors';
 
-export const useThemeColors = (): ColorPalette => {
+export const useThemeColors = () => {
   const theme = useSelector((state: RootState) => state.settings.theme);
   return getColors(theme);
 };
