@@ -33,6 +33,7 @@ import {
   BRUTE_FORCE_TAB_BUTTON,
   CANCEL_SEARCH_BUTTON,
   CIPHERTEXT_INPUT,
+  COPY_MESSAGE_BUTTON,
   CRIB_ANALYSIS_TAB_BUTTON,
   CRIB_INPUT,
   CRIB_POSITION_CARD,
@@ -56,6 +57,7 @@ import {
   cribSearchAsync,
   findCribPositions,
 } from '../../../utils/codebreaking';
+import { CopyButton } from '../../common';
 
 type Tab = 'bruteForce' | 'cribAnalysis';
 
@@ -303,6 +305,10 @@ const BruteForceResults: FunctionComponent<{
             {DECRYPTED_TEXT_LABEL}: {result.decryptedText}
           </Text>
           <NlpBadge score={result.nlpScore} testIdSuffix={String(index)} />
+          <CopyButton
+            text={result.decryptedText}
+            testID={`${COPY_MESSAGE_BUTTON}_${index}`}
+          />
         </View>
       ))}
     </View>
@@ -343,6 +349,10 @@ const CribSearchResults: FunctionComponent<{
             {DECRYPTED_TEXT_LABEL}: {result.decryptedText}
           </Text>
           <NlpBadge score={result.nlpScore} testIdSuffix={String(index)} />
+          <CopyButton
+            text={result.decryptedText}
+            testID={`${COPY_MESSAGE_BUTTON}_${index}`}
+          />
         </View>
       ))}
     </View>

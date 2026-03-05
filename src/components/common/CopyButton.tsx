@@ -12,9 +12,13 @@ import { useThemeColors } from '../../theme/useThemeColors';
 
 interface CopyButtonProps {
   text: string;
+  testID?: string;
 }
 
-export const CopyButton: FunctionComponent<CopyButtonProps> = ({ text }) => {
+export const CopyButton: FunctionComponent<CopyButtonProps> = ({
+  text,
+  testID = COPY_MESSAGE_BUTTON,
+}) => {
   const [copied, setCopied] = useState(false);
   const colors = useThemeColors();
 
@@ -26,7 +30,7 @@ export const CopyButton: FunctionComponent<CopyButtonProps> = ({ text }) => {
 
   return (
     <Button
-      testID={COPY_MESSAGE_BUTTON}
+      testID={testID}
       mode='text'
       compact={true}
       textColor={colors.textPrimary}
