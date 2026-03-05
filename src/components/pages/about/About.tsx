@@ -1,5 +1,5 @@
 import type { FunctionComponent } from 'react';
-import React from 'react';
+import React, { useMemo } from 'react';
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
 
 import {
@@ -11,58 +11,66 @@ import {
   ABOUT_HOW_IT_WORKS_HEADING,
   ABOUT_TITLE,
 } from '../../../constants/labels';
-import { colors } from '../../../theme/colors';
+import { ColorPalette } from '../../../theme/colors';
+import { useThemeColors } from '../../../theme/useThemeColors';
 
-const styles = StyleSheet.create({
-  screen: {
-    flex: 1,
-    backgroundColor: colors.background,
-  },
-  scrollContent: {
-    padding: 20,
-    paddingBottom: 40,
-  },
-  title: {
-    color: colors.accent,
-    fontSize: 24,
-    fontWeight: 'bold',
-    marginBottom: 24,
-  },
-  section: {
-    marginBottom: 24,
-  },
-  sectionHeading: {
-    color: colors.accent,
-    fontSize: 16,
-    fontWeight: 'bold',
-    marginBottom: 8,
-    textTransform: 'uppercase',
-    letterSpacing: 1,
-  },
-  sectionDivider: {
-    height: 1,
-    backgroundColor: colors.border,
-    marginBottom: 12,
-  },
-  sectionBody: {
-    color: colors.textPrimary,
-    fontSize: 15,
-    lineHeight: 22,
-  },
-});
+const makeStyles = (colors: ColorPalette) =>
+  StyleSheet.create({
+    screen: {
+      flex: 1,
+      backgroundColor: colors.background,
+    },
+    scrollContent: {
+      padding: 20,
+      paddingBottom: 40,
+    },
+    title: {
+      color: colors.accent,
+      fontSize: 24,
+      fontWeight: 'bold',
+      marginBottom: 24,
+    },
+    section: {
+      marginBottom: 24,
+    },
+    sectionHeading: {
+      color: colors.accent,
+      fontSize: 16,
+      fontWeight: 'bold',
+      marginBottom: 8,
+      textTransform: 'uppercase',
+      letterSpacing: 1,
+    },
+    sectionDivider: {
+      height: 1,
+      backgroundColor: colors.border,
+      marginBottom: 12,
+    },
+    sectionBody: {
+      color: colors.textPrimary,
+      fontSize: 15,
+      lineHeight: 22,
+    },
+  });
 
 const AboutSection: FunctionComponent<{ heading: string; body: string }> = ({
   heading,
   body,
-}) => (
-  <View style={styles.section}>
-    <Text style={styles.sectionHeading}>{heading}</Text>
-    <View style={styles.sectionDivider} />
-    <Text style={styles.sectionBody}>{body}</Text>
-  </View>
-);
+}) => {
+  const colors = useThemeColors();
+  const styles = useMemo(() => makeStyles(colors), [colors]);
+  return (
+    <View style={styles.section}>
+      <Text style={styles.sectionHeading}>{heading}</Text>
+      <View style={styles.sectionDivider} />
+      <Text style={styles.sectionBody}>{body}</Text>
+    </View>
+  );
+};
 
 export const About: FunctionComponent = () => {
+  const colors = useThemeColors();
+  const styles = useMemo(() => makeStyles(colors), [colors]);
   return (
     <View style={styles.screen}>
       <ScrollView contentContainerStyle={styles.scrollContent}>

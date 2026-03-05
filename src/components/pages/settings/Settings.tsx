@@ -1,5 +1,5 @@
 import type { FunctionComponent } from 'react';
-import React from 'react';
+import React, { useMemo } from 'react';
 import { Alert, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { Button, SegmentedButtons } from 'react-native-paper';
 import { useDispatch, useSelector } from 'react-redux';
@@ -21,63 +21,71 @@ import { clearPlugboard } from '../../../features/plugboard';
 import { resetRotors } from '../../../features/rotors/features';
 import { persistSettings, setTheme } from '../../../features/settings';
 import type { AppDispatch, RootState } from '../../../store/store';
-import { colors } from '../../../theme/colors';
+import { ColorPalette } from '../../../theme/colors';
+import { useThemeColors } from '../../../theme/useThemeColors';
 import type { Theme } from '../../../types';
 
-const styles = StyleSheet.create({
-  screen: {
-    flex: 1,
-    backgroundColor: colors.background,
-  },
-  scrollContent: {
-    padding: 20,
-    paddingBottom: 40,
-  },
-  section: {
-    marginBottom: 32,
-  },
-  sectionHeading: {
-    color: colors.accent,
-    fontSize: 16,
-    fontWeight: 'bold',
-    marginBottom: 8,
-    textTransform: 'uppercase',
-    letterSpacing: 1,
-  },
-  sectionDivider: {
-    height: 1,
-    backgroundColor: colors.border,
-    marginBottom: 16,
-  },
-  label: {
-    color: colors.textPrimary,
-    fontSize: 15,
-    marginBottom: 12,
-  },
-  description: {
-    color: colors.textSecondary,
-    fontSize: 13,
-    marginBottom: 12,
-  },
-  resetButton: {
-    borderColor: colors.destructive,
-  },
-});
+const makeStyles = (colors: ColorPalette) =>
+  StyleSheet.create({
+    screen: {
+      flex: 1,
+      backgroundColor: colors.background,
+    },
+    scrollContent: {
+      padding: 20,
+      paddingBottom: 40,
+    },
+    section: {
+      marginBottom: 32,
+    },
+    sectionHeading: {
+      color: colors.accent,
+      fontSize: 16,
+      fontWeight: 'bold',
+      marginBottom: 8,
+      textTransform: 'uppercase',
+      letterSpacing: 1,
+    },
+    sectionDivider: {
+      height: 1,
+      backgroundColor: colors.border,
+      marginBottom: 16,
+    },
+    label: {
+      color: colors.textPrimary,
+      fontSize: 15,
+      marginBottom: 12,
+    },
+    description: {
+      color: colors.textSecondary,
+      fontSize: 13,
+      marginBottom: 12,
+    },
+    resetButton: {
+      borderColor: colors.destructive,
+    },
+  });
 
 const SettingsSection: FunctionComponent<{
   heading: string;
   children: React.ReactNode;
-}> = ({ heading, children }) => (
-  <View style={styles.section}>
-    <Text style={styles.sectionHeading}>{heading}</Text>
-    <View style={styles.sectionDivider} />
-    {children}
-  </View>
-);
+}> = ({ heading, children }) => {
+  const colors = useThemeColors();
+  const styles = useMemo(() => makeStyles(colors), [colors]);
+  return (
+    <View style={styles.section}>
+      <Text style={styles.sectionHeading}>{heading}</Text>
+      <View style={styles.sectionDivider} />
+      {children}
+    </View>
+  );
+};
 
 export const Settings: FunctionComponent = () => {
   const dispatch = useDispatch<AppDispatch>();
   const theme = useSelector((state: RootState) => state.settings.theme);
+  const colors = useThemeColors();
+  const styles = useMemo(() => makeStyles(colors), [colors]);
 
   const handleThemeChange = (value: string) => {
     dispatch(setTheme(value as Theme));

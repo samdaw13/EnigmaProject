@@ -1,6 +1,6 @@
 import { Dimensions, StyleSheet } from 'react-native';
 
-import { colors } from '../theme/colors';
+import { ColorPalette } from '../theme/colors';
 
 const KEYS_IN_TOP_ROW = 10;
 const KEY_MARGIN = 2;
@@ -21,109 +21,111 @@ export const buttonStyles = StyleSheet.create({
   },
 });
 
-export const rotorStyles = StyleSheet.create({
-  container: {
-    flexDirection: 'column',
-    justifyContent: 'space-evenly',
-    margin: 10,
-    paddingHorizontal: 0,
-  },
-  rotor: {
-    marginVertical: 10,
-    paddingHorizontal: 0,
-  },
-  selectRotor: {
-    backgroundColor: colors.surface,
-    padding: 20,
-    marginHorizontal: 50,
-    marginVertical: 30,
-  },
-  cardComponent: {
-    paddingHorizontal: 10,
-  },
-  chip: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-  },
-});
+export const makeRotorStyles = (colors: ColorPalette) =>
+  StyleSheet.create({
+    container: {
+      flexDirection: 'column',
+      justifyContent: 'space-evenly',
+      margin: 10,
+      paddingHorizontal: 0,
+    },
+    rotor: {
+      marginVertical: 10,
+      paddingHorizontal: 0,
+    },
+    selectRotor: {
+      backgroundColor: colors.surface,
+      padding: 20,
+      marginHorizontal: 50,
+      marginVertical: 30,
+    },
+    cardComponent: {
+      paddingHorizontal: 10,
+    },
+    chip: {
+      flexDirection: 'row',
+      flexWrap: 'wrap',
+    },
+  });
 
-export const keyboardStyles = StyleSheet.create({
-  screen: {
-    flex: 1,
-    backgroundColor: colors.background,
-  },
-  container: {
-    flexDirection: 'column',
-    alignItems: 'center',
-    justifyContent: 'flex-end',
-    paddingBottom: 24,
-  },
-  horizontalRow: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    marginTop: 3,
-    paddingHorizontal: ROW_PADDING,
-  },
-  key: {
-    width: KEY_SIZE,
-    minWidth: 0,
-    borderRadius: 100,
-    marginHorizontal: KEY_MARGIN,
-    marginVertical: 3,
-    justifyContent: 'center',
-    paddingHorizontal: 0,
-    borderColor: colors.border,
-    borderWidth: 1.5,
-  },
-  outputContainer: {
-    alignItems: 'center',
-    paddingVertical: 30,
-    flex: 1,
-    justifyContent: 'center',
-  },
-  outputLetter: {
-    fontSize: 48,
-    fontWeight: 'bold',
-    color: colors.accent,
-  },
-  messageText: {
-    fontSize: 16,
-    color: colors.textSecondary,
-    letterSpacing: 2,
-    paddingHorizontal: 10,
-    marginTop: 12,
-  },
-  rotorDisplayRow: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    gap: 8,
-    paddingVertical: 8,
-  },
-  rotorWindow: {
-    width: 36,
-    height: 36,
-    borderRadius: 6,
-    backgroundColor: colors.surface,
-    borderColor: colors.border,
-    borderWidth: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  rotorWindowText: {
-    color: colors.textPrimary,
-    fontWeight: 'bold',
-    fontSize: 18,
-  },
-  plugboardRow: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    justifyContent: 'center',
-    paddingHorizontal: 12,
-    paddingBottom: 8,
-  },
-  plugboardChip: {
-    margin: 3,
-    borderColor: colors.border,
-    borderWidth: 1,
-  },
-});
+export const makeKeyboardStyles = (colors: ColorPalette) =>
+  StyleSheet.create({
+    screen: {
+      flex: 1,
+      backgroundColor: colors.background,
+    },
+    container: {
+      flexDirection: 'column',
+      alignItems: 'center',
+      justifyContent: 'flex-end',
+      paddingBottom: 24,
+    },
+    horizontalRow: {
+      flexDirection: 'row',
+      justifyContent: 'center',
+      marginTop: 3,
+      paddingHorizontal: ROW_PADDING,
+    },
+    key: {
+      width: KEY_SIZE,
+      minWidth: 0,
+      borderRadius: 100,
+      marginHorizontal: KEY_MARGIN,
+      marginVertical: 3,
+      justifyContent: 'center',
+      paddingHorizontal: 0,
+      borderColor: colors.border,
+      borderWidth: 1.5,
+    },
+    outputContainer: {
+      alignItems: 'center',
+      paddingVertical: 30,
+      flex: 1,
+      justifyContent: 'center',
+    },
+    outputLetter: {
+      fontSize: 48,
+      fontWeight: 'bold',
+      color: colors.accent,
+    },
+    messageText: {
+      fontSize: 16,
+      color: colors.textSecondary,
+      letterSpacing: 2,
+      paddingHorizontal: 10,
+      marginTop: 12,
+    },
+    rotorDisplayRow: {
+      flexDirection: 'row',
+      justifyContent: 'center',
+      gap: 8,
+      paddingVertical: 8,
+    },
+    rotorWindow: {
+      width: 36,
+      height: 36,
+      borderRadius: 6,
+      backgroundColor: colors.surface,
+      borderColor: colors.border,
+      borderWidth: 1,
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    rotorWindowText: {
+      color: colors.textPrimary,
+      fontWeight: 'bold',
+      fontSize: 18,
+    },
+    plugboardRow: {
+      flexDirection: 'row',
+      flexWrap: 'wrap',
+      justifyContent: 'center',
+      paddingHorizontal: 12,
+      paddingBottom: 8,
+    },
+    plugboardChip: {
+      margin: 3,
+      borderColor: colors.border,
+      borderWidth: 1,
+    },
+  });

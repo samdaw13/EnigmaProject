@@ -1,5 +1,5 @@
 import type { FunctionComponent } from 'react';
-import React from 'react';
+import React, { useMemo } from 'react';
 import { ScrollView, View } from 'react-native';
 import { Button, Modal, Text } from 'react-native-paper';
 import { useDispatch, useSelector } from 'react-redux';
@@ -7,7 +7,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import { SELECT_NEW_LETTER } from '../../../../../constants';
 import { updateRotorCurrentIndex } from '../../../../../features/rotors/features';
 import type { RootState } from '../../../../../store/store';
-import { rotorStyles } from '../../../../../styles';
+import { makeRotorStyles } from '../../../../../styles';
+import { useThemeColors } from '../../../../../theme/useThemeColors';
 import type { ChangeIndexModalProps } from '../../../../../types';
 import { letterButton } from '../../../../../utils';
 
@@ -19,6 +20,8 @@ export const ChangeIndexModal: FunctionComponent<ChangeIndexModalProps> = ({
 }) => {
   const rotors = useSelector((state: RootState) => state.rotors.available);
   const dispatch = useDispatch();
+  const colors = useThemeColors();
+  const rotorStyles = useMemo(() => makeRotorStyles(colors), [colors]);
   const closeModal = () => {
     setModalVisible(false);
   };

@@ -1,5 +1,5 @@
 import type { FunctionComponent } from 'react';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { View } from 'react-native';
 import { Button, Card, IconButton, Portal } from 'react-native-paper';
 import { useDispatch, useSelector } from 'react-redux';
@@ -20,8 +20,8 @@ import {
   updateRotorAvailability,
 } from '../../../../../features/rotors/features';
 import type { RootState } from '../../../../../store/store';
-import { rotorStyles } from '../../../../../styles';
-import { colors } from '../../../../../theme/colors';
+import { makeRotorStyles } from '../../../../../styles';
+import { useThemeColors } from '../../../../../theme/useThemeColors';
 import type { RotorState } from '../../../../../types';
 import { currentLetter, currentRotor } from '../../../../../utils';
 import { ChangeIndexModal } from './ChangeIndexModal';
@@ -39,6 +39,9 @@ export const Rotor: FunctionComponent<RotorProps> = ({ slotIndex }) => {
   const [isSelectModalOpen, setIsSelectModalOpen] = useState(false);
   const [isChangeIndexModalOpen, setIsChangeIndexModalOpen] = useState(false);
   const dispatch = useDispatch();
+  const colors = useThemeColors();
+  const rotorStyles = useMemo(() => makeRotorStyles(colors), [colors]);
+
   const setRotor = () => {
     setIsSelectModalOpen(true);
   };
