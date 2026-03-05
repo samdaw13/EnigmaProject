@@ -128,4 +128,9 @@ export const makeKeyboardStyles = (colors: ColorPalette) =>
       borderColor: colors.border,
       borderWidth: 1,
     },
+    headerRow: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'space-between',
+    },
   });

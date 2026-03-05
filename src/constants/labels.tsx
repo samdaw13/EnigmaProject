@@ -71,3 +71,19 @@ export const ABOUT_HOW_IT_WORKS_BODY =
 export const ABOUT_CODEBREAKERS_HEADING = 'The Codebreakers';
 export const ABOUT_CODEBREAKERS_BODY =
   'Breaking Enigma was a collaborative effort spanning decades. Polish mathematician Marian Rejewski first cracked early Enigma variants in the 1930s using mathematical analysis, sharing his work with British and French intelligence shortly before the war.\n\nAt Bletchley Park, Alan Turing and Gordon Welchman improved on the Polish "Bomba" to create the electromechanical Bombe, a machine that could systematically eliminate incorrect Enigma settings. By exploiting predictable message structures — known as "cribs" — codebreakers could narrow down millions of possible configurations in hours.\n\nThe intelligence produced, codenamed ULTRA, is widely credited with shortening the war by two to four years.';
+
+export const INFO_BRUTE_FORCE_TITLE = 'Brute Force';
+export const INFO_BRUTE_FORCE_CONTENT =
+  'Brute force tests every combination of rotors, reflector, and starting positions against your ciphertext.\n\nOptional: if you know a word or phrase that appears in the plaintext, enter it as known plaintext. This dramatically narrows the search.\n\nWithout known plaintext, the ciphertext must be 50 characters or fewer. Results are ranked by NLP confidence — a measure of how closely the decrypted text resembles natural English.';
+
+export const INFO_CRIB_ANALYSIS_TITLE = 'Crib Analysis';
+export const INFO_CRIB_ANALYSIS_CONTENT =
+  'A crib is a word or phrase you expect to appear in the plaintext. Common WWII examples include WETTER (weather), KEINE (none), and OBERKOMMANDO.\n\nA key Enigma weakness is that a letter can never encrypt to itself. Wherever you slide the crib along the ciphertext, any position where a crib letter matches the ciphertext letter beneath it is structurally impossible — eliminating many positions instantly.\n\nThe search tests all valid positions across every rotor and reflector combination, returning the top results ranked by NLP confidence.';
+
+export const INFO_SETTINGS_TITLE = 'Machine Settings';
+export const INFO_SETTINGS_CONTENT =
+  "Configure the Enigma machine before encrypting a message.\n\nRotors: choose which three rotors to use and set each one's starting letter. Order matters — the signal flows left-to-right through the rotors on every keypress, and each rotor steps forward like a digit on an odometer.\n\nPlugboard: add cable pairs to swap letters before and after the signal passes through the rotors. Up to 10 pairs can be connected.\n\nThe same settings that encrypt a message will also decrypt it — type the ciphertext with identical rotor positions and plugboard cables to recover the original text.";
+
+export const INFO_KEYBOARD_TITLE = 'Encrypting & Decrypting';
+export const INFO_KEYBOARD_CONTENT =
+  'Press any letter key to encrypt it. The rotors step first, then the signal travels through the plugboard, the three rotors, the reflector, back through the rotors in reverse, and through the plugboard again.\n\nThe rotor windows at the top show the current letter for each rotor. The rightmost rotor advances one step on every keypress.\n\nTo decrypt, set the rotors to the same starting positions used when the message was encrypted, then type the ciphertext. The output will be the original plaintext.';
