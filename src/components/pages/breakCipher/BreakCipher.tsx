@@ -1,5 +1,5 @@
 import type { FunctionComponent } from 'react';
-import React, { useCallback, useRef, useState } from 'react';
+import React, { useCallback, useMemo, useRef, useState } from 'react';
 import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { Button, SegmentedButtons, TextInput } from 'react-native-paper';
 
@@ -45,7 +45,8 @@ import {
 } from '../../../constants/selectors';
 import { initialReflectorState } from '../../../features/reflector';
 import { initialRotorState } from '../../../features/rotors/features';
-import { colors } from '../../../theme/colors';
+import type { ColorPalette } from '../../../theme/colors';
+import { useThemeColors } from '../../../theme/useThemeColors';
 import type {
   BruteForceResult,
   CribSearchResult,
@@ -83,19 +84,138 @@ const nlpBadgeColor = (score: number): string => {
   return '#F44336';
 };
 
+const makeStyles = (colors: ColorPalette) =>
+  StyleSheet.create({
+    screen: {
+      flex: 1,
+      backgroundColor: colors.background,
+      padding: 16,
+    },
+    tabs: {
+      marginBottom: 16,
+    },
+    input: {
+      marginBottom: 12,
+      backgroundColor: colors.surface,
+    },
+    runButton: {
+      marginVertical: 12,
+    },
+    progressButton: {
+      height: 40,
+      borderRadius: 20,
+      marginVertical: 12,
+      overflow: 'hidden',
+      backgroundColor: colors.surface,
+      borderWidth: 1,
+      borderColor: colors.accent,
+      justifyContent: 'center',
+      alignItems: 'center',
+    },
+    progressButtonFill: {
+      position: 'absolute',
+      left: 0,
+      top: 0,
+      bottom: 0,
+      backgroundColor: colors.accent,
+    },
+    progressButtonLabel: {
+      fontSize: 13,
+      fontWeight: 'bold',
+      letterSpacing: 0.5,
+    },
+    progressButtonTextClip: {
+      position: 'absolute',
+      left: 0,
+      top: 0,
+      bottom: 0,
+      overflow: 'hidden',
+      justifyContent: 'center',
+    },
+    cancelButton: {
+      marginTop: 4,
+      borderColor: colors.border,
+    },
+    resultsTitle: {
+      color: colors.accent,
+      fontSize: 18,
+      fontWeight: 'bold',
+      marginTop: 16,
+      marginBottom: 8,
+    },
+    fallbackHeader: {
+      color: colors.textSecondary,
+      fontSize: 14,
+      fontStyle: 'italic',
+      marginTop: 16,
+      marginBottom: 4,
+    },
+    resultCard: {
+      backgroundColor: colors.surface,
+      borderRadius: 8,
+      padding: 12,
+      marginBottom: 8,
+      borderColor: colors.border,
+      borderWidth: 1,
+    },
+    resultText: {
+      color: colors.textPrimary,
+      fontSize: 14,
+      marginBottom: 4,
+    },
+    alignmentText: {
+      color: colors.textSecondary,
+      fontFamily: 'monospace',
+      fontSize: 12,
+      marginTop: 4,
+    },
+    hintText: {
+      color: colors.textSecondary,
+      fontSize: 12,
+      marginBottom: 8,
+    },
+    errorText: {
+      color: colors.destructive,
+      fontSize: 12,
+      marginBottom: 8,
+    },
+    noResults: {
+      color: colors.textSecondary,
+      textAlign: 'center',
+      marginTop: 16,
+      fontSize: 14,
+    },
+    nlpBadge: {
+      borderRadius: 4,
+      paddingHorizontal: 8,
+      paddingVertical: 4,
+      alignSelf: 'flex-start',
+      marginTop: 4,
+    },
+    nlpBadgeText: {
+      color: colors.background,
+      fontSize: 12,
+      fontWeight: 'bold',
+    },
+  });
+
 const NlpBadge: FunctionComponent<{ score: number; testIdSuffix: string }> = ({
   score,
   testIdSuffix,
-}) => (
-  <View style={[styles.nlpBadge, { backgroundColor: nlpBadgeColor(score) }]}>
-    <Text
-      testID={`${NLP_SCORE_DISPLAY}_${testIdSuffix}`}
-      style={styles.nlpBadgeText}
-    >
-      {NLP_CONFIDENCE_LABEL}: {score}%
-    </Text>
-  </View>
-);
+}) => {
+  const colors = useThemeColors();
+  const styles = useMemo(() => makeStyles(colors), [colors]);
+  return (
+    <View style={[styles.nlpBadge, { backgroundColor: nlpBadgeColor(score) }]}>
+      <Text
+        testID={`${NLP_SCORE_DISPLAY}_${testIdSuffix}`}
+        style={styles.nlpBadgeText}
+      >
+        {NLP_CONFIDENCE_LABEL}: {score}%
+      </Text>
+    </View>
+  );
+};
 
 const RunButton: FunctionComponent<{
   isSearching: boolean;
@@ -104,6 +224,8 @@ const RunButton: FunctionComponent<{
   onPress: () => void;
 }> = ({ isSearching, progress, disabled, onPress }) => {
   const [buttonWidth, setButtonWidth] = useState(0);
+  const colors = useThemeColors();
+  const styles = useMemo(() => makeStyles(colors), [colors]);
 
   if (isSearching) {
     const statusLabel = progress >= 1 ? RANKING_RESULTS_LABEL : SEARCHING_LABEL;
@@ -152,72 +274,80 @@ const RunButton: FunctionComponent<{
 
 const BruteForceResults: FunctionComponent<{
   results: BruteForceResult[];
-}> = ({ results }) => (
-  <View>
-    <Text style={styles.resultsTitle}>{RESULTS_TITLE}</Text>
-    {results.map((result, index) => (
-      <View
-        key={index}
-        testID={`${BRUTE_FORCE_RESULT_CARD}_${index}`}
-        style={styles.resultCard}
-      >
-        <Text style={styles.resultText}>
-          {ROTOR_ORDER_LABEL}: {result.rotorIds.join(', ')}
-        </Text>
-        <Text style={styles.resultText}>
-          {REFLECTOR_LABEL}: {result.reflectorName}
-        </Text>
-        <Text style={styles.resultText}>
-          {POSITIONS_LABEL}:{' '}
-          {result.startingPositions.map((p) => ALPHABET[p]).join(', ')}
-        </Text>
-        <Text
-          testID={`${DECRYPTED_TEXT_DISPLAY}_${index}`}
-          style={styles.resultText}
+}> = ({ results }) => {
+  const colors = useThemeColors();
+  const styles = useMemo(() => makeStyles(colors), [colors]);
+  return (
+    <View>
+      <Text style={styles.resultsTitle}>{RESULTS_TITLE}</Text>
+      {results.map((result, index) => (
+        <View
+          key={index}
+          testID={`${BRUTE_FORCE_RESULT_CARD}_${index}`}
+          style={styles.resultCard}
         >
-          {DECRYPTED_TEXT_LABEL}: {result.decryptedText}
-        </Text>
-        <NlpBadge score={result.nlpScore} testIdSuffix={String(index)} />
-      </View>
-    ))}
-  </View>
-);
+          <Text style={styles.resultText}>
+            {ROTOR_ORDER_LABEL}: {result.rotorIds.join(', ')}
+          </Text>
+          <Text style={styles.resultText}>
+            {REFLECTOR_LABEL}: {result.reflectorName}
+          </Text>
+          <Text style={styles.resultText}>
+            {POSITIONS_LABEL}:{' '}
+            {result.startingPositions.map((p) => ALPHABET[p]).join(', ')}
+          </Text>
+          <Text
+            testID={`${DECRYPTED_TEXT_DISPLAY}_${index}`}
+            style={styles.resultText}
+          >
+            {DECRYPTED_TEXT_LABEL}: {result.decryptedText}
+          </Text>
+          <NlpBadge score={result.nlpScore} testIdSuffix={String(index)} />
+        </View>
+      ))}
+    </View>
+  );
+};
 
 const CribSearchResults: FunctionComponent<{
   results: CribSearchResult[];
-}> = ({ results }) => (
-  <View>
-    <Text style={styles.resultsTitle}>{RESULTS_TITLE}</Text>
-    {results.map((result, index) => (
-      <View
-        key={index}
-        testID={`${BRUTE_FORCE_RESULT_CARD}_${index}`}
-        style={styles.resultCard}
-      >
-        <Text style={styles.resultText}>
-          {POSITION_LABEL}: {result.cribPosition}
-        </Text>
-        <Text style={styles.resultText}>
-          {ROTOR_ORDER_LABEL}: {result.rotorIds.join(', ')}
-        </Text>
-        <Text style={styles.resultText}>
-          {REFLECTOR_LABEL}: {result.reflectorName}
-        </Text>
-        <Text style={styles.resultText}>
-          {POSITIONS_LABEL}:{' '}
-          {result.startingPositions.map((p) => ALPHABET[p]).join(', ')}
-        </Text>
-        <Text
-          testID={`${DECRYPTED_TEXT_DISPLAY}_${index}`}
-          style={styles.resultText}
+}> = ({ results }) => {
+  const colors = useThemeColors();
+  const styles = useMemo(() => makeStyles(colors), [colors]);
+  return (
+    <View>
+      <Text style={styles.resultsTitle}>{RESULTS_TITLE}</Text>
+      {results.map((result, index) => (
+        <View
+          key={index}
+          testID={`${BRUTE_FORCE_RESULT_CARD}_${index}`}
+          style={styles.resultCard}
         >
-          {DECRYPTED_TEXT_LABEL}: {result.decryptedText}
-        </Text>
-        <NlpBadge score={result.nlpScore} testIdSuffix={String(index)} />
-      </View>
-    ))}
-  </View>
-);
+          <Text style={styles.resultText}>
+            {POSITION_LABEL}: {result.cribPosition}
+          </Text>
+          <Text style={styles.resultText}>
+            {ROTOR_ORDER_LABEL}: {result.rotorIds.join(', ')}
+          </Text>
+          <Text style={styles.resultText}>
+            {REFLECTOR_LABEL}: {result.reflectorName}
+          </Text>
+          <Text style={styles.resultText}>
+            {POSITIONS_LABEL}:{' '}
+            {result.startingPositions.map((p) => ALPHABET[p]).join(', ')}
+          </Text>
+          <Text
+            testID={`${DECRYPTED_TEXT_DISPLAY}_${index}`}
+            style={styles.resultText}
+          >
+            {DECRYPTED_TEXT_LABEL}: {result.decryptedText}
+          </Text>
+          <NlpBadge score={result.nlpScore} testIdSuffix={String(index)} />
+        </View>
+      ))}
+    </View>
+  );
+};
 
 const CribStructuralFallback: FunctionComponent<{
   ciphertext: string;
@@ -226,6 +356,8 @@ const CribStructuralFallback: FunctionComponent<{
   onTogglePosition: (pos: number) => void;
 }> = ({ ciphertext, crib, expandedPosition, onTogglePosition }) => {
   const positions = findCribPositions(ciphertext, crib);
+  const colors = useThemeColors();
+  const styles = useMemo(() => makeStyles(colors), [colors]);
   return (
     <View>
       <Text style={styles.fallbackHeader}>{NO_CRIB_RESULTS_FALLBACK}</Text>
@@ -276,6 +408,8 @@ export const BreakCipher: FunctionComponent = () => {
   const [progress, setProgress] = useState(0);
   const [expandedPosition, setExpandedPosition] = useState<number | null>(null);
   const cancelledRef = useRef(false);
+  const colors = useThemeColors();
+  const styles = useMemo(() => makeStyles(colors), [colors]);
 
   const handleCancel = useCallback(() => {
     cancelledRef.current = true;
@@ -519,117 +653,3 @@ export const BreakCipher: FunctionComponent = () => {
     </ScrollView>
   );
 };
-
-const styles = StyleSheet.create({
-  screen: {
-    flex: 1,
-    backgroundColor: colors.background,
-    padding: 16,
-  },
-  tabs: {
-    marginBottom: 16,
-  },
-  input: {
-    marginBottom: 12,
-    backgroundColor: colors.surface,
-  },
-  runButton: {
-    marginVertical: 12,
-  },
-  progressButton: {
-    height: 40,
-    borderRadius: 20,
-    marginVertical: 12,
-    overflow: 'hidden',
-    backgroundColor: colors.surface,
-    borderWidth: 1,
-    borderColor: colors.accent,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  progressButtonFill: {
-    position: 'absolute',
-    left: 0,
-    top: 0,
-    bottom: 0,
-    backgroundColor: colors.accent,
-  },
-  progressButtonLabel: {
-    fontSize: 13,
-    fontWeight: 'bold',
-    letterSpacing: 0.5,
-  },
-  progressButtonTextClip: {
-    position: 'absolute',
-    left: 0,
-    top: 0,
-    bottom: 0,
-    overflow: 'hidden',
-    justifyContent: 'center',
-  },
-  cancelButton: {
-    marginTop: 4,
-    borderColor: colors.border,
-  },
-  resultsTitle: {
-    color: colors.accent,
-    fontSize: 18,
-    fontWeight: 'bold',
-    marginTop: 16,
-    marginBottom: 8,
-  },
-  fallbackHeader: {
-    color: colors.textSecondary,
-    fontSize: 14,
-    fontStyle: 'italic',
-    marginTop: 16,
-    marginBottom: 4,
-  },
-  resultCard: {
-    backgroundColor: colors.surface,
-    borderRadius: 8,
-    padding: 12,
-    marginBottom: 8,
-    borderColor: colors.border,
-    borderWidth: 1,
-  },
-  resultText: {
-    color: colors.textPrimary,
-    fontSize: 14,
-    marginBottom: 4,
-  },
-  alignmentText: {
-    color: colors.textSecondary,
-    fontFamily: 'monospace',
-    fontSize: 12,
-    marginTop: 4,
-  },
-  hintText: {
-    color: colors.textSecondary,
-    fontSize: 12,
-    marginBottom: 8,
-  },
-  errorText: {
-    color: colors.destructive,
-    fontSize: 12,
-    marginBottom: 8,
-  },
-  noResults: {
-    color: colors.textSecondary,
-    textAlign: 'center',
-    marginTop: 16,
-    fontSize: 14,
-  },
-  nlpBadge: {
-    borderRadius: 4,
-    paddingHorizontal: 8,
-    paddingVertical: 4,
-    alignSelf: 'flex-start',
-    marginTop: 4,
-  },
-  nlpBadgeText: {
-    color: colors.background,
-    fontSize: 12,
-    fontWeight: 'bold',
-  },
-});

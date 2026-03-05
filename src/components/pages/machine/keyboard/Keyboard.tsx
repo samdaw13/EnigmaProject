@@ -1,5 +1,5 @@
 import type { FunctionComponent } from 'react';
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import { Text, View } from 'react-native';
 import { Button, Chip } from 'react-native-paper';
 import { useDispatch, useSelector } from 'react-redux';
@@ -7,8 +7,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import { MESSAGE_DISPLAY, OUTPUT_LETTER_DISPLAY } from '../../../../constants';
 import { updateRotorCurrentIndex } from '../../../../features/rotors/features';
 import type { RootState } from '../../../../store/store';
-import { keyboardStyles } from '../../../../styles';
-import { colors } from '../../../../theme/colors';
+import { makeKeyboardStyles } from '../../../../styles';
+import { useThemeColors } from '../../../../theme/useThemeColors';
 import {
   encryptLetter,
   keyboardLetterButton,
@@ -33,6 +33,8 @@ export const Keyboard: FunctionComponent = () => {
     (state: RootState) => state.reflector,
   );
   const dispatch = useDispatch();
+  const colors = useThemeColors();
+  const keyboardStyles = useMemo(() => makeKeyboardStyles(colors), [colors]);
 
   const [outputLetter, setOutputLetter] = useState<string | null>(null);
   const [message, setMessage] = useState('');

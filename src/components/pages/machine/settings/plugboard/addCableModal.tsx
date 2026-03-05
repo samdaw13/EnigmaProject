@@ -12,7 +12,8 @@ import {
 } from '../../../../../constants';
 import { addCable } from '../../../../../features/plugboard';
 import type { RootState } from '../../../../../store/store';
-import { rotorStyles } from '../../../../../styles';
+import { makeRotorStyles } from '../../../../../styles';
+import { useThemeColors } from '../../../../../theme/useThemeColors';
 import type { AddCableModalProps } from '../../../../../types';
 import { SelectLetterButton } from './SelectLetterButton';
 
@@ -23,6 +24,8 @@ export const AddCableModal: FunctionComponent<AddCableModalProps> = ({
   const plugboard = useSelector((state: RootState) => state.plugboard);
   const [inputLetter, setInputLetter] = useState<string | null>(null);
   const dispatch = useDispatch();
+  const colors = useThemeColors();
+  const rotorStyles = useMemo(() => makeRotorStyles(colors), [colors]);
 
   const availableLetters = useMemo(
     () =>

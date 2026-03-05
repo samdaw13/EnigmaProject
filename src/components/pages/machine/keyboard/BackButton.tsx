@@ -4,11 +4,12 @@ import React from 'react';
 import { IconButton } from 'react-native-paper';
 
 import { KEYBOARD_GO_BACK_BUTTON } from '../../../../constants';
-import { colors } from '../../../../theme/colors';
+import { useThemeColors } from '../../../../theme/useThemeColors';
 import type { NextScreenNavigationProp } from '../../../../types';
 
 export const BackButton: FunctionComponent = () => {
   const navigation = useNavigation<NextScreenNavigationProp>();
+  const colors = useThemeColors();
 
   const navigateToPreviousScreen = () => {
     navigation.goBack();
