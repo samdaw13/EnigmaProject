@@ -15,10 +15,11 @@ export const plugboardSlice = createSlice({
     removeCable: (state, action: PayloadAction<PlugboardActionInterface>) => {
       delete state[action.payload.inputLetter];
     },
+    clearPlugboard: () => ({}),
   },
 });
 
 // Action creators are generated for each case reducer function
-export const { addCable, removeCable } = plugboardSlice.actions;
+export const { addCable, removeCable, clearPlugboard } = plugboardSlice.actions;
 
 export default plugboardSlice.reducer;

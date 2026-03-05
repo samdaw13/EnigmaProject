@@ -100,3 +100,9 @@ export interface SelectedRotorAction {
   slotIndex: number;
   rotorId: number;
 }
+
+export type Theme = 'dark' | 'light';
+
+export interface SettingsState {
+  theme: Theme;
+}
