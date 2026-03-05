@@ -11,10 +11,14 @@ import { Provider } from 'react-redux';
 import plugboardReducer from '../features/plugboard';
 import reflectorReducer from '../features/reflector';
 import rotorsReducer from '../features/rotors/features';
+import settingsReducer from '../features/settings';
 import type { RootState } from '../store/store';
 import { RotorState } from '../types';
 
-type ReducerTypes = Pick<RootState, 'rotors' | 'reflector' | 'plugboard'>;
+type ReducerTypes = Pick<
+  RootState,
+  'rotors' | 'reflector' | 'plugboard' | 'settings'
+>;
 type TStore = EnhancedStore<ReducerTypes>;
 
 type CustomRenderOptions = {
@@ -64,6 +68,7 @@ async function render(ui: ReactElement, options?: CustomRenderOptions) {
         rotors: rotorsReducer,
         plugboard: plugboardReducer,
         reflector: reflectorReducer,
+        settings: settingsReducer,
       },
       preloadedState,
     });

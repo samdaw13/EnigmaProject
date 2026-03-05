@@ -4,6 +4,7 @@ module.exports = {
   transformIgnorePatterns: [
     'node_modules/(?!(react-native' +
       '|@react-native' +
+      '|@react-native-async-storage' +
       '|@react-navigation' +
       '|@reduxjs' +
       '|react-redux' +
@@ -14,7 +15,7 @@ module.exports = {
       '|react-native-reanimated' +
       '|react-native-gesture-handler' +
       '|react-native-screens' +
-      '|react-native-safe-area-context',
+      '|react-native-safe-area-context' +
       ')/)',
   ],
 

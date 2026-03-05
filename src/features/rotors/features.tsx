@@ -91,6 +91,7 @@ export const rotorsSlice = createSlice({
     ) => {
       state.selectedSlots[action.payload.slotIndex] = null;
     },
+    resetRotors: () => initialRotorState,
   },
 });
 
@@ -99,6 +100,7 @@ export const {
   updateRotorCurrentIndex,
   setSelectedRotor,
   clearSelectedRotor,
+  resetRotors,
 } = rotorsSlice.actions;
 
 export default rotorsSlice.reducer;

@@ -31,6 +31,20 @@ export const KNOWN_PLAINTEXT_HINT =
 export const COMMON_CRIBS_HINT = 'Common cribs: WETTER, KEINE, OBERKOMMANDO';
 export const TAP_TO_EXPAND = 'Tap a position to see alignment';
 
+export const SETTINGS_APPEARANCE_HEADING = 'Appearance';
+export const SETTINGS_THEME_LABEL = 'Theme';
+export const SETTINGS_THEME_DARK = 'Dark';
+export const SETTINGS_THEME_LIGHT = 'Light';
+export const SETTINGS_MACHINE_HEADING = 'Machine';
+export const SETTINGS_RESET_DESCRIPTION =
+  'Clears all rotor selections, starting positions, and plugboard cables.';
+export const SETTINGS_RESET_BUTTON = 'Reset machine to defaults';
+export const SETTINGS_RESET_CONFIRM_TITLE = 'Reset machine?';
+export const SETTINGS_RESET_CONFIRM_MESSAGE =
+  'This will clear all rotor selections, positions, and plugboard cables.';
+export const SETTINGS_RESET_CONFIRM = 'Reset';
+export const SETTINGS_RESET_CANCEL = 'Cancel';
+
 export const ABOUT_TITLE = 'The Enigma Machine';
 
 export const ABOUT_HISTORY_HEADING = 'History';
