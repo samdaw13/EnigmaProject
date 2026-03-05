@@ -1,4 +1,5 @@
-import React, { FunctionComponent, useEffect, useState } from 'react';
+import type { FunctionComponent } from 'react';
+import React, { useEffect, useState } from 'react';
 import { View } from 'react-native';
 import { Button, Card, IconButton, Portal } from 'react-native-paper';
 import { useDispatch, useSelector } from 'react-redux';
@@ -18,10 +19,10 @@ import {
   setSelectedRotor as setSelectedRotorAction,
   updateRotorAvailability,
 } from '../../../../../features/rotors/features';
-import { RootState } from '../../../../../store/store';
+import type { RootState } from '../../../../../store/store';
 import { rotorStyles } from '../../../../../styles';
 import { colors } from '../../../../../theme/colors';
-import { RotorState } from '../../../../../types';
+import type { RotorState } from '../../../../../types';
 import { currentLetter, currentRotor } from '../../../../../utils';
 import { ChangeIndexModal } from './ChangeIndexModal';
 import { RotorSelectModal } from './RotorSelectModal';

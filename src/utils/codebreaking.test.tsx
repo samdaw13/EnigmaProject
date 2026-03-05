@@ -1,16 +1,15 @@
 import { initialReflectorState } from '../features/reflector';
 import { initialRotorState } from '../features/rotors/features';
-import {
+import type {
   PlugboardCable,
   ReflectorState,
   RotorState,
 } from '../types/interfaces';
+import type { BruteForceResult, CribSearchResult } from './codebreaking';
 import {
-  BruteForceResult,
   bruteForceSearch,
   bruteForceSearchAsync,
   cribSearchAsync,
-  CribSearchResult,
   encryptString,
   findCribPositions,
 } from './codebreaking';

@@ -1,4 +1,5 @@
-import React, { FunctionComponent, useMemo, useState } from 'react';
+import type { FunctionComponent } from 'react';
+import React, { useMemo, useState } from 'react';
 import { View } from 'react-native';
 import { Modal } from 'react-native-paper';
 import { useDispatch, useSelector } from 'react-redux';
@@ -10,9 +11,9 @@ import {
   SELECT_OUTPUT_LETTER_DISPLAY,
 } from '../../../../../constants';
 import { addCable } from '../../../../../features/plugboard';
-import { RootState } from '../../../../../store/store';
+import type { RootState } from '../../../../../store/store';
 import { rotorStyles } from '../../../../../styles';
-import { AddCableModalProps } from '../../../../../types';
+import type { AddCableModalProps } from '../../../../../types';
 import { SelectLetterButton } from './SelectLetterButton';
 
 export const AddCableModal: FunctionComponent<AddCableModalProps> = ({

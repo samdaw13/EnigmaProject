@@ -1,4 +1,5 @@
-import React, { FunctionComponent, useCallback, useRef, useState } from 'react';
+import type { FunctionComponent } from 'react';
+import React, { useCallback, useRef, useState } from 'react';
 import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { Button, SegmentedButtons, TextInput } from 'react-native-paper';
 
@@ -45,11 +46,13 @@ import {
 import { initialReflectorState } from '../../../features/reflector';
 import { initialRotorState } from '../../../features/rotors/features';
 import { colors } from '../../../theme/colors';
-import {
+import type {
   BruteForceResult,
+  CribSearchResult,
+} from '../../../utils/codebreaking';
+import {
   bruteForceSearchAsync,
   cribSearchAsync,
-  CribSearchResult,
   findCribPositions,
 } from '../../../utils/codebreaking';
 

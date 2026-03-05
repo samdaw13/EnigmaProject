@@ -1,11 +1,12 @@
-import React, { FunctionComponent, useState } from 'react';
+import type { FunctionComponent } from 'react';
+import React, { useState } from 'react';
 import { Text, View } from 'react-native';
 import { Button, Chip } from 'react-native-paper';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { MESSAGE_DISPLAY, OUTPUT_LETTER_DISPLAY } from '../../../../constants';
 import { updateRotorCurrentIndex } from '../../../../features/rotors/features';
-import { RootState } from '../../../../store/store';
+import type { RootState } from '../../../../store/store';
 import { keyboardStyles } from '../../../../styles';
 import { colors } from '../../../../theme/colors';
 import {

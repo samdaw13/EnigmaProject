@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { RotorState } from '../../../../../types';
+import type { RotorState } from '../../../../../types';
 import { letterButton } from '../../../../../utils';
 import {
   fireEvent,

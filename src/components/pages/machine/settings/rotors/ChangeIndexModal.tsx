@@ -1,13 +1,14 @@
-import React, { FunctionComponent } from 'react';
+import type { FunctionComponent } from 'react';
+import React from 'react';
 import { ScrollView, View } from 'react-native';
 import { Button, Modal, Text } from 'react-native-paper';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { SELECT_NEW_LETTER } from '../../../../../constants';
 import { updateRotorCurrentIndex } from '../../../../../features/rotors/features';
-import { RootState } from '../../../../../store/store';
+import type { RootState } from '../../../../../store/store';
 import { rotorStyles } from '../../../../../styles';
-import { ChangeIndexModalProps } from '../../../../../types';
+import type { ChangeIndexModalProps } from '../../../../../types';
 import { letterButton } from '../../../../../utils';
 
 export const ChangeIndexModal: FunctionComponent<ChangeIndexModalProps> = ({
