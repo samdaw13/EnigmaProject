@@ -8,9 +8,10 @@ export interface RotorSelectModalProps {
 }
 
 export interface ChangeIndexModalProps {
-  rotor: RotorState;
   modalVisible: boolean;
   setModalVisible: React.Dispatch<React.SetStateAction<boolean>>;
+  currentRotor: RotorState | null;
+  setRotor: (rotor: RotorState | null) => void;
 }
 
 export interface RotorConfig {

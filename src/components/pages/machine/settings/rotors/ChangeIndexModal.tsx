@@ -7,10 +7,10 @@ import { SELECT_NEW_LETTER } from '../../../../../constants';
 import { updateRotorCurrentIndex } from '../../../../../features/rotors/features';
 import { RootState } from '../../../../../store/store';
 import { rotorStyles } from '../../../../../styles';
-import { RotorSelectModalProps } from '../../../../../types';
+import { ChangeIndexModalProps } from '../../../../../types';
 import { letterButton } from '../../../../../utils';
 
-export const ChangeIndexModal: FunctionComponent<RotorSelectModalProps> = ({
+export const ChangeIndexModal: FunctionComponent<ChangeIndexModalProps> = ({
   modalVisible,
   setModalVisible,
   currentRotor,
