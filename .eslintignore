@@ -1,0 +1,7 @@
+node_modules/
+android/
+ios/
+coverage/
+babel.config.js
+metro.config.js
+jest.config.js
