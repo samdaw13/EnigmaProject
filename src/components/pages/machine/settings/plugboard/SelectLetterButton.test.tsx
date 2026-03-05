@@ -23,7 +23,6 @@ describe(`SelectLetterButton`, () => {
   };
   it(`calls updateLetter function`, async () => {
     await renderComponent();
-    // eslint-disable-next-line testing-library/no-await-sync-events
     await fireEvent.press(screen.getByTestId(`${SELECT_INPUT_LETTER}1`));
     expect(mockSetLetter).toHaveBeenCalledWith('B');
     expect(mockSetAvailableLetteres).toHaveBeenCalledWith([

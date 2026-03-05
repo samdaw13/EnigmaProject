@@ -1,4 +1,3 @@
-/* eslint-disable testing-library/no-await-sync-events */
 import React from 'react';
 
 import {

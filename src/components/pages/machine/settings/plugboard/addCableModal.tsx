@@ -1,4 +1,4 @@
-import React, { FunctionComponent, useEffect, useState } from 'react';
+import React, { FunctionComponent, useMemo, useState } from 'react';
 import { View } from 'react-native';
 import { Modal } from 'react-native-paper';
 import { useDispatch, useSelector } from 'react-redux';
@@ -20,34 +20,27 @@ export const AddCableModal: FunctionComponent<AddCableModalProps> = ({
   setModalVisible,
 }) => {
   const plugboard = useSelector((state: RootState) => state.plugboard);
-  const [availableLetters, setAvailableLetters] = useState<string[]>(
-    [...'ABCDEFGHIJKLMNOPQRSTUVWXYZ'].filter(
-      (letter) => !JSON.stringify(plugboard).includes(letter),
-    ),
-  );
-  const [inputLetter, setInputLetter] = useState<null | string>(null);
-  const [outputLetter, setOutputLetter] = useState<null | string>(null);
+  const [inputLetter, setInputLetter] = useState<string | null>(null);
   const dispatch = useDispatch();
-  useEffect(() => {
-    if (inputLetter !== null && outputLetter !== null) {
-      dispatch(
-        addCable({
-          inputLetter,
-          outputLetter,
-        }),
-      );
-      setModalVisible(false);
-      setInputLetter(null);
-      setOutputLetter(null);
-    }
-  }, [inputLetter, outputLetter]);
-  useEffect(() => {
-    setAvailableLetters(
+
+  const availableLetters = useMemo(
+    () =>
       [...'ABCDEFGHIJKLMNOPQRSTUVWXYZ'].filter(
         (letter) => !JSON.stringify(plugboard).includes(letter),
       ),
-    );
-  }, [plugboard]);
+    [plugboard],
+  );
+
+  const availableOutputLetters = useMemo(
+    () => availableLetters.filter((letter) => letter !== inputLetter),
+    [availableLetters, inputLetter],
+  );
+
+  const handleOutputLetterSelect = (letter: string) => {
+    dispatch(addCable({ inputLetter: inputLetter!, outputLetter: letter }));
+    setModalVisible(false);
+    setInputLetter(null);
+  };
   return (
     <Modal
       visible={modalVisible}
@@ -60,16 +53,16 @@ export const AddCableModal: FunctionComponent<AddCableModalProps> = ({
             setLetter={setInputLetter}
             displayText={SELECT_INPUT_LETTER_DISPLAY}
             availableLetters={availableLetters}
-            setAvailableLetters={setAvailableLetters}
+            setAvailableLetters={() => {}}
             testID={SELECT_INPUT_LETTER}
           />
         )}
         {inputLetter !== null && (
           <SelectLetterButton
-            setLetter={setOutputLetter}
+            setLetter={handleOutputLetterSelect}
             displayText={SELECT_OUTPUT_LETTER_DISPLAY}
-            availableLetters={availableLetters}
-            setAvailableLetters={setAvailableLetters}
+            availableLetters={availableOutputLetters}
+            setAvailableLetters={() => {}}
             testID={SELECT_OUTPUT_LETTER}
           />
         )}

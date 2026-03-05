@@ -22,7 +22,6 @@ describe(`BackButton`, () => {
   };
   it(`goes back to previous stack item`, async () => {
     await renderComponent();
-    // eslint-disable-next-line testing-library/no-await-sync-events
     await fireEvent.press(screen.getByTestId(KEYBOARD_GO_BACK_BUTTON));
     expect(mockGoBack).toHaveBeenCalledTimes(1);
   });

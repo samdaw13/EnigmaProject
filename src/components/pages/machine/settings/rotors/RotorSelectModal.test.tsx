@@ -31,8 +31,6 @@ describe(`RotorSelectModal`, () => {
     const setRotorMock = jest.fn();
     await renderComponent(true, setModalMock, ROTOR_1, setRotorMock);
 
-    // For some reason ESLint claims this line both needs an await and does not
-    // eslint-disable-next-line testing-library/no-await-sync-events
     await fireEvent.press(screen.getByTestId(selectRotorButton(1)));
     expect(setRotorMock).toHaveBeenCalledWith(ROTOR_1);
     expect(setModalMock).toHaveBeenCalledWith(false);

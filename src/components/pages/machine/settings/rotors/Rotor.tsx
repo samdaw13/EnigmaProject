@@ -32,7 +32,9 @@ interface RotorProps {
 
 export const Rotor: FunctionComponent<RotorProps> = ({ slotIndex }) => {
   const rotors = useSelector((state: RootState) => state.rotors.available);
-  const [selectedRotor, setSelectedRotor] = useState<RotorState | null>(null);
+  const [selectedRotorId, setSelectedRotorId] = useState<number | null>(null);
+  const selectedRotor =
+    selectedRotorId !== null ? (rotors[selectedRotorId] ?? null) : null;
   const [isSelectModalOpen, setIsSelectModalOpen] = useState(false);
   const [isChangeIndexModalOpen, setIsChangeIndexModalOpen] = useState(false);
   const dispatch = useDispatch();
@@ -44,35 +46,31 @@ export const Rotor: FunctionComponent<RotorProps> = ({ slotIndex }) => {
       dispatch(
         updateRotorAvailability({ id: selectedRotor.id, isAvailable: true }),
       );
-    setSelectedRotor(null);
+    setSelectedRotorId(null);
     dispatch(clearSelectedRotor({ slotIndex }));
   };
+  const handleSetRotor = (rotor: RotorState | null) => {
+    setSelectedRotorId(rotor?.id ?? null);
+  };
   useEffect(() => {
-    if (selectedRotor) {
-      dispatch(
-        setSelectedRotorAction({ slotIndex, rotorId: selectedRotor.id }),
-      );
+    if (selectedRotorId !== null) {
+      dispatch(setSelectedRotorAction({ slotIndex, rotorId: selectedRotorId }));
     }
-  }, [dispatch, selectedRotor, selectedRotor?.id, slotIndex]);
-  useEffect(() => {
-    if (selectedRotor) {
-      setSelectedRotor(rotors[selectedRotor.id]);
-    }
-  }, [rotors]);
+  }, [dispatch, selectedRotorId, slotIndex]);
   return (
     <View>
       <Portal>
         <RotorSelectModal
           modalVisible={isSelectModalOpen}
           setModalVisible={setIsSelectModalOpen}
-          setRotor={setSelectedRotor}
+          setRotor={handleSetRotor}
           currentRotor={selectedRotor}
         />
         {selectedRotor && (
           <ChangeIndexModal
             modalVisible={isChangeIndexModalOpen}
             setModalVisible={setIsChangeIndexModalOpen}
-            setRotor={setSelectedRotor}
+            setRotor={handleSetRotor}
             currentRotor={selectedRotor}
           />
         )}
