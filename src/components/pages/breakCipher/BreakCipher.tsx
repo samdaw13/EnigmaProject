@@ -1,43 +1,46 @@
-import React, { FunctionComponent, useCallback, useState } from 'react';
+import React, { FunctionComponent, useCallback, useRef, useState } from 'react';
 import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
-import {
-  Button,
-  ProgressBar,
-  SegmentedButtons,
-  TextInput,
-} from 'react-native-paper';
+import { Button, SegmentedButtons, TextInput } from 'react-native-paper';
 
 import {
   BRUTE_FORCE_TAB,
+  CANCEL_LABEL,
   CIPHERTEXT_LABEL,
+  CIPHERTEXT_TOO_LONG,
   COMMON_CRIBS_HINT,
   CRIB_ANALYSIS_TAB,
   CRIB_LABEL,
-  KNOWN_PLAINTEXT_HINT,
+  DECRYPTED_TEXT_LABEL,
   KNOWN_PLAINTEXT_LABEL,
+  KNOWN_PLAINTEXT_OPTIONAL_HINT,
+  NLP_CONFIDENCE_LABEL,
+  NO_CRIB_RESULTS_FALLBACK,
   NO_RESULTS,
   POSITION_LABEL,
   POSITIONS_LABEL,
+  RANKING_RESULTS_LABEL,
   REFLECTOR_LABEL,
   RESULTS_TITLE,
   ROTOR_ORDER_LABEL,
   RUN_ANALYSIS,
-  RUNNING_ANALYSIS,
   SEARCHING_LABEL,
   TAP_TO_EXPAND,
   VALID_POSITIONS_LABEL,
 } from '../../../constants/labels';
 import {
+  BRUTE_FORCE_RESULT_CARD,
   BRUTE_FORCE_TAB_BUTTON,
+  CANCEL_SEARCH_BUTTON,
   CIPHERTEXT_INPUT,
   CRIB_ANALYSIS_TAB_BUTTON,
   CRIB_INPUT,
   CRIB_POSITION_CARD,
+  DECRYPTED_TEXT_DISPLAY,
+  NLP_SCORE_DISPLAY,
   PLAINTEXT_INPUT,
   PROGRESS_BAR,
   RESULTS_CONTAINER,
   RUN_ANALYSIS_BUTTON,
-  SEARCHING_INDICATOR,
 } from '../../../constants/selectors';
 import { initialReflectorState } from '../../../features/reflector';
 import { initialRotorState } from '../../../features/rotors/features';
@@ -45,18 +48,15 @@ import { colors } from '../../../theme/colors';
 import {
   BruteForceResult,
   bruteForceSearchAsync,
+  cribSearchAsync,
+  CribSearchResult,
   findCribPositions,
 } from '../../../utils/codebreaking';
 
 type Tab = 'bruteForce' | 'cribAnalysis';
 
-interface CribResult {
-  positions: number[];
-  ciphertext: string;
-  crib: string;
-}
-
 const ALPHABET = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+const BRUTE_FORCE_MAX_KEYLESS_LENGTH = 50;
 
 const sanitizeInput = (text: string): string =>
   text
@@ -74,13 +74,90 @@ const formatPositionAlignment = (
   return `${ciphertext}\n${padding}${crib}`;
 };
 
+const nlpBadgeColor = (score: number): string => {
+  if (score >= 70) return '#4CAF50';
+  if (score >= 40) return '#FFC107';
+  return '#F44336';
+};
+
+const NlpBadge: FunctionComponent<{ score: number; testIdSuffix: string }> = ({
+  score,
+  testIdSuffix,
+}) => (
+  <View style={[styles.nlpBadge, { backgroundColor: nlpBadgeColor(score) }]}>
+    <Text
+      testID={`${NLP_SCORE_DISPLAY}_${testIdSuffix}`}
+      style={styles.nlpBadgeText}
+    >
+      {NLP_CONFIDENCE_LABEL}: {score}%
+    </Text>
+  </View>
+);
+
+const RunButton: FunctionComponent<{
+  isSearching: boolean;
+  progress: number;
+  disabled: boolean;
+  onPress: () => void;
+}> = ({ isSearching, progress, disabled, onPress }) => {
+  const [buttonWidth, setButtonWidth] = useState(0);
+
+  if (isSearching) {
+    const statusLabel = progress >= 1 ? RANKING_RESULTS_LABEL : SEARCHING_LABEL;
+    const fillWidth = Math.min(Math.round(progress * buttonWidth), buttonWidth);
+    return (
+      <View
+        testID={RUN_ANALYSIS_BUTTON}
+        style={styles.progressButton}
+        onLayout={(e) => setButtonWidth(e.nativeEvent.layout.width)}
+      >
+        <Text
+          style={[styles.progressButtonLabel, { color: colors.textPrimary }]}
+        >
+          {statusLabel}
+        </Text>
+        <View
+          testID={PROGRESS_BAR}
+          style={[styles.progressButtonFill, { width: fillWidth }]}
+        />
+        <View style={[styles.progressButtonTextClip, { width: fillWidth }]}>
+          <View style={{ width: buttonWidth, alignItems: 'center' }}>
+            <Text
+              style={[styles.progressButtonLabel, { color: colors.background }]}
+            >
+              {statusLabel}
+            </Text>
+          </View>
+        </View>
+      </View>
+    );
+  }
+  return (
+    <Button
+      testID={RUN_ANALYSIS_BUTTON}
+      mode='contained'
+      onPress={onPress}
+      style={styles.runButton}
+      buttonColor={colors.accent}
+      textColor={colors.background}
+      disabled={disabled}
+    >
+      {RUN_ANALYSIS}
+    </Button>
+  );
+};
+
 const BruteForceResults: FunctionComponent<{
   results: BruteForceResult[];
 }> = ({ results }) => (
   <View>
     <Text style={styles.resultsTitle}>{RESULTS_TITLE}</Text>
     {results.map((result, index) => (
-      <View key={index} style={styles.resultCard}>
+      <View
+        key={index}
+        testID={`${BRUTE_FORCE_RESULT_CARD}_${index}`}
+        style={styles.resultCard}
+      >
         <Text style={styles.resultText}>
           {ROTOR_ORDER_LABEL}: {result.rotorIds.join(', ')}
         </Text>
@@ -91,43 +168,91 @@ const BruteForceResults: FunctionComponent<{
           {POSITIONS_LABEL}:{' '}
           {result.startingPositions.map((p) => ALPHABET[p]).join(', ')}
         </Text>
+        <Text
+          testID={`${DECRYPTED_TEXT_DISPLAY}_${index}`}
+          style={styles.resultText}
+        >
+          {DECRYPTED_TEXT_LABEL}: {result.decryptedText}
+        </Text>
+        <NlpBadge score={result.nlpScore} testIdSuffix={String(index)} />
       </View>
     ))}
   </View>
 );
 
-const CribResults: FunctionComponent<{
-  result: CribResult;
-  expandedPosition: number | null;
-  onTogglePosition: (pos: number) => void;
-}> = ({ result, expandedPosition, onTogglePosition }) => (
+const CribSearchResults: FunctionComponent<{
+  results: CribSearchResult[];
+}> = ({ results }) => (
   <View>
-    <Text style={styles.resultsTitle}>
-      {VALID_POSITIONS_LABEL} ({result.positions.length})
-    </Text>
-    <Text style={styles.hintText}>{TAP_TO_EXPAND}</Text>
-    {result.positions.map((pos) => (
-      <Pressable
-        key={pos}
-        testID={`${CRIB_POSITION_CARD}_${pos}`}
-        onPress={() => onTogglePosition(pos)}
+    <Text style={styles.resultsTitle}>{RESULTS_TITLE}</Text>
+    {results.map((result, index) => (
+      <View
+        key={index}
+        testID={`${BRUTE_FORCE_RESULT_CARD}_${index}`}
         style={styles.resultCard}
       >
         <Text style={styles.resultText}>
-          {POSITION_LABEL} {pos}
+          {POSITION_LABEL}: {result.cribPosition}
         </Text>
-        {expandedPosition === pos && (
-          <Text
-            testID={`${CRIB_POSITION_CARD}_${pos}_alignment`}
-            style={styles.alignmentText}
-          >
-            {formatPositionAlignment(result.ciphertext, result.crib, pos)}
-          </Text>
-        )}
-      </Pressable>
+        <Text style={styles.resultText}>
+          {ROTOR_ORDER_LABEL}: {result.rotorIds.join(', ')}
+        </Text>
+        <Text style={styles.resultText}>
+          {REFLECTOR_LABEL}: {result.reflectorName}
+        </Text>
+        <Text style={styles.resultText}>
+          {POSITIONS_LABEL}:{' '}
+          {result.startingPositions.map((p) => ALPHABET[p]).join(', ')}
+        </Text>
+        <Text
+          testID={`${DECRYPTED_TEXT_DISPLAY}_${index}`}
+          style={styles.resultText}
+        >
+          {DECRYPTED_TEXT_LABEL}: {result.decryptedText}
+        </Text>
+        <NlpBadge score={result.nlpScore} testIdSuffix={String(index)} />
+      </View>
     ))}
   </View>
 );
+
+const CribStructuralFallback: FunctionComponent<{
+  ciphertext: string;
+  crib: string;
+  expandedPosition: number | null;
+  onTogglePosition: (pos: number) => void;
+}> = ({ ciphertext, crib, expandedPosition, onTogglePosition }) => {
+  const positions = findCribPositions(ciphertext, crib);
+  return (
+    <View>
+      <Text style={styles.fallbackHeader}>{NO_CRIB_RESULTS_FALLBACK}</Text>
+      <Text style={styles.resultsTitle}>
+        {VALID_POSITIONS_LABEL} ({positions.length})
+      </Text>
+      <Text style={styles.hintText}>{TAP_TO_EXPAND}</Text>
+      {positions.map((pos) => (
+        <Pressable
+          key={pos}
+          testID={`${CRIB_POSITION_CARD}_${pos}`}
+          onPress={() => onTogglePosition(pos)}
+          style={styles.resultCard}
+        >
+          <Text style={styles.resultText}>
+            {POSITION_LABEL} {pos}
+          </Text>
+          {expandedPosition === pos && (
+            <Text
+              testID={`${CRIB_POSITION_CARD}_${pos}_alignment`}
+              style={styles.alignmentText}
+            >
+              {formatPositionAlignment(ciphertext, crib, pos)}
+            </Text>
+          )}
+        </Pressable>
+      ))}
+    </View>
+  );
+};
 
 export const BreakCipher: FunctionComponent = () => {
   const [activeTab, setActiveTab] = useState<Tab>('bruteForce');
@@ -137,27 +262,46 @@ export const BreakCipher: FunctionComponent = () => {
   const [bruteForceResults, setBruteForceResults] = useState<
     BruteForceResult[] | null
   >(null);
-  const [cribResults, setCribResults] = useState<CribResult | null>(null);
+  const [cribSearchResults, setCribSearchResults] = useState<
+    CribSearchResult[] | null
+  >(null);
+  const [lastCribSearch, setLastCribSearch] = useState<{
+    ciphertext: string;
+    crib: string;
+  } | null>(null);
   const [isSearching, setIsSearching] = useState(false);
   const [progress, setProgress] = useState(0);
   const [expandedPosition, setExpandedPosition] = useState<number | null>(null);
+  const cancelledRef = useRef(false);
+
+  const handleCancel = useCallback(() => {
+    cancelledRef.current = true;
+    setIsSearching(false);
+    setProgress(0);
+  }, []);
 
   const handleTabChange = useCallback((value: string) => {
+    cancelledRef.current = true;
+    setIsSearching(false);
     setActiveTab(value as Tab);
     setBruteForceResults(null);
-    setCribResults(null);
+    setCribSearchResults(null);
+    setLastCribSearch(null);
     setProgress(0);
     setExpandedPosition(null);
   }, []);
 
   const runBruteForce = useCallback(async () => {
     const sanitizedCiphertext = sanitizeInput(ciphertext);
-    const sanitizedPlaintext = sanitizeInput(plaintext);
-    if (!sanitizedCiphertext || !sanitizedPlaintext) return;
+    if (!sanitizedCiphertext) return;
 
+    cancelledRef.current = false;
     setIsSearching(true);
     setBruteForceResults(null);
     setProgress(0);
+
+    const sanitizedPlaintext =
+      plaintext.length > 0 ? sanitizeInput(plaintext) : undefined;
 
     const results = await bruteForceSearchAsync(
       sanitizedCiphertext,
@@ -165,32 +309,44 @@ export const BreakCipher: FunctionComponent = () => {
       initialRotorState.available,
       initialReflectorState.reflectors,
       setProgress,
+      () => cancelledRef.current,
     );
+    if (cancelledRef.current) return;
     setBruteForceResults(results);
     setIsSearching(false);
   }, [ciphertext, plaintext]);
 
-  const runCribAnalysis = useCallback(() => {
+  const runCribAnalysis = useCallback(async () => {
     const sanitizedCiphertext = sanitizeInput(ciphertext);
     const sanitizedCrib = sanitizeInput(crib);
     if (!sanitizedCiphertext || !sanitizedCrib) return;
 
+    cancelledRef.current = false;
+    setIsSearching(true);
+    setCribSearchResults(null);
+    setLastCribSearch(null);
     setProgress(0);
-    const positions = findCribPositions(sanitizedCiphertext, sanitizedCrib);
-    setCribResults({
-      positions,
-      ciphertext: sanitizedCiphertext,
-      crib: sanitizedCrib,
-    });
-    setProgress(1);
     setExpandedPosition(null);
+
+    const results = await cribSearchAsync(
+      sanitizedCiphertext,
+      sanitizedCrib,
+      initialRotorState.available,
+      initialReflectorState.reflectors,
+      setProgress,
+      () => cancelledRef.current,
+    );
+    if (cancelledRef.current) return;
+    setCribSearchResults(results);
+    setLastCribSearch({ ciphertext: sanitizedCiphertext, crib: sanitizedCrib });
+    setIsSearching(false);
   }, [ciphertext, crib]);
 
   const handleRun = useCallback(() => {
     if (activeTab === 'bruteForce') {
       void runBruteForce();
     } else {
-      runCribAnalysis();
+      void runCribAnalysis();
     }
   }, [activeTab, runBruteForce, runCribAnalysis]);
 
@@ -201,27 +357,36 @@ export const BreakCipher: FunctionComponent = () => {
     [expandedPosition],
   );
 
+  const sanitizedCiphertextLength = sanitizeInput(ciphertext).length;
+  const isBruteForceWithoutPlaintext =
+    activeTab === 'bruteForce' && plaintext.length === 0;
+  const ciphertextTooLong =
+    isBruteForceWithoutPlaintext &&
+    sanitizedCiphertextLength > BRUTE_FORCE_MAX_KEYLESS_LENGTH;
+
+  const isBruteForceReady =
+    activeTab === 'bruteForce' && sanitizedCiphertextLength > 0;
+  const isCribReady =
+    activeTab === 'cribAnalysis' &&
+    sanitizedCiphertextLength > 0 &&
+    crib.length > 0;
+  const areInputsEmpty = !isBruteForceReady && !isCribReady;
+  const runAnalysisButtonDisabled =
+    areInputsEmpty || isSearching || ciphertextTooLong;
+
   const hasResults =
     activeTab === 'bruteForce'
       ? bruteForceResults !== null
-      : cribResults !== null;
+      : cribSearchResults !== null;
   const hasNoResults =
-    (activeTab === 'bruteForce' &&
-      bruteForceResults !== null &&
-      bruteForceResults.length === 0) ||
-    (activeTab === 'cribAnalysis' &&
-      cribResults !== null &&
-      cribResults.positions.length === 0);
+    activeTab === 'bruteForce' &&
+    bruteForceResults !== null &&
+    bruteForceResults.length === 0;
 
   const hintText =
-    activeTab === 'bruteForce' ? KNOWN_PLAINTEXT_HINT : COMMON_CRIBS_HINT;
-  const isCribTextSet = activeTab === 'cribAnalysis' && crib.length > 0;
-  const isBruteForceTextSet =
-    activeTab === 'bruteForce' && plaintext.length > 0;
-  const areInputsEmpty =
-    ciphertext.length === 0 || (!isCribTextSet && !isBruteForceTextSet);
-  const runAnalysisButtonDisabled = areInputsEmpty || isSearching;
-  const runAnalysisButtonText = isSearching ? RUNNING_ANALYSIS : RUN_ANALYSIS;
+    activeTab === 'bruteForce'
+      ? KNOWN_PLAINTEXT_OPTIONAL_HINT
+      : COMMON_CRIBS_HINT;
 
   return (
     <ScrollView style={styles.screen}>
@@ -297,30 +462,27 @@ export const BreakCipher: FunctionComponent = () => {
 
       <Text style={styles.hintText}>{hintText}</Text>
 
-      <Button
-        testID={RUN_ANALYSIS_BUTTON}
-        mode='contained'
-        onPress={handleRun}
-        style={styles.runButton}
-        buttonColor={colors.accent}
-        textColor={colors.background}
+      {ciphertextTooLong && (
+        <Text style={styles.errorText}>{CIPHERTEXT_TOO_LONG}</Text>
+      )}
+
+      <RunButton
+        isSearching={isSearching}
+        progress={progress}
         disabled={runAnalysisButtonDisabled}
-      >
-        {runAnalysisButtonText}
-      </Button>
+        onPress={handleRun}
+      />
 
       {isSearching && (
-        <>
-          <Text testID={SEARCHING_INDICATOR} style={styles.searchingText}>
-            {SEARCHING_LABEL}
-          </Text>
-          <ProgressBar
-            testID={PROGRESS_BAR}
-            progress={progress}
-            color={colors.accent}
-            style={styles.progressBar}
-          />
-        </>
+        <Button
+          testID={CANCEL_SEARCH_BUTTON}
+          mode='outlined'
+          onPress={handleCancel}
+          style={styles.cancelButton}
+          textColor={colors.textSecondary}
+        >
+          {CANCEL_LABEL}
+        </Button>
       )}
 
       {hasResults && !isSearching && (
@@ -334,13 +496,20 @@ export const BreakCipher: FunctionComponent = () => {
             )}
 
           {activeTab === 'cribAnalysis' &&
-            cribResults &&
-            cribResults.positions.length > 0 && (
-              <CribResults
-                result={cribResults}
-                expandedPosition={expandedPosition}
-                onTogglePosition={toggleExpandedPosition}
-              />
+            cribSearchResults !== null &&
+            lastCribSearch !== null && (
+              <>
+                {cribSearchResults.length > 0 ? (
+                  <CribSearchResults results={cribSearchResults} />
+                ) : (
+                  <CribStructuralFallback
+                    ciphertext={lastCribSearch.ciphertext}
+                    crib={lastCribSearch.crib}
+                    expandedPosition={expandedPosition}
+                    onTogglePosition={toggleExpandedPosition}
+                  />
+                )}
+              </>
             )}
         </View>
       )}
@@ -364,16 +533,40 @@ const styles = StyleSheet.create({
   runButton: {
     marginVertical: 12,
   },
-  searchingText: {
-    color: colors.accent,
-    textAlign: 'center',
-    marginTop: 16,
-    fontSize: 16,
-  },
-  progressBar: {
-    marginTop: 8,
-    borderRadius: 4,
+  progressButton: {
+    height: 40,
+    borderRadius: 20,
+    marginVertical: 12,
+    overflow: 'hidden',
     backgroundColor: colors.surface,
+    borderWidth: 1,
+    borderColor: colors.accent,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  progressButtonFill: {
+    position: 'absolute',
+    left: 0,
+    top: 0,
+    bottom: 0,
+    backgroundColor: colors.accent,
+  },
+  progressButtonLabel: {
+    fontSize: 13,
+    fontWeight: 'bold',
+    letterSpacing: 0.5,
+  },
+  progressButtonTextClip: {
+    position: 'absolute',
+    left: 0,
+    top: 0,
+    bottom: 0,
+    overflow: 'hidden',
+    justifyContent: 'center',
+  },
+  cancelButton: {
+    marginTop: 4,
+    borderColor: colors.border,
   },
   resultsTitle: {
     color: colors.accent,
@@ -381,6 +574,13 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     marginTop: 16,
     marginBottom: 8,
+  },
+  fallbackHeader: {
+    color: colors.textSecondary,
+    fontSize: 14,
+    fontStyle: 'italic',
+    marginTop: 16,
+    marginBottom: 4,
   },
   resultCard: {
     backgroundColor: colors.surface,
@@ -406,10 +606,27 @@ const styles = StyleSheet.create({
     fontSize: 12,
     marginBottom: 8,
   },
+  errorText: {
+    color: colors.destructive,
+    fontSize: 12,
+    marginBottom: 8,
+  },
   noResults: {
     color: colors.textSecondary,
     textAlign: 'center',
     marginTop: 16,
     fontSize: 14,
+  },
+  nlpBadge: {
+    borderRadius: 4,
+    paddingHorizontal: 8,
+    paddingVertical: 4,
+    alignSelf: 'flex-start',
+    marginTop: 4,
+  },
+  nlpBadgeText: {
+    color: colors.background,
+    fontSize: 12,
+    fontWeight: 'bold',
   },
 });

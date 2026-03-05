@@ -8,6 +8,10 @@ globalThis.AggregateError = function (errors, message) {
   return new OriginalAggregateError(errors, message);
 };
 
+jest.mock('@react-native-async-storage/async-storage', () =>
+  require('@react-native-async-storage/async-storage/jest/async-storage-mock'),
+);
+
 jest.mock('react-native-paper', () => {
   const RealModule = jest.requireActual('react-native-paper');
   const React = require('react');

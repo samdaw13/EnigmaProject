@@ -77,7 +77,7 @@ export const Rotor: FunctionComponent<RotorProps> = ({ slotIndex }) => {
       </Portal>
       <Card style={rotorStyles.rotor} contentStyle={{ paddingHorizontal: 0 }}>
         {selectedRotor && (
-          <>
+          <View>
             <Card.Title
               title={currentLetter(
                 selectedRotor.config.displayedLetters[
@@ -107,7 +107,7 @@ export const Rotor: FunctionComponent<RotorProps> = ({ slotIndex }) => {
                 {CHANGE_CURRENT_LETTER}
               </Button>
             </Card.Actions>
-          </>
+          </View>
         )}
         {selectedRotor === null && (
           <Card.Title

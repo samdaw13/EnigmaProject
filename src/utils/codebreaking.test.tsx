@@ -9,6 +9,8 @@ import {
   BruteForceResult,
   bruteForceSearch,
   bruteForceSearchAsync,
+  cribSearchAsync,
+  CribSearchResult,
   encryptString,
   findCribPositions,
 } from './codebreaking';
@@ -95,6 +97,9 @@ describe('bruteForceSearch', () => {
     );
     expect(matchingResult).toBeDefined();
     expect(matchingResult!.reflectorName).toBe('UKW-B');
+    expect(matchingResult!.decryptedText).toBeTruthy();
+    expect(matchingResult!.nlpScore).toBeGreaterThanOrEqual(0);
+    expect(matchingResult!.nlpScore).toBeLessThanOrEqual(100);
   });
 
   it('returns empty array when no config matches', () => {
@@ -146,6 +151,9 @@ describe('bruteForceSearchAsync', () => {
     );
     expect(matchingResult).toBeDefined();
     expect(matchingResult!.reflectorName).toBe('UKW-B');
+    expect(matchingResult!.decryptedText).toBeTruthy();
+    expect(matchingResult!.nlpScore).toBeGreaterThanOrEqual(0);
+    expect(matchingResult!.nlpScore).toBeLessThanOrEqual(100);
   });
 
   it('calls onProgress with increasing values up to 1', async () => {
@@ -165,6 +173,101 @@ describe('bruteForceSearchAsync', () => {
     for (let i = 1; i < progressValues.length; i++) {
       expect(progressValues[i]).toBeGreaterThanOrEqual(progressValues[i - 1]);
     }
+  });
+});
+
+// Limit rotors to III, II, I for faster crib search tests (6 perms vs 60)
+const limitedRotors = {
+  1: initialRotorState.available[1],
+  2: initialRotorState.available[2],
+  3: initialRotorState.available[3],
+};
+
+describe('cribSearchAsync', () => {
+  it('finds a matching result when the crib is present in the decrypted text', async () => {
+    jest.useRealTimers();
+    // 'WITHTION' contains high-value quadgrams WITH and TION, so NLP scoring
+    // reliably ranks the correct config above false positives
+    const plaintext = 'WITHTION';
+    const crib = 'WITH';
+    const rotors = [
+      { ...rotorIII, config: { ...rotorIII.config, currentIndex: 0 } },
+      { ...rotorII, config: { ...rotorII.config, currentIndex: 0 } },
+      { ...rotorI, config: { ...rotorI.config, currentIndex: 0 } },
+    ];
+    const ciphertext = encryptString(
+      plaintext,
+      rotors,
+      emptyPlugboard,
+      reflectorB,
+    );
+
+    const singleReflector = { 2: initialReflectorState.reflectors[2] };
+    const results: CribSearchResult[] = await cribSearchAsync(
+      ciphertext,
+      crib,
+      limitedRotors,
+      singleReflector,
+      () => {},
+    );
+
+    const matchingResult = results.find(
+      (r) =>
+        r.rotorIds[0] === 3 &&
+        r.rotorIds[1] === 2 &&
+        r.rotorIds[2] === 1 &&
+        r.startingPositions[0] === 0 &&
+        r.startingPositions[1] === 0 &&
+        r.startingPositions[2] === 0,
+    );
+    expect(matchingResult).toBeDefined();
+    expect(matchingResult!.decryptedText).toBe('WITHTION');
+    expect(matchingResult!.cribPosition).toBe(0);
+    expect(matchingResult!.nlpScore).toBeGreaterThanOrEqual(0);
+    expect(matchingResult!.nlpScore).toBeLessThanOrEqual(100);
+  });
+
+  it('returns empty array when crib is longer than ciphertext', async () => {
+    jest.useRealTimers();
+    const progressValues: number[] = [];
+
+    const results = await cribSearchAsync(
+      'ABC',
+      'HELLO',
+      limitedRotors,
+      { 2: initialReflectorState.reflectors[2] },
+      (p) => progressValues.push(p),
+    );
+
+    expect(results).toEqual([]);
+    expect(progressValues[progressValues.length - 1]).toBe(1);
+  });
+
+  it('calls onProgress from 0 to 1', async () => {
+    jest.useRealTimers();
+    const rotors = [
+      { ...rotorIII, config: { ...rotorIII.config, currentIndex: 0 } },
+      { ...rotorII, config: { ...rotorII.config, currentIndex: 0 } },
+      { ...rotorI, config: { ...rotorI.config, currentIndex: 0 } },
+    ];
+    const ciphertext = encryptString(
+      'WITHTION',
+      rotors,
+      emptyPlugboard,
+      reflectorB,
+    );
+    const progressValues: number[] = [];
+
+    await cribSearchAsync(
+      ciphertext,
+      'WITH',
+      limitedRotors,
+      { 2: initialReflectorState.reflectors[2] },
+      (p) => progressValues.push(p),
+    );
+
+    expect(progressValues.length).toBeGreaterThan(0);
+    expect(progressValues[progressValues.length - 1]).toBe(1);
   });
 });
 

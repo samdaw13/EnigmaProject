@@ -23,3 +23,7 @@ export const RESULTS_CONTAINER = 'resultsContainer';
 export const SEARCHING_INDICATOR = 'searchingIndicator';
 export const PROGRESS_BAR = 'progressBar';
 export const CRIB_POSITION_CARD = 'cribPositionCard';
+export const BRUTE_FORCE_RESULT_CARD = 'bruteForceResultCard';
+export const DECRYPTED_TEXT_DISPLAY = 'decryptedTextDisplay';
+export const NLP_SCORE_DISPLAY = 'nlpScoreDisplay';
+export const CANCEL_SEARCH_BUTTON = 'cancelSearchButton';

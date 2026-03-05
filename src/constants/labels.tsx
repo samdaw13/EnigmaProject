@@ -28,8 +28,19 @@ export const VALID_POSITIONS_LABEL = 'Valid crib positions';
 export const POSITION_LABEL = 'Position';
 export const KNOWN_PLAINTEXT_HINT =
   'Both methods require some known or suspected plaintext';
+export const KNOWN_PLAINTEXT_OPTIONAL_HINT =
+  'Known plaintext is optional — omit to search all combinations (ciphertext ≤ 50 chars)';
 export const COMMON_CRIBS_HINT = 'Common cribs: WETTER, KEINE, OBERKOMMANDO';
+export const CRIB_SEARCH_HINT = 'Common cribs: WETTER, KEINE, OBERKOMMANDO';
 export const TAP_TO_EXPAND = 'Tap a position to see alignment';
+export const DECRYPTED_TEXT_LABEL = 'Decrypted';
+export const NLP_CONFIDENCE_LABEL = 'Confidence';
+export const NO_CRIB_RESULTS_FALLBACK =
+  'No configurations found — showing structural positions only';
+export const CIPHERTEXT_TOO_LONG =
+  'Ciphertext must be 50 characters or fewer for keyless brute force';
+export const RANKING_RESULTS_LABEL = 'Search complete, ranking results...';
+export const CANCEL_LABEL = 'Cancel';
 
 export const SETTINGS_APPEARANCE_HEADING = 'Appearance';
 export const SETTINGS_THEME_LABEL = 'Theme';
