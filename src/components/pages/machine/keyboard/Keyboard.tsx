@@ -1,10 +1,16 @@
 import type { FunctionComponent } from 'react';
 import React, { useMemo, useState } from 'react';
 import { Text, View } from 'react-native';
-import { Button, Chip } from 'react-native-paper';
+import { Button, Chip, IconButton } from 'react-native-paper';
 import { useDispatch, useSelector } from 'react-redux';
 
-import { MESSAGE_DISPLAY, OUTPUT_LETTER_DISPLAY } from '../../../../constants';
+import {
+  INFO_BUTTON,
+  INFO_KEYBOARD_CONTENT,
+  INFO_KEYBOARD_TITLE,
+  MESSAGE_DISPLAY,
+  OUTPUT_LETTER_DISPLAY,
+} from '../../../../constants';
 import { updateRotorCurrentIndex } from '../../../../features/rotors/features';
 import type { RootState } from '../../../../store/store';
 import { makeKeyboardStyles } from '../../../../styles';
@@ -16,6 +22,7 @@ import {
   stepRotors,
 } from '../../../../utils';
 import { CopyButton } from '../../../common';
+import { InfoSidebar } from '../../../InfoSidebar';
 import { BackButton } from './BackButton';
 
 export const Keyboard: FunctionComponent = () => {
@@ -39,6 +46,7 @@ export const Keyboard: FunctionComponent = () => {
 
   const [outputLetter, setOutputLetter] = useState<string | null>(null);
   const [message, setMessage] = useState('');
+  const [infoVisible, setInfoVisible] = useState(false);
 
   const allRotorsSelected = (): boolean =>
     selectedRotorIds.every((id) => id !== null);
@@ -74,7 +82,16 @@ export const Keyboard: FunctionComponent = () => {
 
   return (
     <View style={keyboardStyles.screen}>
-      <BackButton />
+      <View style={keyboardStyles.headerRow}>
+        <BackButton />
+        <IconButton
+          testID={INFO_BUTTON}
+          icon='information'
+          iconColor={colors.textSecondary}
+          size={22}
+          onPress={() => setInfoVisible(true)}
+        />
+      </View>
 
       <View style={keyboardStyles.rotorDisplayRow}>
         {selectedRotorIds.map((slotId, index) => (
@@ -136,6 +153,12 @@ export const Keyboard: FunctionComponent = () => {
           </View>
         ))}
       </View>
+      <InfoSidebar
+        visible={infoVisible}
+        onDismiss={() => setInfoVisible(false)}
+        title={INFO_KEYBOARD_TITLE}
+        content={INFO_KEYBOARD_CONTENT}
+      />
     </View>
   );
 };

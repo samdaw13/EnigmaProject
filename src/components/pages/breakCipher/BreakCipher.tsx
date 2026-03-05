@@ -1,7 +1,12 @@
 import type { FunctionComponent } from 'react';
 import React, { useCallback, useMemo, useRef, useState } from 'react';
 import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
-import { Button, SegmentedButtons, TextInput } from 'react-native-paper';
+import {
+  Button,
+  IconButton,
+  SegmentedButtons,
+  TextInput,
+} from 'react-native-paper';
 
 import {
   BRUTE_FORCE_TAB,
@@ -12,6 +17,10 @@ import {
   CRIB_ANALYSIS_TAB,
   CRIB_LABEL,
   DECRYPTED_TEXT_LABEL,
+  INFO_BRUTE_FORCE_CONTENT,
+  INFO_BRUTE_FORCE_TITLE,
+  INFO_CRIB_ANALYSIS_CONTENT,
+  INFO_CRIB_ANALYSIS_TITLE,
   KNOWN_PLAINTEXT_LABEL,
   KNOWN_PLAINTEXT_OPTIONAL_HINT,
   NLP_CONFIDENCE_LABEL,
@@ -38,6 +47,7 @@ import {
   CRIB_INPUT,
   CRIB_POSITION_CARD,
   DECRYPTED_TEXT_DISPLAY,
+  INFO_BUTTON,
   NLP_SCORE_DISPLAY,
   PLAINTEXT_INPUT,
   PROGRESS_BAR,
@@ -57,6 +67,7 @@ import {
   cribSearchAsync,
   findCribPositions,
 } from '../../../utils/codebreaking';
+import { InfoSidebar } from '../../InfoSidebar';
 import { CopyButton } from '../../common';
 
 type Tab = 'bruteForce' | 'cribAnalysis';
@@ -186,6 +197,10 @@ const makeStyles = (colors: ColorPalette) =>
       textAlign: 'center',
       marginTop: 16,
       fontSize: 14,
+    },
+    infoRow: {
+      alignItems: 'flex-end',
+      marginBottom: -4,
     },
     nlpBadge: {
       borderRadius: 4,
@@ -401,6 +416,7 @@ const CribStructuralFallback: FunctionComponent<{
 
 export const BreakCipher: FunctionComponent = () => {
   const [activeTab, setActiveTab] = useState<Tab>('bruteForce');
+  const [infoVisible, setInfoVisible] = useState(false);
   const [ciphertext, setCiphertext] = useState('');
   const [plaintext, setPlaintext] = useState('');
   const [crib, setCrib] = useState('');
@@ -535,8 +551,26 @@ export const BreakCipher: FunctionComponent = () => {
       ? KNOWN_PLAINTEXT_OPTIONAL_HINT
       : COMMON_CRIBS_HINT;
 
+  const infoTitle =
+    activeTab === 'bruteForce'
+      ? INFO_BRUTE_FORCE_TITLE
+      : INFO_CRIB_ANALYSIS_TITLE;
+  const infoContent =
+    activeTab === 'bruteForce'
+      ? INFO_BRUTE_FORCE_CONTENT
+      : INFO_CRIB_ANALYSIS_CONTENT;
+
   return (
     <ScrollView style={styles.screen}>
+      <View style={styles.infoRow}>
+        <IconButton
+          testID={INFO_BUTTON}
+          icon='information'
+          iconColor={colors.textSecondary}
+          size={20}
+          onPress={() => setInfoVisible(true)}
+        />
+      </View>
       <SegmentedButtons
         value={activeTab}
         onValueChange={handleTabChange}
@@ -660,6 +694,12 @@ export const BreakCipher: FunctionComponent = () => {
             )}
         </View>
       )}
+      <InfoSidebar
+        visible={infoVisible}
+        onDismiss={() => setInfoVisible(false)}
+        title={infoTitle}
+        content={infoContent}
+      />
     </ScrollView>
   );
 };

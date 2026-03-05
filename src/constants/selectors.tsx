@@ -28,3 +28,7 @@ export const DECRYPTED_TEXT_DISPLAY = 'decryptedTextDisplay';
 export const NLP_SCORE_DISPLAY = 'nlpScoreDisplay';
 export const CANCEL_SEARCH_BUTTON = 'cancelSearchButton';
 export const COPY_MESSAGE_BUTTON = 'copyMessageButton';
+
+export const INFO_BUTTON = 'infoButton';
+export const INFO_SIDEBAR = 'infoSidebar';
+export const INFO_SIDEBAR_CLOSE = 'infoSidebarClose';
