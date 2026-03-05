@@ -15,10 +15,8 @@ import settingsReducer from '../features/settings';
 import type { RootState } from '../store/store';
 import { RotorState } from '../types';
 
-type ReducerTypes = Pick<
-  RootState,
-  'rotors' | 'reflector' | 'plugboard' | 'settings'
->;
+type ReducerTypes = Pick<RootState, 'rotors' | 'reflector' | 'plugboard'> &
+  Partial<Pick<RootState, 'settings'>>;
 type TStore = EnhancedStore<ReducerTypes>;
 
 type CustomRenderOptions = {
