@@ -4,7 +4,7 @@ export interface RotorSelectModalProps {
   modalVisible: boolean;
   setModalVisible: React.Dispatch<React.SetStateAction<boolean>>;
   currentRotor: RotorState | null;
-  setRotor: React.Dispatch<React.SetStateAction<RotorState | null>>;
+  setRotor: (rotor: RotorState | null) => void;
 }
 
 export interface ChangeIndexModalProps {
@@ -61,9 +61,9 @@ export interface AddCableModalProps {
 }
 
 export interface SelectLetterProps {
-  setLetter: React.Dispatch<React.SetStateAction<string | null>>;
+  setLetter: (letter: string) => void;
   availableLetters: string[];
-  setAvailableLetters: React.Dispatch<React.SetStateAction<string[]>>;
+  setAvailableLetters: (letters: string[]) => void;
   displayText: string;
   testID?: string;
 }

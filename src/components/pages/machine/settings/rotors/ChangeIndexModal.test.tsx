@@ -30,8 +30,6 @@ describe(`ChangeIndexModal`, () => {
     const setModalMock = jest.fn();
     const setRotorMock = jest.fn();
     await renderComponent(true, setModalMock, ROTOR_1, setRotorMock);
-    // ESLint keeps saying fireEvent needs an await and is sync
-    // eslint-disable-next-line testing-library/no-await-sync-events
     await fireEvent.press(screen.getByTestId(letterButton('B', 1)));
     expect(setRotorMock).toHaveBeenCalledWith(ROTOR_1);
     expect(setModalMock).toHaveBeenCalledWith(false);

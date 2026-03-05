@@ -41,6 +41,7 @@ export default tseslint.config(
       ...testingLibrary.configs['flat/react'].rules,
       'testing-library/await-async-queries': 'error',
       'testing-library/no-await-sync-queries': 'error',
+      'testing-library/no-await-sync-events': 'off',
       'testing-library/no-debugging-utils': 'warn',
       'testing-library/no-dom-import': 'off',
     },

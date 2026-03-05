@@ -1,5 +1,3 @@
-/* eslint-disable testing-library/no-await-sync-events */
-// THis is due to ESLint both demanding an await and no await for the fireEvents
 import React from 'react';
 
 import {
