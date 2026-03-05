@@ -1,7 +1,10 @@
 import type { PayloadAction } from '@reduxjs/toolkit';
 import { createSlice } from '@reduxjs/toolkit';
 
-import { ReflectorsState, UpdateSelectedReflectorInterface } from '../../types';
+import type {
+  ReflectorsState,
+  UpdateSelectedReflectorInterface,
+} from '../../types';
 
 export const initialReflectorState: ReflectorsState = {
   reflectors: {

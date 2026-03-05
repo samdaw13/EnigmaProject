@@ -16,11 +16,13 @@ import {
   RESULTS_CONTAINER,
   RUN_ANALYSIS_BUTTON,
 } from '../../../constants/selectors';
-import {
+import type {
   BruteForceResult,
+  CribSearchResult,
+} from '../../../utils/codebreaking';
+import {
   bruteForceSearchAsync,
   cribSearchAsync,
-  CribSearchResult,
 } from '../../../utils/codebreaking';
 import {
   act,

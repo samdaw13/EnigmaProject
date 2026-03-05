@@ -1,8 +1,9 @@
-import React, { FunctionComponent } from 'react';
+import type { FunctionComponent } from 'react';
+import React from 'react';
 import { ScrollView, View } from 'react-native';
 import { Button, Text } from 'react-native-paper';
 
-import { SelectLetterProps } from '../../../../../types';
+import type { SelectLetterProps } from '../../../../../types';
 
 export const SelectLetterButton: FunctionComponent<SelectLetterProps> = ({
   setLetter,

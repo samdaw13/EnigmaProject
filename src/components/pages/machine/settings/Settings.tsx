@@ -1,11 +1,12 @@
 import { useNavigation } from '@react-navigation/native';
-import React, { FunctionComponent } from 'react';
+import type { FunctionComponent } from 'react';
+import React from 'react';
 import { StyleSheet, View } from 'react-native';
 import { Button } from 'react-native-paper';
 
 import { ENCRYPT_MESSAGE, ENCRYPT_MESSAGE_BUTTON } from '../../../../constants';
 import { colors } from '../../../../theme/colors';
-import { NextScreenNavigationProp } from '../../../../types';
+import type { NextScreenNavigationProp } from '../../../../types';
 import { Plugboard } from './plugboard';
 import { Rotors } from './rotors';
 

@@ -1,4 +1,4 @@
-import {
+import type {
   PlugboardCable,
   ReflectorState,
   RotorState,
@@ -185,7 +185,7 @@ export const bruteForceSearchAsync = (
     let index = 0;
 
     const processNext = () => {
-      if (isCancelled?.()) {
+      if (isCancelled?.() === true) {
         resolve([]);
         return;
       }
@@ -193,7 +193,7 @@ export const bruteForceSearchAsync = (
       if (index >= totalPerms) {
         onProgress(1);
         setTimeout(() => {
-          if (isCancelled?.()) {
+          if (isCancelled?.() === true) {
             resolve([]);
             return;
           }
@@ -305,7 +305,7 @@ export const cribSearchAsync = (
     };
 
     const processNext = () => {
-      if (isCancelled?.()) {
+      if (isCancelled?.() === true) {
         resolve([]);
         return;
       }
@@ -313,7 +313,7 @@ export const cribSearchAsync = (
       if (index >= totalPerms) {
         onProgress(1);
         setTimeout(() => {
-          if (isCancelled?.()) {
+          if (isCancelled?.() === true) {
             resolve([]);
             return;
           }

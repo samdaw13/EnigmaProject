@@ -2,7 +2,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import type { PayloadAction } from '@reduxjs/toolkit';
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 
-import { SettingsState, Theme } from '../../types';
+import type { SettingsState, Theme } from '../../types';
 
 const SETTINGS_STORAGE_KEY = '@enigma_settings';
 
@@ -12,7 +12,7 @@ const initialState: SettingsState = {
 
 export const loadSettings = createAsyncThunk('settings/load', async () => {
   const stored = await AsyncStorage.getItem(SETTINGS_STORAGE_KEY);
-  return stored ? (JSON.parse(stored) as SettingsState) : initialState;
+  return stored !== null ? (JSON.parse(stored) as SettingsState) : initialState;
 });
 
 export const persistSettings =

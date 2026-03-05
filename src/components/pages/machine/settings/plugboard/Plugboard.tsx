@@ -1,11 +1,12 @@
-import React, { FunctionComponent, useState } from 'react';
+import type { FunctionComponent } from 'react';
+import React, { useState } from 'react';
 import { View } from 'react-native';
 import { Button, Chip, Portal } from 'react-native-paper';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { ADD_CABLE, ADD_CABLE_MODAL_BUTTON } from '../../../../../constants';
 import { removeCable } from '../../../../../features/plugboard';
-import { RootState } from '../../../../../store/store';
+import type { RootState } from '../../../../../store/store';
 import { rotorStyles } from '../../../../../styles';
 import { colors } from '../../../../../theme/colors';
 import { plugboardChipText } from '../../../../../utils';

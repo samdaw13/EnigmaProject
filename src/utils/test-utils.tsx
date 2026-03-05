@@ -1,9 +1,9 @@
-import { configureStore, EnhancedStore } from '@reduxjs/toolkit';
-import {
-  render as rtlRender,
-  RenderOptions,
-} from '@testing-library/react-native';
-import React, { ReactElement } from 'react';
+import type { EnhancedStore } from '@reduxjs/toolkit';
+import { configureStore } from '@reduxjs/toolkit';
+import type { RenderOptions } from '@testing-library/react-native';
+import { render as rtlRender } from '@testing-library/react-native';
+import type { ReactElement } from 'react';
+import React from 'react';
 import { PaperProvider } from 'react-native-paper';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { Provider } from 'react-redux';
@@ -13,7 +13,7 @@ import reflectorReducer from '../features/reflector';
 import rotorsReducer from '../features/rotors/features';
 import settingsReducer from '../features/settings';
 import type { RootState } from '../store/store';
-import { RotorState } from '../types';
+import type { RotorState } from '../types';
 
 type ReducerTypes = Pick<RootState, 'rotors' | 'reflector' | 'plugboard'> &
   Partial<Pick<RootState, 'settings'>>;

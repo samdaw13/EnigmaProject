@@ -1,6 +1,7 @@
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import { NavigationContainer } from '@react-navigation/native';
-import React, { FunctionComponent, useEffect } from 'react';
+import type { FunctionComponent } from 'react';
+import React, { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 
 import { About, BreakCipher, Machine, Settings } from './components';

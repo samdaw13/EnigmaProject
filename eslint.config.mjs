@@ -73,6 +73,9 @@ export default tseslint.config(
   {
     rules: {
       'jsx-quotes': ['error', 'prefer-single'],
+      '@typescript-eslint/no-floating-promises': 'error',
+      '@typescript-eslint/strict-boolean-expressions': 'error',
+      '@typescript-eslint/consistent-type-imports': 'error',
       '@typescript-eslint/no-unused-vars': [
       'error',
       {

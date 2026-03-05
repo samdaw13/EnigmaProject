@@ -1,13 +1,14 @@
-import React, { FunctionComponent } from 'react';
+import type { FunctionComponent } from 'react';
+import React from 'react';
 import { View } from 'react-native';
 import { Button, Modal, Text } from 'react-native-paper';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { ROTOR_SELECT_MODAL, SELECT_ROTOR } from '../../../../../constants';
 import { updateRotorAvailability } from '../../../../../features/rotors/features';
-import { RootState } from '../../../../../store/store';
+import type { RootState } from '../../../../../store/store';
 import { rotorStyles } from '../../../../../styles';
-import { RotorSelectModalProps, RotorState } from '../../../../../types';
+import type { RotorSelectModalProps, RotorState } from '../../../../../types';
 import { selectRotorButton } from '../../../../../utils';
 
 export const RotorSelectModal: FunctionComponent<RotorSelectModalProps> = ({
