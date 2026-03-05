@@ -1,5 +1,6 @@
 import reducer, {
   clearSelectedRotor,
+  resetRotors,
   setSelectedRotor,
   updateRotorAvailability,
   updateRotorCurrentIndex,
@@ -70,6 +71,19 @@ describe('rotors reducer', () => {
       );
       state = reducer(state, setSelectedRotor({ slotIndex: 0, rotorId: 5 }));
       expect(state.selectedSlots[0]).toBe(5);
+    });
+  });
+
+  describe('resetRotors', () => {
+    it('resets rotors to initial state', () => {
+      let state = reducer(
+        undefined,
+        updateRotorAvailability({ id: 1, isAvailable: false }),
+      );
+      expect(state.available[1].isAvailable).toBe(false);
+      state = reducer(state, resetRotors());
+      expect(state.available[1].isAvailable).toBe(true);
+      expect(state.selectedSlots).toEqual([null, null, null]);
     });
   });
 });

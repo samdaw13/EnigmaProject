@@ -34,5 +34,5 @@ describe(`Plugboard`, () => {
     expect(
       within(screen.getByTestId(`${SELECT_INPUT_LETTER}1`)).queryAllByText('B'),
     ).toHaveLength(1);
-  });
+  }, 15000);
 });

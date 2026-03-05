@@ -26,4 +26,12 @@ module.exports = {
   collectCoverage: false,
   collectCoverageFrom: ['src/**/*.tsx'],
   coverageReporters: ['text'],
+  coverageThreshold: {
+    global: {
+      statements: 90,
+      branches: 90,
+      functions: 90,
+      lines: 90,
+    },
+  },
 };
