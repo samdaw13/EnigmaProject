@@ -6,6 +6,7 @@ import {
   BRUTE_FORCE_TAB_BUTTON,
   CANCEL_SEARCH_BUTTON,
   CIPHERTEXT_INPUT,
+  COPY_MESSAGE_BUTTON,
   CRIB_ANALYSIS_TAB_BUTTON,
   CRIB_INPUT,
   CRIB_POSITION_CARD,
@@ -208,6 +209,18 @@ describe('BreakCipher', () => {
     });
   });
 
+  it('brute force result card shows copy button for decrypted text', async () => {
+    await render(<BreakCipher />);
+
+    await fireEvent.changeText(screen.getByTestId(CIPHERTEXT_INPUT), 'ABC');
+    await fireEvent.changeText(screen.getByTestId(PLAINTEXT_INPUT), 'XYZ');
+    await fireEvent.press(screen.getByTestId(RUN_ANALYSIS_BUTTON));
+
+    await waitFor(() => {
+      expect(screen.getByTestId(`${COPY_MESSAGE_BUTTON}_0`)).toBeTruthy();
+    });
+  });
+
   it('crib analysis shows ranked result cards when cribSearchAsync returns results', async () => {
     const mockResult: CribSearchResult = {
       rotorIds: [3, 2, 1],
@@ -240,6 +253,40 @@ describe('BreakCipher', () => {
     await waitFor(() => {
       expect(screen.getByTestId(`${BRUTE_FORCE_RESULT_CARD}_0`)).toBeTruthy();
       expect(screen.getByTestId(`${DECRYPTED_TEXT_DISPLAY}_0`)).toBeTruthy();
+    });
+  });
+
+  it('crib analysis result card shows copy button for decrypted text', async () => {
+    const mockResult: CribSearchResult = {
+      rotorIds: [3, 2, 1],
+      reflectorName: 'UKW-B',
+      startingPositions: [0, 0, 0],
+      cribPosition: 0,
+      decryptedText: 'HELLO',
+      nlpScore: 80,
+    };
+    mockCribSearchAsync.mockImplementationOnce(
+      (
+        _c: string,
+        _cr: string,
+        _r: object,
+        _ref: object,
+        onProgress: (p: number) => void,
+      ) => {
+        onProgress(1);
+        return Promise.resolve([mockResult]);
+      },
+    );
+
+    await render(<BreakCipher />);
+    await fireEvent.press(screen.getByTestId(CRIB_ANALYSIS_TAB_BUTTON));
+
+    await fireEvent.changeText(screen.getByTestId(CIPHERTEXT_INPUT), 'ABCDEF');
+    await fireEvent.changeText(screen.getByTestId(CRIB_INPUT), 'XY');
+    await fireEvent.press(screen.getByTestId(RUN_ANALYSIS_BUTTON));
+
+    await waitFor(() => {
+      expect(screen.getByTestId(`${COPY_MESSAGE_BUTTON}_0`)).toBeTruthy();
     });
   });
 
