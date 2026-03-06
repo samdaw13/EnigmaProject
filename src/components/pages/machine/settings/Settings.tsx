@@ -3,6 +3,7 @@ import type { FunctionComponent } from 'react';
 import React, { useCallback, useMemo, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { Button, IconButton } from 'react-native-paper';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useDispatch, useSelector } from 'react-redux';
 
 import {
@@ -41,7 +42,7 @@ const shuffleArray = <T,>(arr: T[]): T[] => {
   return result;
 };
 
-const makeStyles = (colors: ColorPalette) =>
+const makeStyles = (colors: ColorPalette, bottomInset: number = 0) =>
   StyleSheet.create({
     screen: {
       flex: 1,
@@ -52,7 +53,7 @@ const makeStyles = (colors: ColorPalette) =>
     },
     bottomSection: {
       paddingHorizontal: 16,
-      paddingBottom: 16,
+      paddingBottom: 16 + bottomInset,
       gap: 8,
     },
   });
@@ -60,7 +61,11 @@ const makeStyles = (colors: ColorPalette) =>
 export const Settings: FunctionComponent = () => {
   const navigation = useNavigation<NextScreenNavigationProp>();
   const colors = useThemeColors();
-  const styles = useMemo(() => makeStyles(colors), [colors]);
+  const { bottom: bottomInset } = useSafeAreaInsets();
+  const styles = useMemo(
+    () => makeStyles(colors, bottomInset),
+    [colors, bottomInset],
+  );
   const [infoVisible, setInfoVisible] = useState(false);
   const dispatch = useDispatch();
   const selectedSlots = useSelector(

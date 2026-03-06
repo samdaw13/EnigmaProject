@@ -3,6 +3,7 @@ import type { FunctionComponent } from 'react';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { Button, IconButton, TextInput } from 'react-native-paper';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useDispatch, useSelector } from 'react-redux';
 
 import {
@@ -85,12 +86,15 @@ const nlpBadgeColor = (score: number): string => {
   return '#F44336';
 };
 
-const makeStyles = (colors: ColorPalette) =>
+const makeStyles = (colors: ColorPalette, bottomInset: number = 0) =>
   StyleSheet.create({
     screen: {
       flex: 1,
       backgroundColor: colors.background,
       padding: 16,
+    },
+    contentContainer: {
+      paddingBottom: 16 + bottomInset,
     },
     tabs: {
       marginBottom: 16,
@@ -384,7 +388,11 @@ export const BreakCipher: FunctionComponent = () => {
   const [expandedPosition, setExpandedPosition] = useState<number | null>(null);
 
   const colors = useThemeColors();
-  const styles = useMemo(() => makeStyles(colors), [colors]);
+  const { bottom: bottomInset } = useSafeAreaInsets();
+  const styles = useMemo(
+    () => makeStyles(colors, bottomInset),
+    [colors, bottomInset],
+  );
 
   useEffect(() => {
     navigation.setOptions({
@@ -426,7 +434,10 @@ export const BreakCipher: FunctionComponent = () => {
   const runAnalysisButtonDisabled = !isCribReady || isSearching;
 
   return (
-    <ScrollView style={styles.screen}>
+    <ScrollView
+      style={styles.screen}
+      contentContainerStyle={styles.contentContainer}
+    >
       <TextInput
         testID={CIPHERTEXT_INPUT}
         label={CIPHERTEXT_LABEL}
