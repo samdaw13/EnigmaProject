@@ -72,14 +72,14 @@ export const rotorsSlice = createSlice({
       state,
       action: PayloadAction<UpdateRotorAvailabilityInterface>,
     ) => {
-      state.available[action.payload.id].isAvailable =
+      state.available[action.payload.id]!.isAvailable =
         action.payload.isAvailable;
     },
     updateRotorCurrentIndex: (
       state,
       action: PayloadAction<UpdateRotorCurrentIndexInterface>,
     ) => {
-      state.available[action.payload.id].config.currentIndex =
+      state.available[action.payload.id]!.config.currentIndex =
         action.payload.currentIndex;
     },
     setSelectedRotor: (state, action: PayloadAction<SelectedRotorAction>) => {

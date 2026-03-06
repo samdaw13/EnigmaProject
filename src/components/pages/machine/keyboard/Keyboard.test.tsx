@@ -91,16 +91,18 @@ describe('Keyboard', () => {
   it('does not encrypt when rotors are not selected', async () => {
     await renderComponent();
     await fireEvent.press(screen.getByTestId(keyboardLetterButton('A')));
-    expect(screen.getByTestId(OUTPUT_LETTER_DISPLAY).props.children).toBe('');
-    expect(screen.getByTestId(MESSAGE_DISPLAY).props.children).toBe('');
+    expect(screen.getByTestId(OUTPUT_LETTER_DISPLAY).props['children']).toBe(
+      '',
+    );
+    expect(screen.getByTestId(MESSAGE_DISPLAY).props['children']).toBe('');
   });
 
   it('encrypts a letter when all 3 rotors are selected', async () => {
     await renderWithRotorsSelected();
     await fireEvent.press(screen.getByTestId(keyboardLetterButton('A')));
     const output = screen.getByTestId(OUTPUT_LETTER_DISPLAY);
-    expect(output.props.children).toMatch(/^[A-Z]$/);
-    expect(output.props.children).not.toBe('A');
+    expect(output.props['children']).toMatch(/^[A-Z]$/);
+    expect(output.props['children']).not.toBe('A');
   });
 
   it('accumulates encrypted letters in the message', async () => {
@@ -108,14 +110,14 @@ describe('Keyboard', () => {
     await fireEvent.press(screen.getByTestId(keyboardLetterButton('A')));
     await fireEvent.press(screen.getByTestId(keyboardLetterButton('A')));
     const message = screen.getByTestId(MESSAGE_DISPLAY);
-    expect(message.props.children as string).toHaveLength(2);
+    expect(message.props['children'] as string).toHaveLength(2);
   });
 
   it('a letter never encrypts to itself', async () => {
     await renderWithRotorsSelected();
     await fireEvent.press(screen.getByTestId(keyboardLetterButton('A')));
     const output = screen.getByTestId(OUTPUT_LETTER_DISPLAY);
-    expect(output.props.children).not.toBe('A');
+    expect(output.props['children']).not.toBe('A');
   });
 
   it('does not show copy button when message is empty', async () => {

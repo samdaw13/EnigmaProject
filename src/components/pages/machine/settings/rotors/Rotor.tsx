@@ -37,7 +37,7 @@ export const Rotor: FunctionComponent<RotorProps> = ({ slotIndex }) => {
     (state: RootState) => state.rotors.selectedSlots[slotIndex],
   );
   const selectedRotor =
-    selectedRotorId !== null ? (rotors[selectedRotorId] ?? null) : null;
+    selectedRotorId != null ? (rotors[selectedRotorId] ?? null) : null;
   const [isSelectModalOpen, setIsSelectModalOpen] = useState(false);
   const [isChangeIndexModalOpen, setIsChangeIndexModalOpen] = useState(false);
   const dispatch = useDispatch();
@@ -84,7 +84,7 @@ export const Rotor: FunctionComponent<RotorProps> = ({ slotIndex }) => {
               title={currentLetter(
                 selectedRotor.config.displayedLetters[
                   selectedRotor.config.currentIndex
-                ],
+                ]!,
               )}
               subtitle={currentRotor(selectedRotor.id)}
               style={rotorStyles.cardComponent}

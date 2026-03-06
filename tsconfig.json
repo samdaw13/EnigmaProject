@@ -1,8 +1,11 @@
 {
   "extends": "@react-native/typescript-config",
   "compilerOptions": {
-    "types": ["jest"]
+    "types": ["jest"],
+    "noUncheckedIndexedAccess": true,
+    "noPropertyAccessFromIndexSignature": true,
+    "exactOptionalPropertyTypes": true
   },
-  "include": ["**/*.ts", "**/*.tsx"],
+  "include": ["src/**/*.ts", "src/**/*.tsx", "App.tsx"],
   "exclude": ["**/node_modules", "**/Pods"]
 }

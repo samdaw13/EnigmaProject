@@ -37,16 +37,16 @@ export const Plugboard: FunctionComponent = () => {
         {ADD_CABLE}
       </Button>
       <View style={rotorStyles.chip}>
-        {Object.keys(plugboard).map((cable, index) => (
+        {Object.keys(plugboard).map((cable) => (
           <Chip
-            key={`${cable}${index}`}
-            testID={`${cable}${plugboard[cable]}`}
+            key={cable}
+            testID={`${cable}${plugboard[cable]!}`}
             mode='outlined'
             onClose={() =>
               dispatch(
                 removeCable({
                   inputLetter: cable,
-                  outputLetter: plugboard[cable],
+                  outputLetter: plugboard[cable]!,
                 }),
               )
             }
@@ -54,7 +54,7 @@ export const Plugboard: FunctionComponent = () => {
             style={{ margin: 4, borderColor: colors.border }}
             textStyle={{ color: colors.textPrimary }}
           >
-            {plugboardChipText(cable, plugboard[cable])}
+            {plugboardChipText(cable, plugboard[cable]!)}
           </Chip>
         ))}
       </View>

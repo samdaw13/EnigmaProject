@@ -30,7 +30,7 @@ export const SelectLetterButton: FunctionComponent<SelectLetterProps> = ({
         {availableLetters.map((letter, index) => {
           return (
             <Button
-              key={`${letter}${index}`}
+              key={letter}
               mode='outlined'
               textColor={colors.textPrimary}
               style={{ borderColor: colors.border }}

@@ -16,8 +16,8 @@ export interface ChangeIndexModalProps {
 
 export interface RotorConfig {
   stepIndex: number;
-  displayedLetters: Array<string>;
-  mappedLetters: Array<string>;
+  displayedLetters: string[];
+  mappedLetters: string[];
   currentIndex: number;
 }
 
@@ -33,7 +33,7 @@ export interface RotorsState {
 }
 
 export interface RotorContextInterface {
-  availableRotors: Array<RotorState>;
+  availableRotors: RotorState[];
   updateRotors: (id: number, isAvailable: boolean) => void;
 }
 

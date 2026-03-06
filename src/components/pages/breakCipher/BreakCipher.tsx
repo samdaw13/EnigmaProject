@@ -299,7 +299,7 @@ const BruteForceResults: FunctionComponent<{
       <Text style={styles.resultsTitle}>{RESULTS_TITLE}</Text>
       {results.map((result, index) => (
         <View
-          key={index}
+          key={`${result.rotorIds.join('-')}-${result.reflectorName}-${result.startingPositions.join('-')}`}
           testID={`${BRUTE_FORCE_RESULT_CARD}_${index}`}
           style={styles.resultCard}
         >
@@ -340,7 +340,7 @@ const CribSearchResults: FunctionComponent<{
       <Text style={styles.resultsTitle}>{RESULTS_TITLE}</Text>
       {results.map((result, index) => (
         <View
-          key={index}
+          key={`${result.rotorIds.join('-')}-${result.reflectorName}-${result.startingPositions.join('-')}-${result.cribPosition}`}
           testID={`${BRUTE_FORCE_RESULT_CARD}_${index}`}
           style={styles.resultCard}
         >
@@ -433,7 +433,7 @@ export const BreakCipher: FunctionComponent = () => {
   const [isSearching, setIsSearching] = useState(false);
   const [progress, setProgress] = useState(0);
   const [expandedPosition, setExpandedPosition] = useState<number | null>(null);
-  const cancelledRef = useRef(false);
+  const cancelledRef = useRef<boolean>(false);
   const colors = useThemeColors();
   const styles = useMemo(() => makeStyles(colors), [colors]);
 
@@ -474,7 +474,8 @@ export const BreakCipher: FunctionComponent = () => {
       setProgress,
       () => cancelledRef.current,
     );
-    if (cancelledRef.current) return;
+    const wasCancelled = cancelledRef.current as boolean;
+    if (wasCancelled) return;
     setBruteForceResults(results);
     setIsSearching(false);
   }, [ciphertext, plaintext]);
@@ -499,7 +500,8 @@ export const BreakCipher: FunctionComponent = () => {
       setProgress,
       () => cancelledRef.current,
     );
-    if (cancelledRef.current) return;
+    const wasCancelled = cancelledRef.current as boolean;
+    if (wasCancelled) return;
     setCribSearchResults(results);
     setLastCribSearch({ ciphertext: sanitizedCiphertext, crib: sanitizedCrib });
     setIsSearching(false);

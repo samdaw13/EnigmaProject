@@ -71,7 +71,7 @@ export const Keyboard: FunctionComponent = () => {
       return;
     }
 
-    const orderedRotors = selectedRotorIds.map((id) => rotors[id as number]);
+    const orderedRotors = selectedRotorIds.map((id) => rotors[id as number]!);
     const steppedRotors = stepRotors(orderedRotors);
 
     steppedRotors.forEach((rotor, index) => {
@@ -83,7 +83,7 @@ export const Keyboard: FunctionComponent = () => {
       );
     });
 
-    const reflector = reflectors[selectedReflectorId];
+    const reflector = reflectors[selectedReflectorId]!;
     const encrypted = encryptLetter(key, steppedRotors, plugboard, reflector);
     setOutputLetter(encrypted);
     setMessage((prev) => prev + encrypted);
@@ -92,8 +92,8 @@ export const Keyboard: FunctionComponent = () => {
   const processTextInput = (text: string) => {
     if (!allRotorsSelected()) return;
 
-    const orderedRotors = selectedRotorIds.map((id) => rotors[id as number]);
-    const reflector = reflectors[selectedReflectorId];
+    const orderedRotors = selectedRotorIds.map((id) => rotors[id as number]!);
+    const reflector = reflectors[selectedReflectorId]!;
     let currentRotors = orderedRotors;
     const results: string[] = [];
 
@@ -114,7 +114,7 @@ export const Keyboard: FunctionComponent = () => {
       );
     });
 
-    setOutputLetter(results[results.length - 1]);
+    setOutputLetter(results[results.length - 1]!);
     setMessage((prev) => prev + results.join(''));
     setPasteInput('');
     setPasteVisible(false);
@@ -122,8 +122,8 @@ export const Keyboard: FunctionComponent = () => {
 
   const currentRotorLetter = (slotId: number | null): string => {
     if (slotId === null) return '-';
-    const rotor = rotors[slotId];
-    return rotor.config.displayedLetters[rotor.config.currentIndex];
+    const rotor = rotors[slotId]!;
+    return rotor.config.displayedLetters[rotor.config.currentIndex]!;
   };
 
   return (
@@ -191,7 +191,10 @@ export const Keyboard: FunctionComponent = () => {
 
       <View style={keyboardStyles.rotorDisplayRow}>
         {selectedRotorIds.map((slotId, index) => (
-          <View key={index} style={keyboardStyles.rotorWindow}>
+          <View
+            key={(['left', 'middle', 'right'] as const)[index]}
+            style={keyboardStyles.rotorWindow}
+          >
             <Text style={keyboardStyles.rotorWindowText}>
               {currentRotorLetter(slotId)}
             </Text>
@@ -222,15 +225,15 @@ export const Keyboard: FunctionComponent = () => {
               style={keyboardStyles.plugboardChip}
               theme={{ colors: { secondaryContainer: colors.surfaceAlt } }}
             >
-              {plugboardChipText(cable, plugboard[cable])}
+              {plugboardChipText(cable, plugboard[cable]!)}
             </Chip>
           ))}
         </View>
       )}
 
       <View style={keyboardStyles.container}>
-        {keyboardLayout.map((row, rowIndex) => (
-          <View key={rowIndex} style={keyboardStyles.horizontalRow}>
+        {keyboardLayout.map((row) => (
+          <View key={row.join('')} style={keyboardStyles.horizontalRow}>
             {row.map((key) => (
               <Button
                 key={key}

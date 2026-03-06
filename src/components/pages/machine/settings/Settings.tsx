@@ -35,7 +35,7 @@ const shuffleArray = <T,>(arr: T[]): T[] => {
   const result = [...arr];
   for (let i = result.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
-    [result[i], result[j]] = [result[j], result[i]];
+    [result[i], result[j]] = [result[j]!, result[i]!];
   }
   return result;
 };
@@ -91,7 +91,7 @@ export const Settings: FunctionComponent = () => {
     const numCables = 3 + Math.floor(Math.random() * 3);
     for (let i = 0; i < numCables * 2; i += 2) {
       dispatch(
-        addCable({ inputLetter: letters[i], outputLetter: letters[i + 1] }),
+        addCable({ inputLetter: letters[i]!, outputLetter: letters[i + 1]! }),
       );
     }
   };

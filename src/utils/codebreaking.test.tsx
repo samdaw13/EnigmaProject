@@ -14,11 +14,11 @@ import {
   findCribPositions,
 } from './codebreaking';
 
-const rotorI: RotorState = initialRotorState.available[1];
-const rotorII: RotorState = initialRotorState.available[2];
-const rotorIII: RotorState = initialRotorState.available[3];
+const rotorI: RotorState = initialRotorState.available[1]!;
+const rotorII: RotorState = initialRotorState.available[2]!;
+const rotorIII: RotorState = initialRotorState.available[3]!;
 
-const reflectorB: ReflectorState = initialReflectorState.reflectors[2];
+const reflectorB: ReflectorState = initialReflectorState.reflectors[2]!;
 const emptyPlugboard: PlugboardCable = {};
 
 describe('encryptString', () => {
@@ -82,7 +82,7 @@ describe('bruteForceSearch', () => {
       ciphertext,
       plaintext,
       initialRotorState.available,
-      { 2: initialReflectorState.reflectors[2] },
+      { 2: initialReflectorState.reflectors[2]! },
     );
 
     const matchingResult = results.find(
@@ -128,7 +128,7 @@ describe('bruteForceSearchAsync', () => {
       reflectorB,
     );
 
-    const singleReflector = { 2: initialReflectorState.reflectors[2] };
+    const singleReflector = { 2: initialReflectorState.reflectors[2]! };
     const progressValues: number[] = [];
 
     const results = await bruteForceSearchAsync(
@@ -163,23 +163,23 @@ describe('bruteForceSearchAsync', () => {
       'ZZ',
       'ZZ',
       initialRotorState.available,
-      { 2: initialReflectorState.reflectors[2] },
+      { 2: initialReflectorState.reflectors[2]! },
       (p) => progressValues.push(p),
     );
 
     expect(progressValues.length).toBeGreaterThan(0);
     expect(progressValues[progressValues.length - 1]).toBe(1);
     for (let i = 1; i < progressValues.length; i++) {
-      expect(progressValues[i]).toBeGreaterThanOrEqual(progressValues[i - 1]);
+      expect(progressValues[i]).toBeGreaterThanOrEqual(progressValues[i - 1]!);
     }
   });
 });
 
 // Limit rotors to III, II, I for faster crib search tests (6 perms vs 60)
 const limitedRotors = {
-  1: initialRotorState.available[1],
-  2: initialRotorState.available[2],
-  3: initialRotorState.available[3],
+  1: initialRotorState.available[1]!,
+  2: initialRotorState.available[2]!,
+  3: initialRotorState.available[3]!,
 };
 
 describe('cribSearchAsync', () => {
@@ -201,7 +201,7 @@ describe('cribSearchAsync', () => {
       reflectorB,
     );
 
-    const singleReflector = { 2: initialReflectorState.reflectors[2] };
+    const singleReflector = { 2: initialReflectorState.reflectors[2]! };
     const results: CribSearchResult[] = await cribSearchAsync(
       ciphertext,
       crib,
@@ -234,7 +234,7 @@ describe('cribSearchAsync', () => {
       'ABC',
       'HELLO',
       limitedRotors,
-      { 2: initialReflectorState.reflectors[2] },
+      { 2: initialReflectorState.reflectors[2]! },
       (p) => progressValues.push(p),
     );
 
@@ -261,7 +261,7 @@ describe('cribSearchAsync', () => {
       ciphertext,
       'WITH',
       limitedRotors,
-      { 2: initialReflectorState.reflectors[2] },
+      { 2: initialReflectorState.reflectors[2]! },
       (p) => progressValues.push(p),
     );
 

@@ -13,7 +13,7 @@ export default tseslint.config(
     ignores: ['**/*.js', '**/*.mjs', 'node_modules/', 'android/', 'ios/', 'coverage/', 'e2e/'],
   },
   js.configs.recommended,
-  ...tseslint.configs.recommendedTypeChecked,
+  ...tseslint.configs.strictTypeChecked,
   {
     languageOptions: {
       parserOptions: {
@@ -55,6 +55,8 @@ export default tseslint.config(
     rules: {
       'react/no-unstable-nested-components': ['error', { allowAsProps: true }],
       'react-hooks/set-state-in-effect': 'warn',
+      'react/no-array-index-key': 'error',
+      'react/self-closing-comp': 'error',
     },
   },
   {
@@ -68,6 +70,7 @@ export default tseslint.config(
       'import/first': 'error',
       'import/newline-after-import': 'error',
       'import/no-duplicates': 'error',
+      'import/no-cycle': ['warn', { ignoreExternal: true }],
     },
   },
   {
@@ -76,18 +79,25 @@ export default tseslint.config(
       '@typescript-eslint/no-floating-promises': 'error',
       '@typescript-eslint/strict-boolean-expressions': 'error',
       '@typescript-eslint/consistent-type-imports': 'error',
+      '@typescript-eslint/switch-exhaustiveness-check': 'error',
+      '@typescript-eslint/no-explicit-any': 'error',
+      '@typescript-eslint/array-type': ['error', { default: 'array' }],
+      '@typescript-eslint/no-non-null-assertion': 'off',
+      '@typescript-eslint/no-confusing-void-expression': ['error', { ignoreArrowShorthand: true }],
+      '@typescript-eslint/restrict-template-expressions': ['error', { allowNumber: true }],
+      '@typescript-eslint/no-misused-spread': 'off',
       '@typescript-eslint/no-unused-vars': [
-      'error',
-      {
-        'args': 'all',
-        'argsIgnorePattern': '^_',
-        'caughtErrors': 'all',
-        'caughtErrorsIgnorePattern': '^_',
-        'destructuredArrayIgnorePattern': '^_',
-        'varsIgnorePattern': '^_',
-        'ignoreRestSiblings': true
-      }
-    ]
+        'error',
+        {
+          'args': 'all',
+          'argsIgnorePattern': '^_',
+          'caughtErrors': 'all',
+          'caughtErrorsIgnorePattern': '^_',
+          'destructuredArrayIgnorePattern': '^_',
+          'varsIgnorePattern': '^_',
+          'ignoreRestSiblings': true,
+        },
+      ],
     },
   },
   prettier,

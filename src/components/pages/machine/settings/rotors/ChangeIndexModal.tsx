@@ -33,7 +33,7 @@ export const ChangeIndexModal: FunctionComponent<ChangeIndexModalProps> = ({
           currentIndex: currentRotor.config.displayedLetters.indexOf(letter),
         }),
       );
-      setRotor(rotors[currentRotor.id]);
+      setRotor(rotors[currentRotor.id] ?? null);
     }
     closeModal();
   };
