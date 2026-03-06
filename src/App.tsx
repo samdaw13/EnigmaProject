@@ -110,6 +110,7 @@ const App: FunctionComponent = () => {
           drawerStyle: { backgroundColor: colors.background },
           drawerActiveTintColor: colors.accent,
           drawerInactiveTintColor: colors.textPrimary,
+          drawerItemStyle: { marginVertical: 4 },
           headerStyle: { backgroundColor: colors.surface },
           headerTintColor: colors.textPrimary,
         }}
