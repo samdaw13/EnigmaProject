@@ -3,7 +3,7 @@ import type { FunctionComponent } from 'react';
 import React, { useMemo, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { Button, IconButton } from 'react-native-paper';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 import {
   ENCRYPT_MESSAGE,
@@ -21,6 +21,7 @@ import {
   updateRotorAvailability,
   updateRotorCurrentIndex,
 } from '../../../../features/rotors/features';
+import type { RootState } from '../../../../store/store';
 import type { ColorPalette } from '../../../../theme/colors';
 import { useThemeColors } from '../../../../theme/useThemeColors';
 import type { NextScreenNavigationProp } from '../../../../types';
@@ -66,6 +67,10 @@ export const Settings: FunctionComponent = () => {
   const styles = useMemo(() => makeStyles(colors), [colors]);
   const [infoVisible, setInfoVisible] = useState(false);
   const dispatch = useDispatch();
+  const selectedSlots = useSelector(
+    (state: RootState) => state.rotors.selectedSlots,
+  );
+  const allRotorsSelected = selectedSlots.every((id) => id !== null);
 
   const navigateToNextItem = () => {
     navigation.navigate('Keyboard');
@@ -127,6 +132,7 @@ export const Settings: FunctionComponent = () => {
           testID={ENCRYPT_MESSAGE_BUTTON}
           buttonColor={colors.accent}
           textColor={colors.background}
+          disabled={!allRotorsSelected}
         >
           {ENCRYPT_MESSAGE}
         </Button>
