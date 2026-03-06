@@ -9,6 +9,7 @@ jobs:
   e2e-android:
     name: Android Smoke Tests
     runs-on: ubuntu-latest
+    timeout-minutes: 45
 
     steps:
       - name: Checkout code
@@ -52,5 +53,5 @@ jobs:
             adb install android/app/build/outputs/apk/debug/app-debug.apk
             adb reverse tcp:8081 tcp:8081
             npx react-native start --reset-cache &
-            until curl -s http://localhost:8081/status | grep -q "packager-status:running"; do sleep 2; done
+            timeout 120 bash -c 'until curl -s http://localhost:8081/status | grep -q "packager-status:running"; do sleep 2; done' || { echo "Metro bundler did not start in time"; exit 1; }
             maestro test e2e/smoke/
