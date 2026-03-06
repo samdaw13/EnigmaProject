@@ -53,6 +53,7 @@ export const SETTINGS_RESET_CONFIRM = 'Reset';
 export const SETTINGS_RESET_CANCEL = 'Cancel';
 
 export const RANDOMIZE_SETTINGS = 'Randomize';
+export const CLEAR_SETTINGS = 'Clear';
 
 export const PASTE_TEXT = 'Feed text';
 export const PASTE_TEXT_PLACEHOLDER = 'Enter text to encrypt / decrypt';

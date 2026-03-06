@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { ENCRYPT_MESSAGE_BUTTON } from '../../../../constants';
+import { CLEAR_BUTTON, ENCRYPT_MESSAGE_BUTTON } from '../../../../constants';
 import { initialReflectorState } from '../../../../features/reflector';
 import { initialRotorState } from '../../../../features/rotors/features';
 import { fireEvent, render, screen } from '../../../../utils/test-utils';
@@ -39,6 +39,12 @@ describe(`Settings`, () => {
 
   it(`disables Encrypt Message button when rotors are not fully selected`, async () => {
     await render(<Settings />);
+    expect(screen.getByTestId(ENCRYPT_MESSAGE_BUTTON)).toBeDisabled();
+  });
+
+  it(`clears rotor and plugboard state when Clear button is pressed`, async () => {
+    await render(<Settings />, { preloadedState: allRotorsSelectedState });
+    await fireEvent.press(screen.getByTestId(CLEAR_BUTTON));
     expect(screen.getByTestId(ENCRYPT_MESSAGE_BUTTON)).toBeDisabled();
   });
 });
