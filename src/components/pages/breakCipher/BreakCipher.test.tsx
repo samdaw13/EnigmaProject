@@ -23,6 +23,16 @@ import {
 } from '../../../utils/test-utils';
 import { BreakCipher } from './BreakCipher';
 
+jest.mock('@react-navigation/native', () => {
+  const actualNav = jest.requireActual<object>('@react-navigation/native');
+  return {
+    ...actualNav,
+    useNavigation: () => ({
+      setOptions: jest.fn(),
+    }),
+  };
+});
+
 jest.mock('../../../utils/codebreaking', () => {
   const actual = jest.requireActual<object>('../../../utils/codebreaking');
   return {

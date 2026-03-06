@@ -1,5 +1,6 @@
+import { useNavigation } from '@react-navigation/native';
 import type { FunctionComponent } from 'react';
-import React, { useCallback, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { Button, IconButton, TextInput } from 'react-native-paper';
 import { useDispatch, useSelector } from 'react-redux';
@@ -179,10 +180,6 @@ const makeStyles = (colors: ColorPalette) =>
       textAlign: 'center',
       marginTop: 16,
       fontSize: 14,
-    },
-    infoRow: {
-      alignItems: 'flex-end',
-      marginBottom: -4,
     },
     nlpBadge: {
       borderRadius: 4,
@@ -374,6 +371,7 @@ export const BreakCipher: FunctionComponent = () => {
     (state: RootState) => state.codeBreaking.lastCribSearch,
   );
 
+  const navigation = useNavigation();
   const [infoVisible, setInfoVisible] = useState(false);
   const [ciphertext, setCiphertext] = useState('');
   const [crib, setCrib] = useState('');
@@ -381,6 +379,20 @@ export const BreakCipher: FunctionComponent = () => {
 
   const colors = useThemeColors();
   const styles = useMemo(() => makeStyles(colors), [colors]);
+
+  useEffect(() => {
+    navigation.setOptions({
+      headerRight: () => (
+        <IconButton
+          testID={INFO_BUTTON}
+          icon='information'
+          iconColor={colors.textSecondary}
+          size={22}
+          onPress={() => setInfoVisible(true)}
+        />
+      ),
+    });
+  }, [navigation, colors.textSecondary, setInfoVisible]);
 
   const isSearching = searchStatus === 'searching';
 
@@ -409,16 +421,6 @@ export const BreakCipher: FunctionComponent = () => {
 
   return (
     <ScrollView style={styles.screen}>
-      <View style={styles.infoRow}>
-        <IconButton
-          testID={INFO_BUTTON}
-          icon='information'
-          iconColor={colors.textSecondary}
-          size={20}
-          onPress={() => setInfoVisible(true)}
-        />
-      </View>
-
       <TextInput
         testID={CIPHERTEXT_INPUT}
         label={CIPHERTEXT_LABEL}

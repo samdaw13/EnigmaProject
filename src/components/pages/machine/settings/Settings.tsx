@@ -1,6 +1,6 @@
-import { useNavigation } from '@react-navigation/native';
+import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import type { FunctionComponent } from 'react';
-import React, { useMemo, useState } from 'react';
+import React, { useCallback, useMemo, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { Button, IconButton } from 'react-native-paper';
 import { useDispatch, useSelector } from 'react-redux';
@@ -55,10 +55,6 @@ const makeStyles = (colors: ColorPalette) =>
       paddingBottom: 16,
       gap: 8,
     },
-    headerRow: {
-      flexDirection: 'row',
-      justifyContent: 'flex-end',
-    },
   });
 
 export const Settings: FunctionComponent = () => {
@@ -71,6 +67,25 @@ export const Settings: FunctionComponent = () => {
     (state: RootState) => state.rotors.selectedSlots,
   );
   const allRotorsSelected = selectedSlots.every((id) => id !== null);
+
+  useFocusEffect(
+    useCallback(() => {
+      navigation.getParent()?.setOptions({
+        headerRight: () => (
+          <IconButton
+            testID={INFO_BUTTON}
+            icon='information'
+            iconColor={colors.textSecondary}
+            size={22}
+            onPress={() => setInfoVisible(true)}
+          />
+        ),
+      });
+      return () => {
+        navigation.getParent()?.setOptions({ headerRight: undefined });
+      };
+    }, [navigation, colors.textSecondary, setInfoVisible]),
+  );
 
   const navigateToNextItem = () => {
     navigation.navigate('Keyboard');
@@ -103,15 +118,6 @@ export const Settings: FunctionComponent = () => {
 
   return (
     <View style={styles.screen}>
-      <View style={styles.headerRow}>
-        <IconButton
-          testID={INFO_BUTTON}
-          icon='information'
-          iconColor={colors.textSecondary}
-          size={22}
-          onPress={() => setInfoVisible(true)}
-        />
-      </View>
       <View style={styles.content}>
         <Rotors />
         <Plugboard />
