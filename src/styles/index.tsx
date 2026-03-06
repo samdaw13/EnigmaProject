@@ -32,6 +32,11 @@ export const makeRotorStyles = (colors: ColorPalette) =>
     rotor: {
       marginVertical: 10,
       paddingHorizontal: 0,
+      backgroundColor: colors.surface,
+    },
+    modalText: {
+      color: colors.textPrimary,
+      marginBottom: 8,
     },
     selectRotor: {
       backgroundColor: colors.surface,
@@ -132,5 +137,24 @@ export const makeKeyboardStyles = (colors: ColorPalette) =>
       flexDirection: 'row',
       alignItems: 'center',
       justifyContent: 'space-between',
+    },
+    headerActions: {
+      flexDirection: 'row',
+      alignItems: 'center',
+    },
+    pasteModal: {
+      backgroundColor: colors.surface,
+      margin: 24,
+      padding: 20,
+      borderRadius: 8,
+    },
+    pasteInput: {
+      backgroundColor: colors.surface,
+      marginBottom: 12,
+    },
+    pasteButtonRow: {
+      flexDirection: 'row',
+      justifyContent: 'flex-end',
+      gap: 8,
     },
   });

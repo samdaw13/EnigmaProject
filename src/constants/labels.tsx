@@ -58,6 +58,12 @@ export const SETTINGS_RESET_CONFIRM_MESSAGE =
 export const SETTINGS_RESET_CONFIRM = 'Reset';
 export const SETTINGS_RESET_CANCEL = 'Cancel';
 
+export const RANDOMIZE_SETTINGS = 'Randomize';
+
+export const PASTE_TEXT = 'Feed text';
+export const PASTE_TEXT_PLACEHOLDER = 'Enter text to encrypt / decrypt';
+export const PASTE_CONFIRM = 'Feed';
+
 export const ABOUT_TITLE = 'The Enigma Machine';
 
 export const ABOUT_HISTORY_HEADING = 'History';

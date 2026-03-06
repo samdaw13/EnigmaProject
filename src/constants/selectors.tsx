@@ -32,3 +32,8 @@ export const COPY_MESSAGE_BUTTON = 'copyMessageButton';
 export const INFO_BUTTON = 'infoButton';
 export const INFO_SIDEBAR = 'infoSidebar';
 export const INFO_SIDEBAR_CLOSE = 'infoSidebarClose';
+
+export const RANDOMIZE_BUTTON = 'randomizeButton';
+export const PASTE_TEXT_BUTTON = 'pasteTextButton';
+export const PASTE_TEXT_INPUT = 'pasteTextInput';
+export const PASTE_CONFIRM_BUTTON = 'pasteConfirmButton';
