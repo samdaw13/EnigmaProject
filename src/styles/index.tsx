@@ -53,7 +53,10 @@ export const makeRotorStyles = (colors: ColorPalette) =>
     },
   });
 
-export const makeKeyboardStyles = (colors: ColorPalette) =>
+export const makeKeyboardStyles = (
+  colors: ColorPalette,
+  bottomInset: number = 0,
+) =>
   StyleSheet.create({
     screen: {
       flex: 1,
@@ -63,7 +66,7 @@ export const makeKeyboardStyles = (colors: ColorPalette) =>
       flexDirection: 'column',
       alignItems: 'center',
       justifyContent: 'flex-end',
-      paddingBottom: 24,
+      paddingBottom: 24 + bottomInset,
     },
     horizontalRow: {
       flexDirection: 'row',
