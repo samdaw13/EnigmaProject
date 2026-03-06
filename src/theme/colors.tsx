@@ -7,6 +7,8 @@ export interface ColorPalette {
   textSecondary: string;
   accent: string;
   destructive: string;
+  disabledSurface: string;
+  disabledText: string;
 }
 
 export const darkColors: ColorPalette = {
@@ -18,6 +20,8 @@ export const darkColors: ColorPalette = {
   textSecondary: '#E0E0E0',
   accent: '#FFD700',
   destructive: '#9c2a2a',
+  disabledSurface: '#3a3a3a',
+  disabledText: '#666666',
 };
 
 export const lightColors: ColorPalette = {
@@ -29,6 +33,8 @@ export const lightColors: ColorPalette = {
   textSecondary: '#5A4A3A',
   accent: '#B8860B',
   destructive: '#9c2a2a',
+  disabledSurface: '#C5BAA8',
+  disabledText: '#7A6A5A',
 };
 
 export const getColors = (theme: 'dark' | 'light'): ColorPalette =>

@@ -162,6 +162,12 @@ export const Keyboard: FunctionComponent = () => {
               buttonColor={colors.accent}
               textColor={colors.background}
               disabled={pasteInput.length === 0}
+              theme={{
+                colors: {
+                  surfaceDisabled: colors.disabledSurface,
+                  onSurfaceDisabled: colors.disabledText,
+                },
+              }}
               onPress={() => processTextInput(pasteInput)}
             >
               {PASTE_CONFIRM}
