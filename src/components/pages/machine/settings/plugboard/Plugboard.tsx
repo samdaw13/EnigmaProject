@@ -51,7 +51,11 @@ export const Plugboard: FunctionComponent = () => {
               )
             }
             closeIcon={'close-circle'}
-            style={{ margin: 4, borderColor: colors.border }}
+            style={{
+              margin: 4,
+              borderColor: colors.border,
+              backgroundColor: colors.surface,
+            }}
             textStyle={{ color: colors.textPrimary }}
           >
             {plugboardChipText(cable, plugboard[cable]!)}
