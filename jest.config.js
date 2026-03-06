@@ -26,6 +26,8 @@ module.exports = {
 
   moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx', 'json', 'node'],
 
+  testPathIgnorePatterns: ['/node_modules/', '<rootDir>/e2e/'],
+
   setupFiles: ['./jest.setup.js'],
 
   collectCoverage: false,
