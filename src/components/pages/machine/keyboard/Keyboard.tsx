@@ -78,9 +78,6 @@ export const Keyboard: FunctionComponent = () => {
           />
         ),
       });
-      return () => {
-        navigation.getParent()?.setOptions({ headerRight: undefined });
-      };
     }, [navigation, colors.textSecondary, setInfoVisible]),
   );
 

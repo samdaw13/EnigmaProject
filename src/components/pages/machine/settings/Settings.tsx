@@ -81,9 +81,6 @@ export const Settings: FunctionComponent = () => {
           />
         ),
       });
-      return () => {
-        navigation.getParent()?.setOptions({ headerRight: undefined });
-      };
     }, [navigation, colors.textSecondary, setInfoVisible]),
   );
 
