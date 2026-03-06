@@ -262,6 +262,12 @@ const RunButton: FunctionComponent<{
       buttonColor={colors.accent}
       textColor={colors.background}
       disabled={disabled}
+      theme={{
+        colors: {
+          surfaceDisabled: colors.disabledSurface,
+          onSurfaceDisabled: colors.disabledText,
+        },
+      }}
     >
       {RUN_ANALYSIS}
     </Button>
