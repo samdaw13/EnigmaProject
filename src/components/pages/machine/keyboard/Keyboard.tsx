@@ -10,6 +10,7 @@ import {
   Portal,
   TextInput,
 } from 'react-native-paper';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useDispatch, useSelector } from 'react-redux';
 
 import {
@@ -56,7 +57,11 @@ export const Keyboard: FunctionComponent = () => {
   );
   const dispatch = useDispatch();
   const colors = useThemeColors();
-  const keyboardStyles = useMemo(() => makeKeyboardStyles(colors), [colors]);
+  const { bottom: bottomInset } = useSafeAreaInsets();
+  const keyboardStyles = useMemo(
+    () => makeKeyboardStyles(colors, bottomInset),
+    [colors, bottomInset],
+  );
 
   const navigation = useNavigation();
   const [outputLetter, setOutputLetter] = useState<string | null>(null);
