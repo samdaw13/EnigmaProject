@@ -1,7 +1,7 @@
 import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import type { FunctionComponent } from 'react';
 import React, { useCallback, useMemo, useState } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { ScrollView, StyleSheet, View } from 'react-native';
 import { Button, IconButton } from 'react-native-paper';
 import { useDispatch, useSelector } from 'react-redux';
 
@@ -129,10 +129,10 @@ export const Settings: FunctionComponent = () => {
 
   return (
     <View style={styles.screen}>
-      <View style={styles.content}>
+      <ScrollView style={styles.content}>
         <Rotors />
         <Plugboard />
-      </View>
+      </ScrollView>
       <View style={styles.bottomSection}>
         <View style={styles.buttonRow}>
           <Button
