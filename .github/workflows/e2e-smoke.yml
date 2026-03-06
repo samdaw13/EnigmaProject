@@ -38,7 +38,9 @@ jobs:
           restore-keys: gradle-
 
       - name: Build debug APK
-        run: cd android && ./gradlew assembleDebug --no-daemon
+        run: |
+          chmod +x android/gradlew
+          cd android && ./gradlew assembleDebug --no-daemon
 
       - name: Run smoke tests on Android emulator
         uses: reactivecircus/android-emulator-runner@v2
