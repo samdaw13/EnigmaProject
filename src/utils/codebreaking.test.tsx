@@ -5,14 +5,8 @@ import type {
   ReflectorState,
   RotorState,
 } from '../types/interfaces';
-import type {
-  BruteForceResult,
-  CribSearchResult,
-  MenuEdge,
-} from './codebreaking';
+import type { CribSearchResult, MenuEdge } from './codebreaking';
 import {
-  bruteForceSearch,
-  bruteForceSearchAsync,
   buildMenuEdges,
   cribSearchAsync,
   encryptString,
@@ -66,118 +60,6 @@ describe('encryptString', () => {
     const result = encryptString(plaintext, rotors, emptyPlugboard, reflectorB);
     for (let i = 0; i < plaintext.length; i++) {
       expect(result[i]).not.toBe(plaintext[i]);
-    }
-  });
-});
-
-describe('bruteForceSearch', () => {
-  it('finds the correct configuration for a known pair', () => {
-    const rotors = [
-      { ...rotorIII, config: { ...rotorIII.config, currentIndex: 0 } },
-      { ...rotorII, config: { ...rotorII.config, currentIndex: 0 } },
-      { ...rotorI, config: { ...rotorI.config, currentIndex: 0 } },
-    ];
-    const plaintext = 'HI';
-    const ciphertext = encryptString(
-      plaintext,
-      rotors,
-      emptyPlugboard,
-      reflectorB,
-    );
-
-    const results: BruteForceResult[] = bruteForceSearch(
-      ciphertext,
-      plaintext,
-      initialRotorState.available,
-      { 2: initialReflectorState.reflectors[2]! },
-    );
-
-    const matchingResult = results.find(
-      (r) =>
-        r.rotorIds[0] === 3 &&
-        r.rotorIds[1] === 2 &&
-        r.rotorIds[2] === 1 &&
-        r.startingPositions[0] === 0 &&
-        r.startingPositions[1] === 0 &&
-        r.startingPositions[2] === 0,
-    );
-    expect(matchingResult).toBeDefined();
-    expect(matchingResult!.reflectorName).toBe('UKW-B');
-    expect(matchingResult!.decryptedText).toBeTruthy();
-    expect(matchingResult!.nlpScore).toBeGreaterThanOrEqual(0);
-    expect(matchingResult!.nlpScore).toBeLessThanOrEqual(100);
-  });
-
-  it('returns empty array when no config matches', () => {
-    const results = bruteForceSearch(
-      'ZZ',
-      'ZZ',
-      initialRotorState.available,
-      initialReflectorState.reflectors,
-    );
-    expect(results).toEqual([]);
-  });
-});
-
-describe('bruteForceSearchAsync', () => {
-  it('finds the same results as synchronous version', async () => {
-    jest.useRealTimers();
-    const rotors = [
-      { ...rotorIII, config: { ...rotorIII.config, currentIndex: 0 } },
-      { ...rotorII, config: { ...rotorII.config, currentIndex: 0 } },
-      { ...rotorI, config: { ...rotorI.config, currentIndex: 0 } },
-    ];
-    const plaintext = 'HI';
-    const ciphertext = encryptString(
-      plaintext,
-      rotors,
-      emptyPlugboard,
-      reflectorB,
-    );
-
-    const singleReflector = { 2: initialReflectorState.reflectors[2]! };
-    const progressValues: number[] = [];
-
-    const results = await bruteForceSearchAsync(
-      ciphertext,
-      plaintext,
-      initialRotorState.available,
-      singleReflector,
-      (p) => progressValues.push(p),
-    );
-
-    const matchingResult = results.find(
-      (r) =>
-        r.rotorIds[0] === 3 &&
-        r.rotorIds[1] === 2 &&
-        r.rotorIds[2] === 1 &&
-        r.startingPositions[0] === 0 &&
-        r.startingPositions[1] === 0 &&
-        r.startingPositions[2] === 0,
-    );
-    expect(matchingResult).toBeDefined();
-    expect(matchingResult!.reflectorName).toBe('UKW-B');
-    expect(matchingResult!.decryptedText).toBeTruthy();
-    expect(matchingResult!.nlpScore).toBeGreaterThanOrEqual(0);
-    expect(matchingResult!.nlpScore).toBeLessThanOrEqual(100);
-  });
-
-  it('calls onProgress with increasing values up to 1', async () => {
-    jest.useRealTimers();
-    const progressValues: number[] = [];
-
-    await bruteForceSearchAsync(
-      'ZZ',
-      'ZZ',
-      initialRotorState.available,
-      { 2: initialReflectorState.reflectors[2]! },
-      (p) => progressValues.push(p),
-    );
-
-    expect(progressValues.length).toBeGreaterThan(0);
-    expect(progressValues[progressValues.length - 1]).toBe(1);
-    for (let i = 1; i < progressValues.length; i++) {
-      expect(progressValues[i]).toBeGreaterThanOrEqual(progressValues[i - 1]!);
     }
   });
 });
