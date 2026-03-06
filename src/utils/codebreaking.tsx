@@ -388,148 +388,55 @@ export const cribSearchAsync = (
   const stecker = new Int8Array(26);
   const queueBuf = new Int16Array(BFS_BUF_SIZE);
 
+  // Break work into slices of 26×26 positions (one p0 value per setTimeout tick)
+  // instead of 26³ per tick — yields ~26× more often so the UI stays responsive.
+  const reflectorIds = Object.keys(allReflectors).map(Number);
+  const totalTicks = permutations.length * reflectorIds.length * 26;
+
   return new Promise((resolve) => {
-    let index = 0;
+    let permIndex = 0;
+    let reflIndex = 0;
+    let p0 = 0;
+    let ticksDone = 0;
 
-    const processPerm = (perm: number[]) => {
-      const [rId, mId, lId] = perm as [number, number, number];
-      const rStep = allRotors[rId]!.config.stepIndex;
-      const mStep = allRotors[mId]!.config.stepIndex;
-      // Hoist typed array references out of the 26³ loop — avoids repeated
-      // property lookups on the rotorIntTables object in the hot path.
-      const rFwd = rotorIntTables[rId]!.fwd;
-      const rInv = rotorIntTables[rId]!.inv;
-      const mFwd = rotorIntTables[mId]!.fwd;
-      const mInv = rotorIntTables[mId]!.inv;
-      const lFwd = rotorIntTables[lId]!.fwd;
-      const lInv = rotorIntTables[lId]!.inv;
+    // Per-permutation tables — recomputed only when permIndex changes.
+    // Initialised from the first rotor's tables; syncPermCache overwrites
+    // them before any loop body runs so the seed values are never used.
+    const seedTables = rotorIntTables[rotorIds[0]!]!;
+    let cachedPermIndex = -1;
+    let rId = 0,
+      mId = 0,
+      lId = 0;
+    let rStep = 0,
+      mStep = 0;
+    let rFwd = seedTables.fwd,
+      rInv = seedTables.inv;
+    let mFwd = seedTables.fwd,
+      mInv = seedTables.inv;
+    let lFwd = seedTables.fwd,
+      lInv = seedTables.inv;
 
-      for (const reflectorId of Object.keys(allReflectors).map(Number)) {
-        const reflMap = reflectorIntMaps[reflectorId]!;
-        const reflector = allReflectors[reflectorId]!;
-
-        for (let p0 = 0; p0 < 26; p0++) {
-          for (let p1 = 0; p1 < 26; p1++) {
-            for (let p2 = 0; p2 < 26; p2++) {
-              // Compute rotor positions at every step up to maxStep using
-              // pure integer arithmetic — no RotorState object allocation.
-              rPos[0] = p0;
-              mPos[0] = p1;
-              lPos[0] = p2;
-              for (let s = 1; s <= maxStep; s++) {
-                intStepRotors(
-                  rPos[s - 1]!,
-                  mPos[s - 1]!,
-                  lPos[s - 1]!,
-                  rStep,
-                  mStep,
-                  stepOut,
-                );
-                rPos[s] = stepOut[0]!;
-                mPos[s] = stepOut[1]!;
-                lPos[s] = stepOut[2]!;
-              }
-
-              // Precompute the 26-entry scrambler lookup for each needed step.
-              // Uses MOD26 table instead of % 26 to avoid expensive modulo ops.
-              for (let si = 0; si < neededScramblerSteps.length; si++) {
-                const step = neededScramblerSteps[si]!;
-                const slot = scramblerSlots[step]!;
-                const ro = rPos[step]!,
-                  mo = mPos[step]!,
-                  lo = lPos[step]!;
-                for (let j = 0; j < 26; j++) {
-                  let x = MOD26[rFwd[MOD26[j + ro]!]! - ro + 26]!;
-                  x = MOD26[mFwd[MOD26[x + mo]!]! - mo + 26]!;
-                  x = MOD26[lFwd[MOD26[x + lo]!]! - lo + 26]!;
-                  x = reflMap[x]!;
-                  x = MOD26[lInv[MOD26[x + lo]!]! - lo + 26]!;
-                  x = MOD26[mInv[MOD26[x + mo]!]! - mo + 26]!;
-                  slot[j] = MOD26[rInv[MOD26[x + ro]!]! - ro + 26]!;
-                }
-              }
-
-              for (let pi = 0; pi < validPositions.length; pi++) {
-                const pos = validPositions[pi]!;
-                const menu = menusArray[pi]!;
-                const segCodes = segCodesArray[pi]!;
-
-                // Copy scrambler rows for this crib position into a flat buffer
-                // [step * 26 .. step * 26 + 25] for single-dereference BFS access.
-                for (let i = 0; i < crib.length; i++) {
-                  posScramblerFlat.set(scramblerSlots[pos + i + 1]!, i * 26);
-                }
-
-                // Try all 26 stecker hypotheses for the most-connected letter.
-                // The diagonal board and menu loops reject most hypotheses in
-                // just a few BFS steps, making this very fast in practice.
-                for (let hypothesis = 0; hypothesis < 26; hypothesis++) {
-                  if (
-                    !propagateIntHypothesis(
-                      menu.testLetter,
-                      hypothesis,
-                      menu.adjOther,
-                      menu.adjStep,
-                      posScramblerFlat,
-                      stecker,
-                      queueBuf,
-                    )
-                  ) {
-                    continue;
-                  }
-
-                  // Fast integer verification: apply stecker→scrambler→stecker
-                  // to each cipher letter and confirm it matches the crib.
-                  // Uses the already-computed posScramblerFlat — no string ops.
-                  if (
-                    !steckerVerifiesCrib(
-                      stecker,
-                      segCodes,
-                      cribCodes,
-                      posScramblerFlat,
-                    )
-                  ) {
-                    continue;
-                  }
-
-                  const derivedPlugboard = steckerIntToPlugboard(stecker);
-
-                  const fullRotors = [
-                    createRotorWithPosition(allRotors[rId]!, p0),
-                    createRotorWithPosition(allRotors[mId]!, p1),
-                    createRotorWithPosition(allRotors[lId]!, p2),
-                  ];
-                  const decryptedText = encryptString(
-                    ciphertext,
-                    fullRotors,
-                    derivedPlugboard,
-                    reflector,
-                  );
-                  allResults.push({
-                    rotorIds: perm,
-                    reflectorName: reflector.name,
-                    startingPositions: [p0, p1, p2],
-                    cribPosition: pos,
-                    decryptedText,
-                    nlpScore: nlpConfidence(decryptedText),
-                    derivedPlugboard,
-                  });
-                  break;
-                }
-              }
-            }
-          }
-        }
-      }
+    const syncPermCache = () => {
+      if (permIndex === cachedPermIndex) return;
+      cachedPermIndex = permIndex;
+      [rId, mId, lId] = permutations[permIndex]! as [number, number, number];
+      rStep = allRotors[rId]!.config.stepIndex;
+      mStep = allRotors[mId]!.config.stepIndex;
+      rFwd = rotorIntTables[rId]!.fwd;
+      rInv = rotorIntTables[rId]!.inv;
+      mFwd = rotorIntTables[mId]!.fwd;
+      mInv = rotorIntTables[mId]!.inv;
+      lFwd = rotorIntTables[lId]!.fwd;
+      lInv = rotorIntTables[lId]!.inv;
     };
 
-    const processNext = () => {
+    const processSlice = () => {
       if (isCancelled?.() === true) {
         resolve([]);
         return;
       }
 
-      if (index >= permutations.length) {
+      if (permIndex >= permutations.length) {
         onProgress(1);
         setTimeout(() => {
           if (isCancelled?.() === true) {
@@ -542,13 +449,141 @@ export const cribSearchAsync = (
         return;
       }
 
-      processPerm(permutations[index]!);
-      index++;
-      onProgress(index / permutations.length);
-      setTimeout(processNext, 0);
+      syncPermCache();
+
+      const reflectorId = reflectorIds[reflIndex]!;
+      const reflMap = reflectorIntMaps[reflectorId]!;
+      const reflector = allReflectors[reflectorId]!;
+      const perm = permutations[permIndex]!;
+
+      for (let p1 = 0; p1 < 26; p1++) {
+        for (let p2 = 0; p2 < 26; p2++) {
+          // Compute rotor positions at every step up to maxStep using
+          // pure integer arithmetic — no RotorState object allocation.
+          rPos[0] = p0;
+          mPos[0] = p1;
+          lPos[0] = p2;
+          for (let s = 1; s <= maxStep; s++) {
+            intStepRotors(
+              rPos[s - 1]!,
+              mPos[s - 1]!,
+              lPos[s - 1]!,
+              rStep,
+              mStep,
+              stepOut,
+            );
+            rPos[s] = stepOut[0]!;
+            mPos[s] = stepOut[1]!;
+            lPos[s] = stepOut[2]!;
+          }
+
+          // Precompute the 26-entry scrambler lookup for each needed step.
+          // Uses MOD26 table instead of % 26 to avoid expensive modulo ops.
+          for (let si = 0; si < neededScramblerSteps.length; si++) {
+            const step = neededScramblerSteps[si]!;
+            const slot = scramblerSlots[step]!;
+            const ro = rPos[step]!,
+              mo = mPos[step]!,
+              lo = lPos[step]!;
+            for (let j = 0; j < 26; j++) {
+              let x = MOD26[rFwd[MOD26[j + ro]!]! - ro + 26]!;
+              x = MOD26[mFwd[MOD26[x + mo]!]! - mo + 26]!;
+              x = MOD26[lFwd[MOD26[x + lo]!]! - lo + 26]!;
+              x = reflMap[x]!;
+              x = MOD26[lInv[MOD26[x + lo]!]! - lo + 26]!;
+              x = MOD26[mInv[MOD26[x + mo]!]! - mo + 26]!;
+              slot[j] = MOD26[rInv[MOD26[x + ro]!]! - ro + 26]!;
+            }
+          }
+
+          for (let pi = 0; pi < validPositions.length; pi++) {
+            const pos = validPositions[pi]!;
+            const menu = menusArray[pi]!;
+            const segCodes = segCodesArray[pi]!;
+
+            // Copy scrambler rows for this crib position into a flat buffer
+            // [step * 26 .. step * 26 + 25] for single-dereference BFS access.
+            for (let i = 0; i < crib.length; i++) {
+              posScramblerFlat.set(scramblerSlots[pos + i + 1]!, i * 26);
+            }
+
+            // Try all 26 stecker hypotheses for the most-connected letter.
+            // The diagonal board and menu loops reject most hypotheses in
+            // just a few BFS steps, making this very fast in practice.
+            for (let hypothesis = 0; hypothesis < 26; hypothesis++) {
+              if (
+                !propagateIntHypothesis(
+                  menu.testLetter,
+                  hypothesis,
+                  menu.adjOther,
+                  menu.adjStep,
+                  posScramblerFlat,
+                  stecker,
+                  queueBuf,
+                )
+              ) {
+                continue;
+              }
+
+              // Fast integer verification: apply stecker→scrambler→stecker
+              // to each cipher letter and confirm it matches the crib.
+              // Uses the already-computed posScramblerFlat — no string ops.
+              if (
+                !steckerVerifiesCrib(
+                  stecker,
+                  segCodes,
+                  cribCodes,
+                  posScramblerFlat,
+                )
+              ) {
+                continue;
+              }
+
+              const derivedPlugboard = steckerIntToPlugboard(stecker);
+
+              const fullRotors = [
+                createRotorWithPosition(allRotors[rId]!, p0),
+                createRotorWithPosition(allRotors[mId]!, p1),
+                createRotorWithPosition(allRotors[lId]!, p2),
+              ];
+              const decryptedText = encryptString(
+                ciphertext,
+                fullRotors,
+                derivedPlugboard,
+                reflector,
+              );
+              allResults.push({
+                rotorIds: perm,
+                reflectorName: reflector.name,
+                startingPositions: [p0, p1, p2],
+                cribPosition: pos,
+                decryptedText,
+                nlpScore: nlpConfidence(decryptedText),
+                derivedPlugboard,
+              });
+              break;
+            }
+          }
+        }
+      }
+
+      // Advance to next p0 slice
+      ticksDone++;
+      p0++;
+      if (p0 >= 26) {
+        p0 = 0;
+        reflIndex++;
+        if (reflIndex >= reflectorIds.length) {
+          reflIndex = 0;
+          permIndex++;
+        }
+      }
+      onProgress(ticksDone / totalTicks);
+
+      setTimeout(processSlice, 0);
     };
 
     // Defer first tick so React can render the searching state before work begins
-    setTimeout(processNext, 0);
+    setTimeout(processSlice, 0);
   });
 };
