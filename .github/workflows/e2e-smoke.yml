@@ -1,0 +1,54 @@
+name: E2E Smoke Tests
+
+# workflow_dispatch is restricted to users with write access to this repo.
+# On a public repo this means only collaborators can trigger this workflow.
+on:
+  workflow_dispatch:
+
+jobs:
+  e2e-android:
+    name: Android Smoke Tests
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup project
+        uses: ./.github/actions/setup
+
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      - name: Install Maestro
+        run: |
+          curl -Ls "https://get.maestro.mobile.dev" | bash
+          echo "$HOME/.maestro/bin" >> $GITHUB_PATH
+
+      - name: Cache Gradle
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: gradle-${{ hashFiles('android/gradle/wrapper/gradle-wrapper.properties', 'android/build.gradle') }}
+          restore-keys: gradle-
+
+      - name: Build debug APK
+        run: cd android && ./gradlew assembleDebug --no-daemon
+
+      - name: Run smoke tests on Android emulator
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 33
+          arch: x86_64
+          disable-animations: true
+          script: |
+            adb install android/app/build/outputs/apk/debug/app-debug.apk
+            adb reverse tcp:8081 tcp:8081
+            npx react-native start --reset-cache &
+            until curl -s http://localhost:8081/status | grep -q "packager-status:running"; do sleep 2; done
+            maestro test e2e/smoke/
