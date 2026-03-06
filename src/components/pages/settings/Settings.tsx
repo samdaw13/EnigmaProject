@@ -16,6 +16,7 @@ import {
   SETTINGS_THEME_DARK,
   SETTINGS_THEME_LABEL,
   SETTINGS_THEME_LIGHT,
+  SETTINGS_THEME_SYSTEM,
 } from '../../../constants/labels';
 import { clearPlugboard } from '../../../features/plugboard';
 import { resetRotors } from '../../../features/rotors/features';
@@ -117,6 +118,7 @@ export const Settings: FunctionComponent = () => {
             buttons={[
               { value: 'dark', label: SETTINGS_THEME_DARK },
               { value: 'light', label: SETTINGS_THEME_LIGHT },
+              { value: 'system', label: SETTINGS_THEME_SYSTEM },
             ]}
           />
         </SettingsSection>

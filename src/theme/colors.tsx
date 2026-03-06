@@ -1,5 +1,3 @@
-import type { Theme } from '../types';
-
 export interface ColorPalette {
   background: string;
   surface: string;
@@ -33,5 +31,5 @@ export const lightColors: ColorPalette = {
   destructive: '#9c2a2a',
 };
 
-export const getColors = (theme: Theme): ColorPalette =>
+export const getColors = (theme: 'dark' | 'light'): ColorPalette =>
   theme === 'light' ? lightColors : darkColors;
