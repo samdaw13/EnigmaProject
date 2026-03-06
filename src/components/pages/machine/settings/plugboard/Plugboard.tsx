@@ -57,6 +57,7 @@ export const Plugboard: FunctionComponent = () => {
               backgroundColor: colors.surface,
             }}
             textStyle={{ color: colors.textPrimary }}
+            theme={{ colors: { onSurfaceVariant: colors.textSecondary } }}
           >
             {plugboardChipText(cable, plugboard[cable]!)}
           </Chip>
