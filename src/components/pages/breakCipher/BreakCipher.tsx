@@ -17,6 +17,7 @@ import {
   CRIB_ANALYSIS_TAB,
   CRIB_LABEL,
   DECRYPTED_TEXT_LABEL,
+  DERIVED_PLUGBOARD_LABEL,
   INFO_BRUTE_FORCE_CONTENT,
   INFO_BRUTE_FORCE_TITLE,
   INFO_CRIB_ANALYSIS_CONTENT,
@@ -89,6 +90,13 @@ const formatPositionAlignment = (
 ): string => {
   const padding = ' '.repeat(position);
   return `${ciphertext}\n${padding}${crib}`;
+};
+
+const formatDerivedPlugboard = (plugboard: Record<string, string>): string => {
+  const pairs = Object.entries(plugboard)
+    .filter(([key, value]) => key < value)
+    .map(([key, value]) => `${key}↔${value}`);
+  return pairs.length > 0 ? pairs.join(', ') : '—';
 };
 
 const nlpBadgeColor = (score: number): string => {
@@ -356,6 +364,10 @@ const CribSearchResults: FunctionComponent<{
           <Text style={styles.resultText}>
             {POSITIONS_LABEL}:{' '}
             {result.startingPositions.map((p) => ALPHABET[p]).join(', ')}
+          </Text>
+          <Text style={styles.resultText}>
+            {DERIVED_PLUGBOARD_LABEL}:{' '}
+            {formatDerivedPlugboard(result.derivedPlugboard)}
           </Text>
           <Text
             testID={`${DECRYPTED_TEXT_DISPLAY}_${index}`}

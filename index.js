@@ -5,7 +5,7 @@ import { name as appName } from './app.json';
 import App from './src/App';
 import { Provider } from 'react-redux';
 import { store } from './src/store/store';
-import { colors } from './src/theme/colors';
+import { darkColors as colors } from './src/theme/colors';
 
 const theme = {
   ...DefaultTheme,
