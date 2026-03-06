@@ -136,6 +136,12 @@ export const Settings: FunctionComponent = () => {
           buttonColor={colors.accent}
           textColor={colors.background}
           disabled={!allRotorsSelected}
+          theme={{
+            colors: {
+              surfaceDisabled: colors.disabledSurface,
+              onSurfaceDisabled: colors.disabledText,
+            },
+          }}
         >
           {ENCRYPT_MESSAGE}
         </Button>
