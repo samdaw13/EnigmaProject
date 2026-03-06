@@ -6,6 +6,8 @@ import { Button, IconButton } from 'react-native-paper';
 import { useDispatch, useSelector } from 'react-redux';
 
 import {
+  CLEAR_BUTTON,
+  CLEAR_SETTINGS,
   ENCRYPT_MESSAGE,
   ENCRYPT_MESSAGE_BUTTON,
   INFO_BUTTON,
@@ -55,6 +57,13 @@ const makeStyles = (colors: ColorPalette) =>
       paddingBottom: 16,
       gap: 8,
     },
+    buttonRow: {
+      flexDirection: 'row',
+      gap: 8,
+    },
+    rowButton: {
+      flex: 1,
+    },
   });
 
 export const Settings: FunctionComponent = () => {
@@ -86,6 +95,11 @@ export const Settings: FunctionComponent = () => {
 
   const navigateToNextItem = () => {
     navigation.navigate('Keyboard');
+  };
+
+  const clearSettings = () => {
+    dispatch(resetRotors());
+    dispatch(clearPlugboard());
   };
 
   const randomizeSettings = () => {
@@ -120,15 +134,26 @@ export const Settings: FunctionComponent = () => {
         <Plugboard />
       </View>
       <View style={styles.bottomSection}>
-        <Button
-          testID={RANDOMIZE_BUTTON}
-          mode='outlined'
-          textColor={colors.textPrimary}
-          style={{ borderColor: colors.border }}
-          onPress={randomizeSettings}
-        >
-          {RANDOMIZE_SETTINGS}
-        </Button>
+        <View style={styles.buttonRow}>
+          <Button
+            testID={CLEAR_BUTTON}
+            mode='outlined'
+            textColor={colors.textPrimary}
+            style={[{ borderColor: colors.border }, styles.rowButton]}
+            onPress={clearSettings}
+          >
+            {CLEAR_SETTINGS}
+          </Button>
+          <Button
+            testID={RANDOMIZE_BUTTON}
+            mode='outlined'
+            textColor={colors.textPrimary}
+            style={[{ borderColor: colors.border }, styles.rowButton]}
+            onPress={randomizeSettings}
+          >
+            {RANDOMIZE_SETTINGS}
+          </Button>
+        </View>
         <Button
           mode='contained'
           onPress={navigateToNextItem}
