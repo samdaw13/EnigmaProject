@@ -11,7 +11,7 @@ jest.mock('@react-native-async-storage/async-storage', () => ({
 describe('settings reducer', () => {
   it('returns the initial state', () => {
     const state = reducer(undefined, { type: 'unknown' });
-    expect(state.theme).toBe('dark');
+    expect(state.theme).toBe('system');
   });
 
   it('setTheme updates the theme', () => {
@@ -33,7 +33,7 @@ describe('settings reducer', () => {
       jest.spyOn(AsyncStorage, 'getItem').mockResolvedValueOnce(null);
       const store = configureStore({ reducer: { settings: reducer } });
       await store.dispatch(loadSettings());
-      expect(store.getState().settings.theme).toBe('dark');
+      expect(store.getState().settings.theme).toBe('system');
     });
   });
 
