@@ -116,10 +116,30 @@ export const Settings: FunctionComponent = () => {
             value={theme}
             onValueChange={handleThemeChange}
             buttons={[
-              { value: 'dark', label: SETTINGS_THEME_DARK },
-              { value: 'light', label: SETTINGS_THEME_LIGHT },
-              { value: 'system', label: SETTINGS_THEME_SYSTEM },
+              {
+                value: 'dark',
+                label: SETTINGS_THEME_DARK,
+                uncheckedColor: colors.textPrimary,
+              },
+              {
+                value: 'light',
+                label: SETTINGS_THEME_LIGHT,
+                uncheckedColor: colors.textPrimary,
+              },
+              {
+                value: 'system',
+                label: SETTINGS_THEME_SYSTEM,
+                uncheckedColor: colors.textPrimary,
+              },
             ]}
+            theme={{
+              colors: {
+                secondaryContainer: colors.accent,
+                onSecondaryContainer: colors.background,
+                outline: colors.border,
+                onSurface: colors.textPrimary,
+              },
+            }}
           />
         </SettingsSection>
         <SettingsSection heading={SETTINGS_MACHINE_HEADING}>
