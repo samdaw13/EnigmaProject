@@ -9,7 +9,7 @@ const ALPHABET = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
 const findDirectCableMapping = (
   letter: string,
   cables: PlugboardCable,
-): string | undefined => (cables[letter] ? cables[letter] : undefined);
+): string | undefined => cables[letter];
 
 const findReverseCableMapping = (
   letter: string,
@@ -46,13 +46,13 @@ const forwardPassThroughRotor = (letter: string, rotor: RotorState): string => {
     currentIndex,
     size,
   );
-  const outputLetter = mappedLetters[shiftedIndex];
+  const outputLetter = mappedLetters[shiftedIndex]!;
   const adjustedIndex = removeOffset(
     ALPHABET.indexOf(outputLetter),
     currentIndex,
     size,
   );
-  return ALPHABET[adjustedIndex];
+  return ALPHABET[adjustedIndex]!;
 };
 
 const reversePassThroughRotor = (letter: string, rotor: RotorState): string => {
@@ -64,10 +64,10 @@ const reversePassThroughRotor = (letter: string, rotor: RotorState): string => {
     currentIndex,
     size,
   );
-  const letterAtShifted = ALPHABET[shiftedIndex];
+  const letterAtShifted = ALPHABET[shiftedIndex]!;
   const mappedIndex = mappedLetters.indexOf(letterAtShifted);
   const adjustedIndex = removeOffset(mappedIndex, currentIndex, size);
-  return ALPHABET[adjustedIndex];
+  return ALPHABET[adjustedIndex]!;
 };
 
 export const passThroughRotor = (
@@ -84,7 +84,7 @@ export const passThroughReflector = (
   reflector: ReflectorState,
 ): string => {
   const index = ALPHABET.indexOf(letter);
-  return reflector.config.mapping[index];
+  return reflector.config.mapping[index]!;
 };
 
 const advanceRotor = (rotor: RotorState): RotorState => ({
@@ -99,7 +99,7 @@ const isAtNotch = (rotor: RotorState): boolean =>
   rotor.config.currentIndex === rotor.config.stepIndex;
 
 export const stepRotors = (rotors: RotorState[]): RotorState[] => {
-  const [right, middle, left] = rotors;
+  const [right, middle, left] = rotors as [RotorState, RotorState, RotorState];
 
   if (isAtNotch(middle)) {
     return [advanceRotor(right), advanceRotor(middle), advanceRotor(left)];

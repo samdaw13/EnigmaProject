@@ -13,7 +13,7 @@ export const plugboardSlice = createSlice({
       state[action.payload.inputLetter] = action.payload.outputLetter;
     },
     removeCable: (state, action: PayloadAction<PlugboardActionInterface>) => {
-      delete state[action.payload.inputLetter];
+      Reflect.deleteProperty(state, action.payload.inputLetter);
     },
     clearPlugboard: () => ({}),
   },

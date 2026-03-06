@@ -20,7 +20,7 @@ describe('Reflector slice', () => {
     const store = createStore();
     const state = store.getState().reflector;
     expect(state.selectedReflectorId).toBe(2);
-    expect(state.reflectors[2].name).toBe('UKW-B');
+    expect(state.reflectors[2]!.name).toBe('UKW-B');
   });
 
   it('should change selected reflector with selectReflector action', () => {

@@ -68,7 +68,7 @@ async function render(ui: ReactElement, options?: CustomRenderOptions) {
         reflector: reflectorReducer,
         settings: settingsReducer,
       },
-      preloadedState,
+      ...(preloadedState !== undefined ? { preloadedState } : {}),
     });
 
   function Wrapper({ children }: { children: React.ReactNode }) {

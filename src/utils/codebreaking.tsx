@@ -55,7 +55,7 @@ const generateRotorPermutations = (rotorIds: number[]): number[][] => {
       if (j === i) continue;
       for (let k = 0; k < rotorIds.length; k++) {
         if (k === i || k === j) continue;
-        permutations.push([rotorIds[i], rotorIds[j], rotorIds[k]]);
+        permutations.push([rotorIds[i]!, rotorIds[j]!, rotorIds[k]!]);
       }
     }
   }
@@ -76,15 +76,15 @@ const processPermutation = (
   const emptyPlugboard: PlugboardCable = {};
 
   for (const reflectorId of Object.keys(allReflectors).map(Number)) {
-    const reflector = allReflectors[reflectorId];
+    const reflector = allReflectors[reflectorId]!;
     for (let p0 = 0; p0 < 26; p0++) {
       for (let p1 = 0; p1 < 26; p1++) {
         for (let p2 = 0; p2 < 26; p2++) {
           if (knownPlaintext !== undefined) {
             const checkRotors = [
-              createRotorWithPosition(allRotors[perm[0]], p0),
-              createRotorWithPosition(allRotors[perm[1]], p1),
-              createRotorWithPosition(allRotors[perm[2]], p2),
+              createRotorWithPosition(allRotors[perm[0]!]!, p0),
+              createRotorWithPosition(allRotors[perm[1]!]!, p1),
+              createRotorWithPosition(allRotors[perm[2]!]!, p2),
             ];
             const encrypted = encryptString(
               knownPlaintext,
@@ -94,9 +94,9 @@ const processPermutation = (
             );
             if (encrypted === ciphertext.slice(0, knownPlaintext.length)) {
               const freshRotors = [
-                createRotorWithPosition(allRotors[perm[0]], p0),
-                createRotorWithPosition(allRotors[perm[1]], p1),
-                createRotorWithPosition(allRotors[perm[2]], p2),
+                createRotorWithPosition(allRotors[perm[0]!]!, p0),
+                createRotorWithPosition(allRotors[perm[1]!]!, p1),
+                createRotorWithPosition(allRotors[perm[2]!]!, p2),
               ];
               const decryptedText = encryptString(
                 ciphertext,
@@ -114,9 +114,9 @@ const processPermutation = (
             }
           } else {
             const rotors = [
-              createRotorWithPosition(allRotors[perm[0]], p0),
-              createRotorWithPosition(allRotors[perm[1]], p1),
-              createRotorWithPosition(allRotors[perm[2]], p2),
+              createRotorWithPosition(allRotors[perm[0]!]!, p0),
+              createRotorWithPosition(allRotors[perm[1]!]!, p1),
+              createRotorWithPosition(allRotors[perm[2]!]!, p2),
             ];
             const decryptedText = encryptString(
               ciphertext,
@@ -204,7 +204,7 @@ export const bruteForceSearchAsync = (
       }
 
       const results = processPermutation(
-        permutations[index],
+        permutations[index]!,
         ciphertext,
         knownPlaintext,
         allRotors,
@@ -270,14 +270,14 @@ export const cribSearchAsync = (
 
     const processPerm = (perm: number[]) => {
       for (const reflectorId of Object.keys(allReflectors).map(Number)) {
-        const reflector = allReflectors[reflectorId];
+        const reflector = allReflectors[reflectorId]!;
         for (let p0 = 0; p0 < 26; p0++) {
           for (let p1 = 0; p1 < 26; p1++) {
             for (let p2 = 0; p2 < 26; p2++) {
               const rotors = [
-                createRotorWithPosition(allRotors[perm[0]], p0),
-                createRotorWithPosition(allRotors[perm[1]], p1),
-                createRotorWithPosition(allRotors[perm[2]], p2),
+                createRotorWithPosition(allRotors[perm[0]!]!, p0),
+                createRotorWithPosition(allRotors[perm[1]!]!, p1),
+                createRotorWithPosition(allRotors[perm[2]!]!, p2),
               ];
               const decryptedText = encryptString(
                 ciphertext,
@@ -323,7 +323,7 @@ export const cribSearchAsync = (
         return;
       }
 
-      processPerm(permutations[index]);
+      processPerm(permutations[index]!);
       index++;
       onProgress(index / totalPerms);
       setTimeout(processNext, 0);

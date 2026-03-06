@@ -353,7 +353,7 @@ describe('BreakCipher', () => {
       screen.getByTestId(CIPHERTEXT_INPUT),
       'abc 123!',
     );
-    expect(screen.getByTestId(CIPHERTEXT_INPUT).props.value).toBe('ABC');
+    expect(screen.getByTestId(CIPHERTEXT_INPUT).props['value']).toBe('ABC');
   });
 
   it('sanitizes plaintext input to uppercase alpha only', async () => {
@@ -362,13 +362,15 @@ describe('BreakCipher', () => {
       screen.getByTestId(PLAINTEXT_INPUT),
       'hello world',
     );
-    expect(screen.getByTestId(PLAINTEXT_INPUT).props.value).toBe('HELLOWORLD');
+    expect(screen.getByTestId(PLAINTEXT_INPUT).props['value']).toBe(
+      'HELLOWORLD',
+    );
   });
 
   it('sanitizes crib input to uppercase alpha only', async () => {
     await render(<BreakCipher />);
     await fireEvent.press(screen.getByTestId(CRIB_ANALYSIS_TAB_BUTTON));
     await fireEvent.changeText(screen.getByTestId(CRIB_INPUT), 'cr1b!');
-    expect(screen.getByTestId(CRIB_INPUT).props.value).toBe('CRB');
+    expect(screen.getByTestId(CRIB_INPUT).props['value']).toBe('CRB');
   });
 });

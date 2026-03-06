@@ -223,7 +223,7 @@ describe('stepRotors', () => {
       makeRotor(2, 4, 0),
       makeRotor(3, 21, 0),
     ];
-    const result = stepRotors(rotors);
+    const result = stepRotors(rotors) as [RotorState, RotorState, RotorState];
     expect(result[0].config.currentIndex).toBe(1);
     expect(result[1].config.currentIndex).toBe(0);
     expect(result[2].config.currentIndex).toBe(0);
@@ -235,7 +235,7 @@ describe('stepRotors', () => {
       makeRotor(2, 4, 0),
       makeRotor(3, 21, 0),
     ];
-    const result = stepRotors(rotors);
+    const result = stepRotors(rotors) as [RotorState, RotorState, RotorState];
     expect(result[0].config.currentIndex).toBe(17);
     expect(result[1].config.currentIndex).toBe(1);
     expect(result[2].config.currentIndex).toBe(0);
@@ -247,7 +247,7 @@ describe('stepRotors', () => {
       makeRotor(2, 4, 4),
       makeRotor(3, 21, 0),
     ];
-    const result = stepRotors(rotors);
+    const result = stepRotors(rotors) as [RotorState, RotorState, RotorState];
     expect(result[0].config.currentIndex).toBe(1);
     expect(result[1].config.currentIndex).toBe(5);
     expect(result[2].config.currentIndex).toBe(1);
@@ -260,13 +260,21 @@ describe('stepRotors', () => {
       makeRotor(2, 4, 3),
       makeRotor(3, 21, 0),
     ];
-    const afterFirst = stepRotors(rotors);
+    const afterFirst = stepRotors(rotors) as [
+      RotorState,
+      RotorState,
+      RotorState,
+    ];
     expect(afterFirst[0].config.currentIndex).toBe(17);
     expect(afterFirst[1].config.currentIndex).toBe(4);
     expect(afterFirst[2].config.currentIndex).toBe(0);
 
     // Second keypress: middle rotor is at its notch, so it steps again (double-step) along with left
-    const afterSecond = stepRotors(afterFirst);
+    const afterSecond = stepRotors(afterFirst) as [
+      RotorState,
+      RotorState,
+      RotorState,
+    ];
     expect(afterSecond[0].config.currentIndex).toBe(18);
     expect(afterSecond[1].config.currentIndex).toBe(5);
     expect(afterSecond[2].config.currentIndex).toBe(1);
@@ -278,7 +286,7 @@ describe('stepRotors', () => {
       makeRotor(2, 4, 0),
       makeRotor(3, 21, 0),
     ];
-    const result = stepRotors(rotors);
+    const result = stepRotors(rotors) as [RotorState, RotorState, RotorState];
     expect(result[0].config.currentIndex).toBe(0);
   });
 
@@ -288,8 +296,8 @@ describe('stepRotors', () => {
       makeRotor(2, 4, 0),
       makeRotor(3, 21, 0),
     ];
-    const originalRight = rotors[0].config.currentIndex;
+    const originalRight = rotors[0]!.config.currentIndex;
     stepRotors(rotors);
-    expect(rotors[0].config.currentIndex).toBe(originalRight);
+    expect(rotors[0]!.config.currentIndex).toBe(originalRight);
   });
 });

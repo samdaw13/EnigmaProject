@@ -20,7 +20,7 @@ describe('rotors reducer', () => {
         undefined,
         updateRotorAvailability({ id: 1, isAvailable: false }),
       );
-      expect(state.available[1].isAvailable).toBe(false);
+      expect(state.available[1]!.isAvailable).toBe(false);
     });
   });
 
@@ -30,7 +30,7 @@ describe('rotors reducer', () => {
         undefined,
         updateRotorCurrentIndex({ id: 1, currentIndex: 5 }),
       );
-      expect(state.available[1].config.currentIndex).toBe(5);
+      expect(state.available[1]!.config.currentIndex).toBe(5);
     });
   });
 
@@ -80,9 +80,9 @@ describe('rotors reducer', () => {
         undefined,
         updateRotorAvailability({ id: 1, isAvailable: false }),
       );
-      expect(state.available[1].isAvailable).toBe(false);
+      expect(state.available[1]!.isAvailable).toBe(false);
       state = reducer(state, resetRotors());
-      expect(state.available[1].isAvailable).toBe(true);
+      expect(state.available[1]!.isAvailable).toBe(true);
       expect(state.selectedSlots).toEqual([null, null, null]);
     });
   });
