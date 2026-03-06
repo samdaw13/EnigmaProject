@@ -10,7 +10,7 @@ import tseslint from 'typescript-eslint';
 
 export default tseslint.config(
   {
-    ignores: ['**/*.js', '**/*.mjs', 'node_modules/', 'android/', 'ios/', 'coverage/'],
+    ignores: ['**/*.js', '**/*.mjs', 'node_modules/', 'android/', 'ios/', 'coverage/', 'e2e/'],
   },
   js.configs.recommended,
   ...tseslint.configs.recommendedTypeChecked,
