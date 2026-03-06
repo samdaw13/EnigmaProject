@@ -1,32 +1,19 @@
 import type { FunctionComponent } from 'react';
 import React, { useCallback, useMemo, useRef, useState } from 'react';
 import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
-import {
-  Button,
-  IconButton,
-  SegmentedButtons,
-  TextInput,
-} from 'react-native-paper';
+import { Button, IconButton, TextInput } from 'react-native-paper';
 
 import {
-  BRUTE_FORCE_TAB,
   CANCEL_LABEL,
   CIPHERTEXT_LABEL,
-  CIPHERTEXT_TOO_LONG,
   COMMON_CRIBS_HINT,
-  CRIB_ANALYSIS_TAB,
   CRIB_LABEL,
   DECRYPTED_TEXT_LABEL,
   DERIVED_PLUGBOARD_LABEL,
-  INFO_BRUTE_FORCE_CONTENT,
-  INFO_BRUTE_FORCE_TITLE,
   INFO_CRIB_ANALYSIS_CONTENT,
   INFO_CRIB_ANALYSIS_TITLE,
-  KNOWN_PLAINTEXT_LABEL,
-  KNOWN_PLAINTEXT_OPTIONAL_HINT,
   NLP_CONFIDENCE_LABEL,
   NO_CRIB_RESULTS_FALLBACK,
-  NO_RESULTS,
   POSITION_LABEL,
   POSITIONS_LABEL,
   RANKING_RESULTS_LABEL,
@@ -40,17 +27,14 @@ import {
 } from '../../../constants/labels';
 import {
   BRUTE_FORCE_RESULT_CARD,
-  BRUTE_FORCE_TAB_BUTTON,
   CANCEL_SEARCH_BUTTON,
   CIPHERTEXT_INPUT,
   COPY_MESSAGE_BUTTON,
-  CRIB_ANALYSIS_TAB_BUTTON,
   CRIB_INPUT,
   CRIB_POSITION_CARD,
   DECRYPTED_TEXT_DISPLAY,
   INFO_BUTTON,
   NLP_SCORE_DISPLAY,
-  PLAINTEXT_INPUT,
   PROGRESS_BAR,
   RESULTS_CONTAINER,
   RUN_ANALYSIS_BUTTON,
@@ -59,22 +43,15 @@ import { initialReflectorState } from '../../../features/reflector';
 import { initialRotorState } from '../../../features/rotors/features';
 import type { ColorPalette } from '../../../theme/colors';
 import { useThemeColors } from '../../../theme/useThemeColors';
-import type {
-  BruteForceResult,
-  CribSearchResult,
-} from '../../../utils/codebreaking';
+import type { CribSearchResult } from '../../../utils/codebreaking';
 import {
-  bruteForceSearchAsync,
   cribSearchAsync,
   findCribPositions,
 } from '../../../utils/codebreaking';
 import { CopyButton } from '../../common';
 import { InfoSidebar } from '../../InfoSidebar';
 
-type Tab = 'bruteForce' | 'cribAnalysis';
-
 const ALPHABET = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-const BRUTE_FORCE_MAX_KEYLESS_LENGTH = 50;
 
 const sanitizeInput = (text: string): string =>
   text
@@ -297,47 +274,6 @@ const RunButton: FunctionComponent<{
   );
 };
 
-const BruteForceResults: FunctionComponent<{
-  results: BruteForceResult[];
-}> = ({ results }) => {
-  const colors = useThemeColors();
-  const styles = useMemo(() => makeStyles(colors), [colors]);
-  return (
-    <View>
-      <Text style={styles.resultsTitle}>{RESULTS_TITLE}</Text>
-      {results.map((result, index) => (
-        <View
-          key={`${result.rotorIds.join('-')}-${result.reflectorName}-${result.startingPositions.join('-')}`}
-          testID={`${BRUTE_FORCE_RESULT_CARD}_${index}`}
-          style={styles.resultCard}
-        >
-          <Text style={styles.resultText}>
-            {ROTOR_ORDER_LABEL}: {result.rotorIds.join(', ')}
-          </Text>
-          <Text style={styles.resultText}>
-            {REFLECTOR_LABEL}: {result.reflectorName}
-          </Text>
-          <Text style={styles.resultText}>
-            {POSITIONS_LABEL}:{' '}
-            {result.startingPositions.map((p) => ALPHABET[p]).join(', ')}
-          </Text>
-          <Text
-            testID={`${DECRYPTED_TEXT_DISPLAY}_${index}`}
-            style={styles.resultText}
-          >
-            {DECRYPTED_TEXT_LABEL}: {result.decryptedText}
-          </Text>
-          <NlpBadge score={result.nlpScore} testIdSuffix={String(index)} />
-          <CopyButton
-            text={result.decryptedText}
-            testID={`${COPY_MESSAGE_BUTTON}_${index}`}
-          />
-        </View>
-      ))}
-    </View>
-  );
-};
-
 const CribSearchResults: FunctionComponent<{
   results: CribSearchResult[];
 }> = ({ results }) => {
@@ -427,14 +363,9 @@ const CribStructuralFallback: FunctionComponent<{
 };
 
 export const BreakCipher: FunctionComponent = () => {
-  const [activeTab, setActiveTab] = useState<Tab>('bruteForce');
   const [infoVisible, setInfoVisible] = useState(false);
   const [ciphertext, setCiphertext] = useState('');
-  const [plaintext, setPlaintext] = useState('');
   const [crib, setCrib] = useState('');
-  const [bruteForceResults, setBruteForceResults] = useState<
-    BruteForceResult[] | null
-  >(null);
   const [cribSearchResults, setCribSearchResults] = useState<
     CribSearchResult[] | null
   >(null);
@@ -454,43 +385,6 @@ export const BreakCipher: FunctionComponent = () => {
     setIsSearching(false);
     setProgress(0);
   }, []);
-
-  const handleTabChange = useCallback((value: string) => {
-    cancelledRef.current = true;
-    setIsSearching(false);
-    setActiveTab(value as Tab);
-    setBruteForceResults(null);
-    setCribSearchResults(null);
-    setLastCribSearch(null);
-    setProgress(0);
-    setExpandedPosition(null);
-  }, []);
-
-  const runBruteForce = useCallback(async () => {
-    const sanitizedCiphertext = sanitizeInput(ciphertext);
-    if (!sanitizedCiphertext) return;
-
-    cancelledRef.current = false;
-    setIsSearching(true);
-    setBruteForceResults(null);
-    setProgress(0);
-
-    const sanitizedPlaintext =
-      plaintext.length > 0 ? sanitizeInput(plaintext) : undefined;
-
-    const results = await bruteForceSearchAsync(
-      sanitizedCiphertext,
-      sanitizedPlaintext,
-      initialRotorState.available,
-      initialReflectorState.reflectors,
-      setProgress,
-      () => cancelledRef.current,
-    );
-    const wasCancelled = cancelledRef.current as boolean;
-    if (wasCancelled) return;
-    setBruteForceResults(results);
-    setIsSearching(false);
-  }, [ciphertext, plaintext]);
 
   const runCribAnalysis = useCallback(async () => {
     const sanitizedCiphertext = sanitizeInput(ciphertext);
@@ -520,12 +414,8 @@ export const BreakCipher: FunctionComponent = () => {
   }, [ciphertext, crib]);
 
   const handleRun = useCallback(() => {
-    if (activeTab === 'bruteForce') {
-      void runBruteForce();
-    } else {
-      void runCribAnalysis();
-    }
-  }, [activeTab, runBruteForce, runCribAnalysis]);
+    void runCribAnalysis();
+  }, [runCribAnalysis]);
 
   const toggleExpandedPosition = useCallback(
     (pos: number) => {
@@ -535,44 +425,8 @@ export const BreakCipher: FunctionComponent = () => {
   );
 
   const sanitizedCiphertextLength = sanitizeInput(ciphertext).length;
-  const isBruteForceWithoutPlaintext =
-    activeTab === 'bruteForce' && plaintext.length === 0;
-  const ciphertextTooLong =
-    isBruteForceWithoutPlaintext &&
-    sanitizedCiphertextLength > BRUTE_FORCE_MAX_KEYLESS_LENGTH;
-
-  const isBruteForceReady =
-    activeTab === 'bruteForce' && sanitizedCiphertextLength > 0;
-  const isCribReady =
-    activeTab === 'cribAnalysis' &&
-    sanitizedCiphertextLength > 0 &&
-    crib.length > 0;
-  const areInputsEmpty = !isBruteForceReady && !isCribReady;
-  const runAnalysisButtonDisabled =
-    areInputsEmpty || isSearching || ciphertextTooLong;
-
-  const hasResults =
-    activeTab === 'bruteForce'
-      ? bruteForceResults !== null
-      : cribSearchResults !== null;
-  const hasNoResults =
-    activeTab === 'bruteForce' &&
-    bruteForceResults !== null &&
-    bruteForceResults.length === 0;
-
-  const hintText =
-    activeTab === 'bruteForce'
-      ? KNOWN_PLAINTEXT_OPTIONAL_HINT
-      : COMMON_CRIBS_HINT;
-
-  const infoTitle =
-    activeTab === 'bruteForce'
-      ? INFO_BRUTE_FORCE_TITLE
-      : INFO_CRIB_ANALYSIS_TITLE;
-  const infoContent =
-    activeTab === 'bruteForce'
-      ? INFO_BRUTE_FORCE_CONTENT
-      : INFO_CRIB_ANALYSIS_CONTENT;
+  const isCribReady = sanitizedCiphertextLength > 0 && crib.length > 0;
+  const runAnalysisButtonDisabled = !isCribReady || isSearching;
 
   return (
     <ScrollView style={styles.screen}>
@@ -585,31 +439,6 @@ export const BreakCipher: FunctionComponent = () => {
           onPress={() => setInfoVisible(true)}
         />
       </View>
-      <SegmentedButtons
-        value={activeTab}
-        onValueChange={handleTabChange}
-        buttons={[
-          {
-            value: 'bruteForce',
-            label: BRUTE_FORCE_TAB,
-            testID: BRUTE_FORCE_TAB_BUTTON,
-          },
-          {
-            value: 'cribAnalysis',
-            label: CRIB_ANALYSIS_TAB,
-            testID: CRIB_ANALYSIS_TAB_BUTTON,
-          },
-        ]}
-        style={styles.tabs}
-        theme={{
-          colors: {
-            secondaryContainer: colors.surfaceAlt,
-            onSecondaryContainer: colors.accent,
-            onSurface: colors.textSecondary,
-            outline: colors.border,
-          },
-        }}
-      />
 
       <TextInput
         testID={CIPHERTEXT_INPUT}
@@ -625,41 +454,21 @@ export const BreakCipher: FunctionComponent = () => {
         theme={{ colors: { onSurfaceVariant: colors.textSecondary } }}
       />
 
-      {activeTab === 'bruteForce' ? (
-        <TextInput
-          testID={PLAINTEXT_INPUT}
-          label={KNOWN_PLAINTEXT_LABEL}
-          value={plaintext}
-          onChangeText={(text) => setPlaintext(sanitizeInput(text))}
-          mode='outlined'
-          autoCapitalize='characters'
-          style={styles.input}
-          textColor={colors.textPrimary}
-          outlineColor={colors.border}
-          activeOutlineColor={colors.accent}
-          theme={{ colors: { onSurfaceVariant: colors.textSecondary } }}
-        />
-      ) : (
-        <TextInput
-          testID={CRIB_INPUT}
-          label={CRIB_LABEL}
-          value={crib}
-          onChangeText={(text) => setCrib(sanitizeInput(text))}
-          mode='outlined'
-          autoCapitalize='characters'
-          style={styles.input}
-          textColor={colors.textPrimary}
-          outlineColor={colors.border}
-          activeOutlineColor={colors.accent}
-          theme={{ colors: { onSurfaceVariant: colors.textSecondary } }}
-        />
-      )}
+      <TextInput
+        testID={CRIB_INPUT}
+        label={CRIB_LABEL}
+        value={crib}
+        onChangeText={(text) => setCrib(sanitizeInput(text))}
+        mode='outlined'
+        autoCapitalize='characters'
+        style={styles.input}
+        textColor={colors.textPrimary}
+        outlineColor={colors.border}
+        activeOutlineColor={colors.accent}
+        theme={{ colors: { onSurfaceVariant: colors.textSecondary } }}
+      />
 
-      <Text style={styles.hintText}>{hintText}</Text>
-
-      {ciphertextTooLong && (
-        <Text style={styles.errorText}>{CIPHERTEXT_TOO_LONG}</Text>
-      )}
+      <Text style={styles.hintText}>{COMMON_CRIBS_HINT}</Text>
 
       <RunButton
         isSearching={isSearching}
@@ -680,39 +489,27 @@ export const BreakCipher: FunctionComponent = () => {
         </Button>
       )}
 
-      {hasResults && !isSearching && (
-        <View testID={RESULTS_CONTAINER}>
-          {hasNoResults && <Text style={styles.noResults}>{NO_RESULTS}</Text>}
-
-          {activeTab === 'bruteForce' &&
-            bruteForceResults &&
-            bruteForceResults.length > 0 && (
-              <BruteForceResults results={bruteForceResults} />
+      {cribSearchResults !== null &&
+        !isSearching &&
+        lastCribSearch !== null && (
+          <View testID={RESULTS_CONTAINER}>
+            {cribSearchResults.length > 0 ? (
+              <CribSearchResults results={cribSearchResults} />
+            ) : (
+              <CribStructuralFallback
+                ciphertext={lastCribSearch.ciphertext}
+                crib={lastCribSearch.crib}
+                expandedPosition={expandedPosition}
+                onTogglePosition={toggleExpandedPosition}
+              />
             )}
-
-          {activeTab === 'cribAnalysis' &&
-            cribSearchResults !== null &&
-            lastCribSearch !== null && (
-              <>
-                {cribSearchResults.length > 0 ? (
-                  <CribSearchResults results={cribSearchResults} />
-                ) : (
-                  <CribStructuralFallback
-                    ciphertext={lastCribSearch.ciphertext}
-                    crib={lastCribSearch.crib}
-                    expandedPosition={expandedPosition}
-                    onTogglePosition={toggleExpandedPosition}
-                  />
-                )}
-              </>
-            )}
-        </View>
-      )}
+          </View>
+        )}
       <InfoSidebar
         visible={infoVisible}
         onDismiss={() => setInfoVisible(false)}
-        title={infoTitle}
-        content={infoContent}
+        title={INFO_CRIB_ANALYSIS_TITLE}
+        content={INFO_CRIB_ANALYSIS_CONTENT}
       />
     </ScrollView>
   );

@@ -4,15 +4,7 @@ import type {
   RotorState,
 } from '../types/interfaces';
 import { encryptLetter, stepRotors } from './enigma';
-import { computeIoC, nlpConfidence } from './nlp';
-
-export interface BruteForceResult {
-  rotorIds: number[];
-  reflectorName: string;
-  startingPositions: number[];
-  decryptedText: string;
-  nlpScore: number;
-}
+import { nlpConfidence } from './nlp';
 
 export interface CribSearchResult {
   rotorIds: number[];
@@ -31,7 +23,6 @@ export interface MenuEdge {
 }
 
 const ALPHABET = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-const EMPTY_PLUGBOARD: PlugboardCable = {};
 
 const createRotorWithPosition = (
   rotor: RotorState,
@@ -72,163 +63,7 @@ const generateRotorPermutations = (rotorIds: number[]): number[][] => {
   return permutations;
 };
 
-const IOC_THRESHOLD = 0.05;
 const MAX_CRIB_RESULTS = 20;
-
-const processPermutation = (
-  perm: number[],
-  ciphertext: string,
-  knownPlaintext: string | undefined,
-  allRotors: { [id: number]: RotorState },
-  allReflectors: { [id: number]: ReflectorState },
-): BruteForceResult[] => {
-  const results: BruteForceResult[] = [];
-
-  for (const reflectorId of Object.keys(allReflectors).map(Number)) {
-    const reflector = allReflectors[reflectorId]!;
-    for (let p0 = 0; p0 < 26; p0++) {
-      for (let p1 = 0; p1 < 26; p1++) {
-        for (let p2 = 0; p2 < 26; p2++) {
-          if (knownPlaintext !== undefined) {
-            const checkRotors = [
-              createRotorWithPosition(allRotors[perm[0]!]!, p0),
-              createRotorWithPosition(allRotors[perm[1]!]!, p1),
-              createRotorWithPosition(allRotors[perm[2]!]!, p2),
-            ];
-            const encrypted = encryptString(
-              knownPlaintext,
-              checkRotors,
-              EMPTY_PLUGBOARD,
-              reflector,
-            );
-            if (encrypted === ciphertext.slice(0, knownPlaintext.length)) {
-              const freshRotors = [
-                createRotorWithPosition(allRotors[perm[0]!]!, p0),
-                createRotorWithPosition(allRotors[perm[1]!]!, p1),
-                createRotorWithPosition(allRotors[perm[2]!]!, p2),
-              ];
-              const decryptedText = encryptString(
-                ciphertext,
-                freshRotors,
-                EMPTY_PLUGBOARD,
-                reflector,
-              );
-              results.push({
-                rotorIds: perm,
-                reflectorName: reflector.name,
-                startingPositions: [p0, p1, p2],
-                decryptedText,
-                nlpScore: nlpConfidence(decryptedText),
-              });
-            }
-          } else {
-            const rotors = [
-              createRotorWithPosition(allRotors[perm[0]!]!, p0),
-              createRotorWithPosition(allRotors[perm[1]!]!, p1),
-              createRotorWithPosition(allRotors[perm[2]!]!, p2),
-            ];
-            const decryptedText = encryptString(
-              ciphertext,
-              rotors,
-              EMPTY_PLUGBOARD,
-              reflector,
-            );
-            if (computeIoC(decryptedText) >= IOC_THRESHOLD) {
-              results.push({
-                rotorIds: perm,
-                reflectorName: reflector.name,
-                startingPositions: [p0, p1, p2],
-                decryptedText,
-                nlpScore: nlpConfidence(decryptedText),
-              });
-            }
-          }
-        }
-      }
-    }
-  }
-
-  return results;
-};
-
-export const bruteForceSearch = (
-  ciphertext: string,
-  knownPlaintext: string | undefined,
-  allRotors: { [id: number]: RotorState },
-  allReflectors: { [id: number]: ReflectorState },
-): BruteForceResult[] => {
-  const results: BruteForceResult[] = [];
-  const rotorIds = Object.keys(allRotors).map(Number);
-  const permutations = generateRotorPermutations(rotorIds);
-
-  for (const perm of permutations) {
-    results.push(
-      ...processPermutation(
-        perm,
-        ciphertext,
-        knownPlaintext,
-        allRotors,
-        allReflectors,
-      ),
-    );
-  }
-
-  results.sort((a, b) => b.nlpScore - a.nlpScore);
-  return results;
-};
-
-export const bruteForceSearchAsync = (
-  ciphertext: string,
-  knownPlaintext: string | undefined,
-  allRotors: { [id: number]: RotorState },
-  allReflectors: { [id: number]: ReflectorState },
-  onProgress: (progress: number) => void,
-  isCancelled?: () => boolean,
-): Promise<BruteForceResult[]> => {
-  const rotorIds = Object.keys(allRotors).map(Number);
-  const permutations = generateRotorPermutations(rotorIds);
-  const totalPerms = permutations.length;
-  const allResults: BruteForceResult[] = [];
-
-  return new Promise((resolve) => {
-    let index = 0;
-
-    const processNext = () => {
-      if (isCancelled?.() === true) {
-        resolve([]);
-        return;
-      }
-
-      if (index >= totalPerms) {
-        onProgress(1);
-        setTimeout(() => {
-          if (isCancelled?.() === true) {
-            resolve([]);
-            return;
-          }
-          allResults.sort((a, b) => b.nlpScore - a.nlpScore);
-          resolve(allResults);
-        }, 0);
-        return;
-      }
-
-      const results = processPermutation(
-        permutations[index]!,
-        ciphertext,
-        knownPlaintext,
-        allRotors,
-        allReflectors,
-      );
-      allResults.push(...results);
-      index++;
-      onProgress(index / totalPerms);
-      setTimeout(processNext, 0);
-    };
-
-    // Defer first tick so React can render the searching state before work begins
-    setTimeout(processNext, 0);
-  });
-};
 
 export const findCribPositions = (
   ciphertext: string,
