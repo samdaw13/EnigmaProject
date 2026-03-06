@@ -19,6 +19,11 @@ module.exports = {
       ')/)',
   ],
 
+  moduleNameMapper: {
+    '@react-native-clipboard/clipboard':
+      '<rootDir>/__mocks__/@react-native-clipboard/clipboard.js',
+  },
+
   moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx', 'json', 'node'],
 
   setupFiles: ['./jest.setup.js'],
