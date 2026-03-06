@@ -1,6 +1,7 @@
 import React from 'react';
 
 import { ENCRYPT_MESSAGE_BUTTON } from '../../../../constants';
+import { initialReflectorState } from '../../../../features/reflector';
 import { initialRotorState } from '../../../../features/rotors/features';
 import { fireEvent, render, screen } from '../../../../utils/test-utils';
 import { Settings } from './Settings';
@@ -22,6 +23,8 @@ const allRotorsSelectedState = {
     ...initialRotorState,
     selectedSlots: [1, 2, 3] as [number, number, number],
   },
+  plugboard: {},
+  reflector: initialReflectorState,
 };
 
 describe(`Settings`, () => {
