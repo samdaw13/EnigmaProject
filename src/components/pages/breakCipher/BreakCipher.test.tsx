@@ -229,6 +229,7 @@ describe('BreakCipher', () => {
       cribPosition: 0,
       decryptedText: 'HELLO',
       nlpScore: 80,
+      derivedPlugboard: {},
     };
     mockCribSearchAsync.mockImplementationOnce(
       (
@@ -264,6 +265,7 @@ describe('BreakCipher', () => {
       cribPosition: 0,
       decryptedText: 'HELLO',
       nlpScore: 80,
+      derivedPlugboard: {},
     };
     mockCribSearchAsync.mockImplementationOnce(
       (

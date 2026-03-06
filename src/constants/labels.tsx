@@ -43,6 +43,7 @@ export const CIPHERTEXT_TOO_LONG =
   'Ciphertext must be 50 characters or fewer for keyless brute force';
 export const RANKING_RESULTS_LABEL = 'Search complete, ranking results...';
 export const CANCEL_LABEL = 'Cancel';
+export const DERIVED_PLUGBOARD_LABEL = 'Plugboard';
 
 export const SETTINGS_APPEARANCE_HEADING = 'Appearance';
 export const SETTINGS_THEME_LABEL = 'Theme';
