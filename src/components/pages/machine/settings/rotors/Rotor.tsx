@@ -95,6 +95,7 @@ export const Rotor: FunctionComponent<RotorProps> = ({ slotIndex }) => {
                   testID={REMOVE_ROTOR_BUTTON}
                   icon='close-circle'
                   mode='contained-tonal'
+                  containerColor={colors.surface}
                   iconColor={colors.destructive}
                   onPress={removeRotor}
                 />
