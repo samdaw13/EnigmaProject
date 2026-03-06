@@ -66,10 +66,11 @@ const rotorI = initialRotorState.available[1]!;
 const reflectorB = initialReflectorState.reflectors[2]!;
 const emptyPlugboard: PlugboardCable = {};
 
-// 'WITHTION' contains high-value quadgrams so NLP reliably ranks the correct
-// config first — same pattern as codebreaking.test.tsx
+// Using the full plaintext as the crib eliminates Bombe false positives —
+// only position 0 passes the structural check, so the correct config always
+// appears in the results regardless of NLP ranking.
 const PLAINTEXT = 'WITHTION';
-const CRIB = 'WITH';
+const CRIB = 'WITHTION';
 const CIPHERTEXT = encryptString(
   PLAINTEXT,
   [
@@ -81,12 +82,12 @@ const CIPHERTEXT = encryptString(
   reflectorB,
 );
 
-describe('BreakCipher with real codebreaking (integration)', () => {
+describe('BreakCipher crib search (integration)', () => {
   beforeEach(() => {
     jest.useRealTimers();
   });
 
-  it('crib search finds and displays the correct decryption', async () => {
+  it('finds and displays the correct decryption for a known crib', async () => {
     await render(<BreakCipher />);
 
     await fireEvent.changeText(
@@ -103,10 +104,7 @@ describe('BreakCipher with real codebreaking (integration)', () => {
       { timeout: 15000 },
     );
 
-    // Crib search guarantees the crib appears in each result's decrypted text.
-    // Exact full plaintext is not asserted here because the Bombe derives a
-    // plugboard hypothesis that may differ from the (empty) encryption plugboard
-    // — algorithm correctness is covered by codebreaking.test.tsx.
     expect(screen.getByTestId(`${DECRYPTED_TEXT_DISPLAY}_0`)).toBeTruthy();
+    expect(screen.getAllByText(/WITHTION/).length).toBeGreaterThan(0);
   });
 });
