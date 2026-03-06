@@ -54,11 +54,9 @@ const makeStyles = (colors: ColorPalette) =>
       paddingBottom: 16,
       gap: 8,
     },
-    infoButton: {
-      position: 'absolute',
-      right: 0,
-      top: 0,
-      zIndex: 1,
+    headerRow: {
+      flexDirection: 'row',
+      justifyContent: 'flex-end',
     },
   });
 
@@ -100,14 +98,15 @@ export const Settings: FunctionComponent = () => {
 
   return (
     <View style={styles.screen}>
-      <IconButton
-        testID={INFO_BUTTON}
-        icon='information'
-        iconColor={colors.textSecondary}
-        size={22}
-        style={styles.infoButton}
-        onPress={() => setInfoVisible(true)}
-      />
+      <View style={styles.headerRow}>
+        <IconButton
+          testID={INFO_BUTTON}
+          icon='information'
+          iconColor={colors.textSecondary}
+          size={22}
+          onPress={() => setInfoVisible(true)}
+        />
+      </View>
       <View style={styles.content}>
         <Rotors />
         <Plugboard />
