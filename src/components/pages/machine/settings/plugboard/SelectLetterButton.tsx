@@ -31,9 +31,8 @@ export const SelectLetterButton: FunctionComponent<SelectLetterProps> = ({
           return (
             <Button
               key={letter}
-              mode='outlined'
+              mode='text'
               textColor={colors.textPrimary}
-              style={{ borderColor: colors.border }}
               onPress={() => updateLetter(letter)}
               testID={`${testID ?? 'test'}${index}`}
             >

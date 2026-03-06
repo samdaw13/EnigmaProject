@@ -52,9 +52,8 @@ export const RotorSelectModal: FunctionComponent<RotorSelectModalProps> = ({
               <Button
                 key={rotor.id}
                 testID={selectRotorButton(rotor.id)}
-                mode='outlined'
+                mode='text'
                 textColor={colors.textPrimary}
-                style={{ borderColor: colors.border }}
                 onPress={() => chooseRotor(rotor)}
               >
                 {rotor.id}
