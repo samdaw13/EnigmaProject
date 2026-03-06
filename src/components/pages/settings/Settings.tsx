@@ -2,6 +2,7 @@ import type { FunctionComponent } from 'react';
 import React, { useMemo } from 'react';
 import { Alert, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { Button, SegmentedButtons } from 'react-native-paper';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useDispatch, useSelector } from 'react-redux';
 
 import {
@@ -26,7 +27,7 @@ import type { ColorPalette } from '../../../theme/colors';
 import { useThemeColors } from '../../../theme/useThemeColors';
 import type { Theme } from '../../../types';
 
-const makeStyles = (colors: ColorPalette) =>
+const makeStyles = (colors: ColorPalette, bottomInset: number = 0) =>
   StyleSheet.create({
     screen: {
       flex: 1,
@@ -34,7 +35,7 @@ const makeStyles = (colors: ColorPalette) =>
     },
     scrollContent: {
       padding: 20,
-      paddingBottom: 40,
+      paddingBottom: 40 + bottomInset,
     },
     section: {
       marginBottom: 32,
@@ -86,7 +87,11 @@ export const Settings: FunctionComponent = () => {
   const dispatch = useDispatch<AppDispatch>();
   const theme = useSelector((state: RootState) => state.settings.theme);
   const colors = useThemeColors();
-  const styles = useMemo(() => makeStyles(colors), [colors]);
+  const { bottom: bottomInset } = useSafeAreaInsets();
+  const styles = useMemo(
+    () => makeStyles(colors, bottomInset),
+    [colors, bottomInset],
+  );
 
   const handleThemeChange = (value: string) => {
     dispatch(setTheme(value as Theme));

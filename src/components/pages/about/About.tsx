@@ -1,6 +1,7 @@
 import type { FunctionComponent } from 'react';
 import React, { useMemo } from 'react';
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import {
   ABOUT_CODEBREAKERS_BODY,
@@ -14,7 +15,7 @@ import {
 import type { ColorPalette } from '../../../theme/colors';
 import { useThemeColors } from '../../../theme/useThemeColors';
 
-const makeStyles = (colors: ColorPalette) =>
+const makeStyles = (colors: ColorPalette, bottomInset: number = 0) =>
   StyleSheet.create({
     screen: {
       flex: 1,
@@ -22,7 +23,7 @@ const makeStyles = (colors: ColorPalette) =>
     },
     scrollContent: {
       padding: 20,
-      paddingBottom: 40,
+      paddingBottom: 40 + bottomInset,
     },
     title: {
       color: colors.accent,
@@ -70,7 +71,11 @@ const AboutSection: FunctionComponent<{ heading: string; body: string }> = ({
 
 export const About: FunctionComponent = () => {
   const colors = useThemeColors();
-  const styles = useMemo(() => makeStyles(colors), [colors]);
+  const { bottom: bottomInset } = useSafeAreaInsets();
+  const styles = useMemo(
+    () => makeStyles(colors, bottomInset),
+    [colors, bottomInset],
+  );
   return (
     <View style={styles.screen}>
       <ScrollView contentContainerStyle={styles.scrollContent}>
