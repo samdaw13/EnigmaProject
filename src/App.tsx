@@ -1,10 +1,7 @@
 import { createDrawerNavigator } from '@react-navigation/drawer';
-import {
-  NavigationContainer,
-  useNavigationState,
-} from '@react-navigation/native';
+import { NavigationContainer } from '@react-navigation/native';
 import type { FunctionComponent } from 'react';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { Button } from 'react-native-paper';
 import { useDispatch, useSelector } from 'react-redux';
@@ -43,7 +40,9 @@ const bannerStyles = StyleSheet.create({
   },
 });
 
-const SearchBanner: FunctionComponent = () => {
+const SearchBanner: FunctionComponent<{ currentRoute: string | null }> = ({
+  currentRoute,
+}) => {
   const dispatch = useDispatch<AppDispatch>();
   const searchStatus = useSelector(
     (state: RootState) => state.codeBreaking.status,
@@ -52,9 +51,6 @@ const SearchBanner: FunctionComponent = () => {
     (state: RootState) => state.codeBreaking.progress,
   );
   const colors = useThemeColors();
-  const currentRoute = useNavigationState(
-    (state) => state.routes[state.index]?.name ?? null,
-  );
 
   if (searchStatus !== 'searching' || currentRoute === 'Break') return null;
 
@@ -96,13 +92,18 @@ const App: FunctionComponent = () => {
   const dispatch = useDispatch<AppDispatch>();
   const resolvedTheme = useResolvedTheme();
   const colors = getColors(resolvedTheme);
+  const [currentRoute, setCurrentRoute] = useState<string | null>(null);
 
   useEffect(() => {
     void dispatch(loadSettings());
   }, [dispatch]);
 
   return (
-    <NavigationContainer>
+    <NavigationContainer
+      onStateChange={(state) => {
+        setCurrentRoute(state?.routes[state.index]?.name ?? null);
+      }}
+    >
       <Drawer.Navigator
         initialRouteName='Enigma'
         screenOptions={{
@@ -134,7 +135,7 @@ const App: FunctionComponent = () => {
           options={{ title: 'Settings' }}
         />
       </Drawer.Navigator>
-      <SearchBanner />
+      <SearchBanner currentRoute={currentRoute} />
     </NavigationContainer>
   );
 };
