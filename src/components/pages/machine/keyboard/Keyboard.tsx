@@ -1,15 +1,28 @@
 import type { FunctionComponent } from 'react';
 import React, { useMemo, useState } from 'react';
 import { Text, View } from 'react-native';
-import { Button, Chip, IconButton } from 'react-native-paper';
+import {
+  Button,
+  Chip,
+  IconButton,
+  Modal,
+  Portal,
+  TextInput,
+} from 'react-native-paper';
 import { useDispatch, useSelector } from 'react-redux';
 
 import {
+  CANCEL_LABEL,
   INFO_BUTTON,
   INFO_KEYBOARD_CONTENT,
   INFO_KEYBOARD_TITLE,
   MESSAGE_DISPLAY,
   OUTPUT_LETTER_DISPLAY,
+  PASTE_CONFIRM,
+  PASTE_CONFIRM_BUTTON,
+  PASTE_TEXT_BUTTON,
+  PASTE_TEXT_INPUT,
+  PASTE_TEXT_PLACEHOLDER,
 } from '../../../../constants';
 import { updateRotorCurrentIndex } from '../../../../features/rotors/features';
 import type { RootState } from '../../../../store/store';
@@ -47,6 +60,8 @@ export const Keyboard: FunctionComponent = () => {
   const [outputLetter, setOutputLetter] = useState<string | null>(null);
   const [message, setMessage] = useState('');
   const [infoVisible, setInfoVisible] = useState(false);
+  const [pasteVisible, setPasteVisible] = useState(false);
+  const [pasteInput, setPasteInput] = useState('');
 
   const allRotorsSelected = (): boolean =>
     selectedRotorIds.every((id) => id !== null);
@@ -74,6 +89,37 @@ export const Keyboard: FunctionComponent = () => {
     setMessage((prev) => prev + encrypted);
   };
 
+  const processTextInput = (text: string) => {
+    if (!allRotorsSelected()) return;
+
+    const orderedRotors = selectedRotorIds.map((id) => rotors[id as number]);
+    const reflector = reflectors[selectedReflectorId];
+    let currentRotors = orderedRotors;
+    const results: string[] = [];
+
+    for (const key of text.toUpperCase()) {
+      if (!/[A-Z]/.test(key)) continue;
+      currentRotors = stepRotors(currentRotors);
+      results.push(encryptLetter(key, currentRotors, plugboard, reflector));
+    }
+
+    if (results.length === 0) return;
+
+    currentRotors.forEach((rotor, index) => {
+      dispatch(
+        updateRotorCurrentIndex({
+          id: selectedRotorIds[index] as number,
+          currentIndex: rotor.config.currentIndex,
+        }),
+      );
+    });
+
+    setOutputLetter(results[results.length - 1]);
+    setMessage((prev) => prev + results.join(''));
+    setPasteInput('');
+    setPasteVisible(false);
+  };
+
   const currentRotorLetter = (slotId: number | null): string => {
     if (slotId === null) return '-';
     const rotor = rotors[slotId];
@@ -82,15 +128,65 @@ export const Keyboard: FunctionComponent = () => {
 
   return (
     <View style={keyboardStyles.screen}>
+      <Portal>
+        <Modal
+          visible={pasteVisible}
+          onDismiss={() => setPasteVisible(false)}
+          contentContainerStyle={keyboardStyles.pasteModal}
+        >
+          <TextInput
+            testID={PASTE_TEXT_INPUT}
+            label={PASTE_TEXT_PLACEHOLDER}
+            value={pasteInput}
+            onChangeText={setPasteInput}
+            mode='outlined'
+            autoCapitalize='characters'
+            style={keyboardStyles.pasteInput}
+            textColor={colors.textPrimary}
+            outlineColor={colors.border}
+            activeOutlineColor={colors.accent}
+            theme={{ colors: { onSurfaceVariant: colors.textSecondary } }}
+          />
+          <View style={keyboardStyles.pasteButtonRow}>
+            <Button
+              mode='outlined'
+              textColor={colors.textSecondary}
+              style={{ borderColor: colors.border }}
+              onPress={() => setPasteVisible(false)}
+            >
+              {CANCEL_LABEL}
+            </Button>
+            <Button
+              testID={PASTE_CONFIRM_BUTTON}
+              mode='contained'
+              buttonColor={colors.accent}
+              textColor={colors.background}
+              disabled={pasteInput.length === 0}
+              onPress={() => processTextInput(pasteInput)}
+            >
+              {PASTE_CONFIRM}
+            </Button>
+          </View>
+        </Modal>
+      </Portal>
       <View style={keyboardStyles.headerRow}>
         <BackButton />
-        <IconButton
-          testID={INFO_BUTTON}
-          icon='information'
-          iconColor={colors.textSecondary}
-          size={22}
-          onPress={() => setInfoVisible(true)}
-        />
+        <View style={keyboardStyles.headerActions}>
+          <IconButton
+            testID={PASTE_TEXT_BUTTON}
+            icon='clipboard-text-outline'
+            iconColor={colors.textSecondary}
+            size={22}
+            onPress={() => setPasteVisible(true)}
+          />
+          <IconButton
+            testID={INFO_BUTTON}
+            icon='information'
+            iconColor={colors.textSecondary}
+            size={22}
+            onPress={() => setInfoVisible(true)}
+          />
+        </View>
       </View>
 
       <View style={keyboardStyles.rotorDisplayRow}>

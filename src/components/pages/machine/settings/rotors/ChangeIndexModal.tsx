@@ -44,7 +44,7 @@ export const ChangeIndexModal: FunctionComponent<ChangeIndexModalProps> = ({
       contentContainerStyle={rotorStyles.selectRotor}
     >
       <View>
-        <Text>{SELECT_NEW_LETTER}</Text>
+        <Text style={rotorStyles.modalText}>{SELECT_NEW_LETTER}</Text>
         <ScrollView>
           {currentRotor &&
             currentRotor.config.displayedLetters.map((letter) => {
@@ -52,6 +52,9 @@ export const ChangeIndexModal: FunctionComponent<ChangeIndexModalProps> = ({
                 <Button
                   key={`${letter}${currentRotor.id.toString()}`}
                   testID={letterButton(letter, currentRotor.id)}
+                  mode='outlined'
+                  textColor={colors.textPrimary}
+                  style={{ borderColor: colors.border }}
                   onPress={() => updateIndex(letter)}
                 >
                   {letter}

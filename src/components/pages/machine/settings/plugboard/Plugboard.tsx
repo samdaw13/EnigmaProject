@@ -29,6 +29,9 @@ export const Plugboard: FunctionComponent = () => {
       </Portal>
       <Button
         testID={ADD_CABLE_MODAL_BUTTON}
+        mode='outlined'
+        textColor={colors.textPrimary}
+        style={{ borderColor: colors.border }}
         onPress={() => setAddCableModalOpen(true)}
       >
         {ADD_CABLE}

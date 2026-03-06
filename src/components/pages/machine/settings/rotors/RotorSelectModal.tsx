@@ -43,7 +43,7 @@ export const RotorSelectModal: FunctionComponent<RotorSelectModalProps> = ({
       testID={ROTOR_SELECT_MODAL}
     >
       <View>
-        <Text>{SELECT_ROTOR}</Text>
+        <Text style={rotorStyles.modalText}>{SELECT_ROTOR}</Text>
         {Object.keys(rotors)
           .filter((key) => rotors[parseInt(key)].isAvailable)
           .map((key) => {
@@ -52,6 +52,9 @@ export const RotorSelectModal: FunctionComponent<RotorSelectModalProps> = ({
               <Button
                 key={rotor.id}
                 testID={selectRotorButton(rotor.id)}
+                mode='outlined'
+                textColor={colors.textPrimary}
+                style={{ borderColor: colors.border }}
                 onPress={() => chooseRotor(rotor)}
               >
                 {rotor.id}

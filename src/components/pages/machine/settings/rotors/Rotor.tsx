@@ -1,5 +1,5 @@
 import type { FunctionComponent } from 'react';
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import { View } from 'react-native';
 import { Button, Card, IconButton, Portal } from 'react-native-paper';
 import { useDispatch, useSelector } from 'react-redux';
@@ -33,7 +33,9 @@ interface RotorProps {
 
 export const Rotor: FunctionComponent<RotorProps> = ({ slotIndex }) => {
   const rotors = useSelector((state: RootState) => state.rotors.available);
-  const [selectedRotorId, setSelectedRotorId] = useState<number | null>(null);
+  const selectedRotorId = useSelector(
+    (state: RootState) => state.rotors.selectedSlots[slotIndex],
+  );
   const selectedRotor =
     selectedRotorId !== null ? (rotors[selectedRotorId] ?? null) : null;
   const [isSelectModalOpen, setIsSelectModalOpen] = useState(false);
@@ -42,7 +44,7 @@ export const Rotor: FunctionComponent<RotorProps> = ({ slotIndex }) => {
   const colors = useThemeColors();
   const rotorStyles = useMemo(() => makeRotorStyles(colors), [colors]);
 
-  const setRotor = () => {
+  const openSelectModal = () => {
     setIsSelectModalOpen(true);
   };
   const removeRotor = () => {
@@ -50,17 +52,13 @@ export const Rotor: FunctionComponent<RotorProps> = ({ slotIndex }) => {
       dispatch(
         updateRotorAvailability({ id: selectedRotor.id, isAvailable: true }),
       );
-    setSelectedRotorId(null);
     dispatch(clearSelectedRotor({ slotIndex }));
   };
   const handleSetRotor = (rotor: RotorState | null) => {
-    setSelectedRotorId(rotor?.id ?? null);
-  };
-  useEffect(() => {
-    if (selectedRotorId !== null) {
-      dispatch(setSelectedRotorAction({ slotIndex, rotorId: selectedRotorId }));
+    if (rotor !== null) {
+      dispatch(setSelectedRotorAction({ slotIndex, rotorId: rotor.id }));
     }
-  }, [dispatch, selectedRotorId, slotIndex]);
+  };
   return (
     <View>
       <Portal>
@@ -90,6 +88,8 @@ export const Rotor: FunctionComponent<RotorProps> = ({ slotIndex }) => {
               )}
               subtitle={currentRotor(selectedRotor.id)}
               style={rotorStyles.cardComponent}
+              titleStyle={{ color: colors.textPrimary }}
+              subtitleStyle={{ color: colors.textSecondary }}
               right={() => (
                 <IconButton
                   testID={REMOVE_ROTOR_BUTTON}
@@ -101,11 +101,20 @@ export const Rotor: FunctionComponent<RotorProps> = ({ slotIndex }) => {
               )}
             />
             <Card.Actions style={rotorStyles.cardComponent}>
-              <Button testID={REPLACE_ROTOR_BUTTON} onPress={setRotor}>
+              <Button
+                testID={REPLACE_ROTOR_BUTTON}
+                mode='outlined'
+                textColor={colors.textPrimary}
+                style={{ borderColor: colors.border }}
+                onPress={openSelectModal}
+              >
                 {REPLACE_ROTOR}
               </Button>
               <Button
                 testID={CHANGE_LETTER_BUTTON}
+                mode='outlined'
+                textColor={colors.textPrimary}
+                style={{ borderColor: colors.border }}
                 onPress={() => setIsChangeIndexModalOpen(true)}
               >
                 {CHANGE_CURRENT_LETTER}
@@ -116,12 +125,15 @@ export const Rotor: FunctionComponent<RotorProps> = ({ slotIndex }) => {
         {selectedRotor === null && (
           <Card.Title
             title={NO_ROTOR_SELECTED}
+            titleStyle={{ color: colors.textPrimary }}
             style={rotorStyles.cardComponent}
             right={() => (
               <Button
                 mode='contained'
                 testID={SET_ROTOR_BUTTON}
-                onPress={setRotor}
+                buttonColor={colors.accent}
+                textColor={colors.background}
+                onPress={openSelectModal}
               >
                 {SELECT_ROTOR}
               </Button>
