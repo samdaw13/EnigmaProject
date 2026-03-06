@@ -1,5 +1,6 @@
+import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import type { FunctionComponent } from 'react';
-import React, { useMemo, useState } from 'react';
+import React, { useCallback, useMemo, useState } from 'react';
 import { Text, View } from 'react-native';
 import {
   Button,
@@ -57,11 +58,31 @@ export const Keyboard: FunctionComponent = () => {
   const colors = useThemeColors();
   const keyboardStyles = useMemo(() => makeKeyboardStyles(colors), [colors]);
 
+  const navigation = useNavigation();
   const [outputLetter, setOutputLetter] = useState<string | null>(null);
   const [message, setMessage] = useState('');
   const [infoVisible, setInfoVisible] = useState(false);
   const [pasteVisible, setPasteVisible] = useState(false);
   const [pasteInput, setPasteInput] = useState('');
+
+  useFocusEffect(
+    useCallback(() => {
+      navigation.getParent()?.setOptions({
+        headerRight: () => (
+          <IconButton
+            testID={INFO_BUTTON}
+            icon='information'
+            iconColor={colors.textSecondary}
+            size={22}
+            onPress={() => setInfoVisible(true)}
+          />
+        ),
+      });
+      return () => {
+        navigation.getParent()?.setOptions({ headerRight: undefined });
+      };
+    }, [navigation, colors.textSecondary, setInfoVisible]),
+  );
 
   const allRotorsSelected = (): boolean =>
     selectedRotorIds.every((id) => id !== null);
@@ -178,13 +199,6 @@ export const Keyboard: FunctionComponent = () => {
             iconColor={colors.textSecondary}
             size={22}
             onPress={() => setPasteVisible(true)}
-          />
-          <IconButton
-            testID={INFO_BUTTON}
-            icon='information'
-            iconColor={colors.textSecondary}
-            size={22}
-            onPress={() => setInfoVisible(true)}
           />
         </View>
       </View>

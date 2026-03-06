@@ -21,6 +21,16 @@ import {
 } from '../../../../utils/test-utils';
 import { BreakCipher } from '../BreakCipher';
 
+jest.mock('@react-navigation/native', () => {
+  const actualNav = jest.requireActual<object>('@react-navigation/native');
+  return {
+    ...actualNav,
+    useNavigation: () => ({
+      setOptions: jest.fn(),
+    }),
+  };
+});
+
 // Limit to rotors I–III and one reflector so the real search completes quickly
 // (6 permutations × 17,576 positions vs the full 60 × 3 × 17,576).
 // __esModule must be explicit — jest.requireActual returns it as non-enumerable
