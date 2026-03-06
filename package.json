@@ -9,6 +9,7 @@
     "lint:fix": "tsc --noEmit && eslint --fix .",
     "start": "react-native start",
     "test": "jest",
+    "test:e2e:smoke": "maestro test e2e/smoke/",
     "prettier": "prettier src/**/*.{ts,tsx}",
     "prettier:fix": "prettier --write src/**/*.{ts,tsx}",
     "format": "npm run prettier:fix && npm run lint:fix",

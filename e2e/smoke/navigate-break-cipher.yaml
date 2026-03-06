@@ -1,0 +1,9 @@
+appId: com.enigmaproject
+---
+- launchApp
+- tapOn:
+    label: "Open drawer"
+- tapOn: "Break a cipher"
+- assertVisible: "Break a cipher"
+- assertVisible:
+    id: "ciphertextInput"

@@ -1,0 +1,7 @@
+appId: com.enigmaproject
+---
+- launchApp
+- tapOn:
+    label: "Open drawer"
+- tapOn: "Settings"
+- assertVisible: "Settings"

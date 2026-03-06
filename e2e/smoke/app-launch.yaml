@@ -1,0 +1,6 @@
+appId: com.enigmaproject
+---
+- launchApp
+- assertVisible: "Enigma machine"
+- assertVisible:
+    id: "goToKeyboardButton"
