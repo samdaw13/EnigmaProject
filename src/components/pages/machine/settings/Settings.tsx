@@ -46,11 +46,13 @@ const makeStyles = (colors: ColorPalette) =>
       flex: 1,
       backgroundColor: colors.background,
     },
-    bottomRow: {
-      flexDirection: 'row',
-      justifyContent: 'space-between',
-      alignItems: 'center',
-      paddingHorizontal: 8,
+    content: {
+      flex: 1,
+    },
+    bottomSection: {
+      paddingHorizontal: 16,
+      paddingBottom: 16,
+      gap: 8,
     },
     infoButton: {
       position: 'absolute',
@@ -106,9 +108,11 @@ export const Settings: FunctionComponent = () => {
         style={styles.infoButton}
         onPress={() => setInfoVisible(true)}
       />
-      <Rotors />
-      <Plugboard />
-      <View style={styles.bottomRow}>
+      <View style={styles.content}>
+        <Rotors />
+        <Plugboard />
+      </View>
+      <View style={styles.bottomSection}>
         <Button
           testID={RANDOMIZE_BUTTON}
           mode='outlined'
