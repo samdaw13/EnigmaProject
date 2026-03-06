@@ -52,9 +52,8 @@ export const ChangeIndexModal: FunctionComponent<ChangeIndexModalProps> = ({
                 <Button
                   key={`${letter}${currentRotor.id.toString()}`}
                   testID={letterButton(letter, currentRotor.id)}
-                  mode='outlined'
+                  mode='text'
                   textColor={colors.textPrimary}
-                  style={{ borderColor: colors.border }}
                   onPress={() => updateIndex(letter)}
                 >
                   {letter}
