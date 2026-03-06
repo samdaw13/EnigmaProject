@@ -34,6 +34,7 @@ export const NO_CRIB_RESULTS_FALLBACK =
   'No configurations found — showing structural positions only';
 export const RANKING_RESULTS_LABEL = 'Search complete, ranking results...';
 export const CANCEL_LABEL = 'Cancel';
+export const SEARCH_RUNNING_BACKGROUND_LABEL = 'Search running in background';
 export const DERIVED_PLUGBOARD_LABEL = 'Plugboard';
 
 export const SETTINGS_APPEARANCE_HEADING = 'Appearance';

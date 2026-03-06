@@ -1,7 +1,8 @@
 import type { FunctionComponent } from 'react';
-import React, { useCallback, useMemo, useRef, useState } from 'react';
+import React, { useCallback, useMemo, useState } from 'react';
 import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { Button, IconButton, TextInput } from 'react-native-paper';
+import { useDispatch, useSelector } from 'react-redux';
 
 import {
   CANCEL_LABEL,
@@ -39,15 +40,16 @@ import {
   RESULTS_CONTAINER,
   RUN_ANALYSIS_BUTTON,
 } from '../../../constants/selectors';
-import { initialReflectorState } from '../../../features/reflector';
-import { initialRotorState } from '../../../features/rotors/features';
+import { searchCancelled } from '../../../features/codeBreaking';
+import {
+  cancelSearch,
+  runCribAnalysis,
+} from '../../../features/codeBreaking/searchRunner';
+import type { AppDispatch, RootState } from '../../../store/store';
 import type { ColorPalette } from '../../../theme/colors';
 import { useThemeColors } from '../../../theme/useThemeColors';
 import type { CribSearchResult } from '../../../utils/codebreaking';
-import {
-  cribSearchAsync,
-  findCribPositions,
-} from '../../../utils/codebreaking';
+import { findCribPositions } from '../../../utils/codebreaking';
 import { CopyButton } from '../../common';
 import { InfoSidebar } from '../../InfoSidebar';
 
@@ -169,11 +171,6 @@ const makeStyles = (colors: ColorPalette) =>
     },
     hintText: {
       color: colors.textSecondary,
-      fontSize: 12,
-      marginBottom: 8,
-    },
-    errorText: {
-      color: colors.destructive,
       fontSize: 12,
       marginBottom: 8,
     },
@@ -363,59 +360,41 @@ const CribStructuralFallback: FunctionComponent<{
 };
 
 export const BreakCipher: FunctionComponent = () => {
+  const dispatch = useDispatch<AppDispatch>();
+  const searchStatus = useSelector(
+    (state: RootState) => state.codeBreaking.status,
+  );
+  const searchProgress = useSelector(
+    (state: RootState) => state.codeBreaking.progress,
+  );
+  const cribSearchResults = useSelector(
+    (state: RootState) => state.codeBreaking.cribSearchResults,
+  );
+  const lastCribSearch = useSelector(
+    (state: RootState) => state.codeBreaking.lastCribSearch,
+  );
+
   const [infoVisible, setInfoVisible] = useState(false);
   const [ciphertext, setCiphertext] = useState('');
   const [crib, setCrib] = useState('');
-  const [cribSearchResults, setCribSearchResults] = useState<
-    CribSearchResult[] | null
-  >(null);
-  const [lastCribSearch, setLastCribSearch] = useState<{
-    ciphertext: string;
-    crib: string;
-  } | null>(null);
-  const [isSearching, setIsSearching] = useState(false);
-  const [progress, setProgress] = useState(0);
   const [expandedPosition, setExpandedPosition] = useState<number | null>(null);
-  const cancelledRef = useRef<boolean>(false);
+
   const colors = useThemeColors();
   const styles = useMemo(() => makeStyles(colors), [colors]);
 
-  const handleCancel = useCallback(() => {
-    cancelledRef.current = true;
-    setIsSearching(false);
-    setProgress(0);
-  }, []);
+  const isSearching = searchStatus === 'searching';
 
-  const runCribAnalysis = useCallback(async () => {
+  const handleCancel = useCallback(() => {
+    cancelSearch();
+    dispatch(searchCancelled());
+  }, [dispatch]);
+
+  const handleRun = useCallback(() => {
     const sanitizedCiphertext = sanitizeInput(ciphertext);
     const sanitizedCrib = sanitizeInput(crib);
     if (!sanitizedCiphertext || !sanitizedCrib) return;
-
-    cancelledRef.current = false;
-    setIsSearching(true);
-    setCribSearchResults(null);
-    setLastCribSearch(null);
-    setProgress(0);
-    setExpandedPosition(null);
-
-    const results = await cribSearchAsync(
-      sanitizedCiphertext,
-      sanitizedCrib,
-      initialRotorState.available,
-      initialReflectorState.reflectors,
-      setProgress,
-      () => cancelledRef.current,
-    );
-    const wasCancelled = cancelledRef.current as boolean;
-    if (wasCancelled) return;
-    setCribSearchResults(results);
-    setLastCribSearch({ ciphertext: sanitizedCiphertext, crib: sanitizedCrib });
-    setIsSearching(false);
-  }, [ciphertext, crib]);
-
-  const handleRun = useCallback(() => {
-    void runCribAnalysis();
-  }, [runCribAnalysis]);
+    runCribAnalysis(sanitizedCiphertext, sanitizedCrib, dispatch);
+  }, [ciphertext, crib, dispatch]);
 
   const toggleExpandedPosition = useCallback(
     (pos: number) => {
@@ -472,7 +451,7 @@ export const BreakCipher: FunctionComponent = () => {
 
       <RunButton
         isSearching={isSearching}
-        progress={progress}
+        progress={searchProgress}
         disabled={runAnalysisButtonDisabled}
         onPress={handleRun}
       />

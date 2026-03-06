@@ -29,6 +29,9 @@ export const NLP_SCORE_DISPLAY = 'nlpScoreDisplay';
 export const CANCEL_SEARCH_BUTTON = 'cancelSearchButton';
 export const COPY_MESSAGE_BUTTON = 'copyMessageButton';
 
+export const SEARCH_BANNER = 'searchBanner';
+export const SEARCH_BANNER_CANCEL_BUTTON = 'searchBannerCancelButton';
+
 export const INFO_BUTTON = 'infoButton';
 export const INFO_SIDEBAR = 'infoSidebar';
 export const INFO_SIDEBAR_CLOSE = 'infoSidebarClose';

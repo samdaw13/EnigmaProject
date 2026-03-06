@@ -8,6 +8,7 @@ import { PaperProvider } from 'react-native-paper';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { Provider } from 'react-redux';
 
+import codeBreakingReducer from '../features/codeBreaking';
 import plugboardReducer from '../features/plugboard';
 import reflectorReducer from '../features/reflector';
 import rotorsReducer from '../features/rotors/features';
@@ -16,7 +17,7 @@ import type { RootState } from '../store/store';
 import type { RotorState } from '../types';
 
 type ReducerTypes = Pick<RootState, 'rotors' | 'reflector' | 'plugboard'> &
-  Partial<Pick<RootState, 'settings'>>;
+  Partial<Pick<RootState, 'settings' | 'codeBreaking'>>;
 type TStore = EnhancedStore<ReducerTypes>;
 
 type CustomRenderOptions = {
@@ -67,6 +68,7 @@ async function render(ui: ReactElement, options?: CustomRenderOptions) {
         plugboard: plugboardReducer,
         reflector: reflectorReducer,
         settings: settingsReducer,
+        codeBreaking: codeBreakingReducer,
       },
       ...(preloadedState !== undefined ? { preloadedState } : {}),
     });

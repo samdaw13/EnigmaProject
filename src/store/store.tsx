@@ -1,5 +1,6 @@
 import { configureStore } from '@reduxjs/toolkit';
 
+import codeBreakingReducer from '../features/codeBreaking';
 import plugboardReducer from '../features/plugboard';
 import reflectorReducer from '../features/reflector';
 import rotorsReducer from '../features/rotors/features';
@@ -11,6 +12,7 @@ export const store = configureStore({
     plugboard: plugboardReducer,
     reflector: reflectorReducer,
     settings: settingsReducer,
+    codeBreaking: codeBreakingReducer,
   },
 });
 
