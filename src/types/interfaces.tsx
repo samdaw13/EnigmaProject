@@ -102,7 +102,7 @@ export interface SelectedRotorAction {
   rotorId: number;
 }
 
-export type Theme = 'dark' | 'light';
+export type Theme = 'dark' | 'light' | 'system';
 
 export interface SettingsState {
   theme: Theme;

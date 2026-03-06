@@ -7,7 +7,7 @@ import type { SettingsState, Theme } from '../../types';
 const SETTINGS_STORAGE_KEY = '@enigma_settings';
 
 const initialState: SettingsState = {
-  theme: 'dark',
+  theme: 'system',
 };
 
 export const loadSettings = createAsyncThunk('settings/load', async () => {

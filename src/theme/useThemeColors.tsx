@@ -1,9 +1,7 @@
-import { useSelector } from 'react-redux';
-
-import type { RootState } from '../store/store';
 import { getColors } from './colors';
+import { useResolvedTheme } from './useResolvedTheme';
 
 export const useThemeColors = () => {
-  const theme = useSelector((state: RootState) => state.settings.theme);
-  return getColors(theme);
+  const resolvedTheme = useResolvedTheme();
+  return getColors(resolvedTheme);
 };
