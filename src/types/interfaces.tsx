@@ -107,3 +107,33 @@ export type Theme = 'dark' | 'light' | 'system';
 export interface SettingsState {
   theme: Theme;
 }
+
+export interface SavedMessage {
+  id: string;
+  label: string;
+  plaintext: string;
+  ciphertext: string;
+  rotorIds: number[];
+  rotorStartingPositions: number[];
+  reflectorId: number;
+  plugboardCables: PlugboardCable;
+  timestamp: number;
+}
+
+export interface SavedAnalysis {
+  id: string;
+  ciphertext: string;
+  crib: string;
+  results: SavedAnalysisResult[];
+  timestamp: number;
+}
+
+export interface SavedAnalysisResult {
+  rotorIds: number[];
+  reflectorName: string;
+  startingPositions: number[];
+  cribPosition: number;
+  decryptedText: string;
+  nlpScore: number;
+  derivedPlugboard: PlugboardCable;
+}

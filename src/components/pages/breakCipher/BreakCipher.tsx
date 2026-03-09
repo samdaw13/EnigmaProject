@@ -30,6 +30,7 @@ import {
   RESULTS_TITLE,
   ROTOR_ORDER_LABEL,
   RUN_ANALYSIS,
+  SAVE_RESULTS_LABEL,
   SEARCHING_LABEL,
   TAP_TO_EXPAND,
   VALID_POSITIONS_LABEL,
@@ -51,6 +52,7 @@ import {
   PROGRESS_BAR,
   RESULTS_CONTAINER,
   RUN_ANALYSIS_BUTTON,
+  SAVE_RESULTS_BUTTON,
 } from '../../../constants/selectors';
 import { searchCancelled } from '../../../features/codeBreaking';
 import {
@@ -60,6 +62,8 @@ import {
 import type { AppDispatch, RootState } from '../../../store/store';
 import type { ColorPalette } from '../../../theme/colors';
 import { useThemeColors } from '../../../theme/useThemeColors';
+import type { SavedAnalysis } from '../../../types/interfaces';
+import { addSavedAnalysis } from '../../../utils/storage';
 import { CopyButton } from '../../common';
 import { InfoSidebar } from '../../InfoSidebar';
 
@@ -501,6 +505,26 @@ export const BreakCipher: FunctionComponent = () => {
     [expandedPosition],
   );
 
+  const handleSaveResults = useCallback(() => {
+    if (!cribSearchResults || !lastCribSearch) return;
+    const analysis: SavedAnalysis = {
+      id: Date.now().toString(),
+      ciphertext: lastCribSearch.ciphertext,
+      crib: lastCribSearch.crib,
+      results: cribSearchResults.map((r) => ({
+        rotorIds: r.rotorIds,
+        reflectorName: r.reflectorName,
+        startingPositions: r.startingPositions,
+        cribPosition: r.cribPosition,
+        decryptedText: r.decryptedText,
+        nlpScore: r.nlpScore,
+        derivedPlugboard: r.derivedPlugboard,
+      })),
+      timestamp: Date.now(),
+    };
+    void addSavedAnalysis(analysis);
+  }, [cribSearchResults, lastCribSearch]);
+
   const sanitizedCiphertextLength = sanitizeInput(ciphertext).length;
   const isCribReady = sanitizedCiphertextLength > 0 && crib.length > 0;
   const runAnalysisButtonDisabled = !isCribReady || isSearching;
@@ -578,7 +602,19 @@ export const BreakCipher: FunctionComponent = () => {
         lastCribSearch !== null && (
           <View testID={RESULTS_CONTAINER}>
             {cribSearchResults.length > 0 ? (
-              <CribSearchResults results={cribSearchResults} />
+              <>
+                <CribSearchResults results={cribSearchResults} />
+                <Button
+                  testID={SAVE_RESULTS_BUTTON}
+                  mode='contained'
+                  onPress={handleSaveResults}
+                  style={styles.runButton}
+                  buttonColor={colors.accent}
+                  textColor={colors.background}
+                >
+                  {SAVE_RESULTS_LABEL}
+                </Button>
+              </>
             ) : (
               <CribStructuralFallback
                 ciphertext={lastCribSearch.ciphertext}
