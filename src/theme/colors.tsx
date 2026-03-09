@@ -37,5 +37,11 @@ export const lightColors: ColorPalette = {
   disabledText: '#7A6A5A',
 };
 
+export const nlpColors = {
+  high: '#4CAF50',
+  medium: '#FFC107',
+  low: '#F44336',
+} as const;
+
 export const getColors = (theme: 'dark' | 'light'): ColorPalette =>
   theme === 'light' ? lightColors : darkColors;

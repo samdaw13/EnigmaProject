@@ -26,7 +26,7 @@ module.exports = {
 
   moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx', 'json', 'node'],
 
-  testPathIgnorePatterns: ['/node_modules/', '<rootDir>/e2e/'],
+  testPathIgnorePatterns: ['/node_modules/', '<rootDir>/e2e/', '<rootDir>/integration/'],
 
   setupFiles: ['./jest.setup.js'],
 

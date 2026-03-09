@@ -8,11 +8,11 @@ import { useDispatch, useSelector } from 'react-redux';
 
 import {
   About,
+  AppSettings,
   BreakCipher,
   Machine,
   SavedAnalyses,
   SavedMessages,
-  Settings,
 } from './components';
 import {
   CANCEL_LABEL,
@@ -149,7 +149,7 @@ const App: FunctionComponent = () => {
         />
         <Drawer.Screen
           name='Settings'
-          component={Settings}
+          component={AppSettings}
           options={{ title: 'Settings' }}
         />
       </Drawer.Navigator>

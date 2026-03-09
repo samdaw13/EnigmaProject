@@ -2,8 +2,8 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import type { FunctionComponent } from 'react';
 import React from 'react';
 
-import { Keyboard } from './keyboard';
-import { Settings } from './settings';
+import { Keyboard } from '../../organisms/Keyboard';
+import { MachineSettings } from '../MachineSettings';
 
 const Stack = createNativeStackNavigator();
 
@@ -12,7 +12,7 @@ export const Machine: FunctionComponent = () => {
     <Stack.Navigator>
       <Stack.Screen
         name='Settings'
-        component={Settings}
+        component={MachineSettings}
         options={{ headerShown: false }}
       />
       <Stack.Screen
