@@ -26,6 +26,7 @@ export const REFLECTOR_LABEL = 'Reflector';
 export const POSITIONS_LABEL = 'Positions';
 export const VALID_POSITIONS_LABEL = 'Valid crib positions';
 export const POSITION_LABEL = 'Position';
+export const CRIB_PREFIX_LABEL = 'Crib';
 export const CRIB_POSITION_LABEL = 'Crib position (optional)';
 export const COMMON_CRIBS_HINT = 'Common cribs: WETTER, KEINE, OBERKOMMANDO';
 export const TAP_TO_EXPAND = 'Tap a position to see alignment';

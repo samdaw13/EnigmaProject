@@ -9,6 +9,7 @@
     "lint:fix": "tsc --noEmit && eslint --fix .",
     "start": "react-native start",
     "test": "jest",
+    "test:integration": "jest --config jest.integration.config.js",
     "test:e2e:smoke": "maestro test e2e/smoke/",
     "test:e2e": "detox test --configuration ios.sim.debug",
     "test:e2e:ios": "detox test --configuration ios.sim.debug",

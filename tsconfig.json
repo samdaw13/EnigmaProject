@@ -6,6 +6,6 @@
     "noPropertyAccessFromIndexSignature": true,
     "exactOptionalPropertyTypes": true
   },
-  "include": ["src/**/*.ts", "src/**/*.tsx", "App.tsx"],
+  "include": ["src/**/*.ts", "src/**/*.tsx", "App.tsx", "integration/**/*.tsx"],
   "exclude": ["**/node_modules", "**/Pods"]
 }

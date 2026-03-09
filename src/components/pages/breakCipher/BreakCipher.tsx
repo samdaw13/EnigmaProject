@@ -1,57 +1,28 @@
 import { useNavigation } from '@react-navigation/native';
 import type { FunctionComponent } from 'react';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
-import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { ScrollView, Text, View } from 'react-native';
 import { Button, IconButton, TextInput } from 'react-native-paper';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useDispatch, useSelector } from 'react-redux';
 
-import type { CribSearchResult } from '../../../codebreaking';
-import { findCribPositions } from '../../../codebreaking';
 import {
   CANCEL_LABEL,
   CIPHERTEXT_LABEL,
   COMMON_CRIBS_HINT,
   CRIB_LABEL,
   CRIB_POSITION_LABEL,
-  DECRYPTED_TEXT_LABEL,
-  DERIVED_PLUGBOARD_LABEL,
   INFO_CRIB_ANALYSIS_CONTENT,
   INFO_CRIB_ANALYSIS_TITLE,
-  NEXT_PAGE_LABEL,
-  NLP_CONFIDENCE_LABEL,
-  NO_CRIB_RESULTS_FALLBACK,
-  PAGE_LABEL,
-  POSITION_LABEL,
-  POSITIONS_LABEL,
-  PREVIOUS_PAGE_LABEL,
-  RANKING_RESULTS_LABEL,
-  REFLECTOR_LABEL,
-  RESULTS_TITLE,
-  ROTOR_ORDER_LABEL,
-  RUN_ANALYSIS,
   SAVE_RESULTS_LABEL,
-  SEARCHING_LABEL,
-  TAP_TO_EXPAND,
-  VALID_POSITIONS_LABEL,
 } from '../../../constants/labels';
 import {
-  BRUTE_FORCE_RESULT_CARD,
   CANCEL_SEARCH_BUTTON,
   CIPHERTEXT_INPUT,
-  COPY_MESSAGE_BUTTON,
   CRIB_INPUT,
-  CRIB_POSITION_CARD,
   CRIB_POSITION_INPUT,
-  DECRYPTED_TEXT_DISPLAY,
   INFO_BUTTON,
-  NEXT_PAGE_BUTTON,
-  NLP_SCORE_DISPLAY,
-  PAGE_INDICATOR,
-  PREVIOUS_PAGE_BUTTON,
-  PROGRESS_BAR,
   RESULTS_CONTAINER,
-  RUN_ANALYSIS_BUTTON,
   SAVE_RESULTS_BUTTON,
 } from '../../../constants/selectors';
 import { searchCancelled } from '../../../features/codeBreaking';
@@ -60,12 +31,14 @@ import {
   runCribAnalysis,
 } from '../../../features/codeBreaking/searchRunner';
 import type { AppDispatch, RootState } from '../../../store/store';
-import type { ColorPalette } from '../../../theme/colors';
 import { useThemeColors } from '../../../theme/useThemeColors';
 import type { SavedAnalysis } from '../../../types/interfaces';
 import { addSavedAnalysis } from '../../../utils/storage';
-import { CopyButton } from '../../common';
-import { InfoSidebar } from '../../InfoSidebar';
+import { InfoSidebar } from '../../molecules/InfoSidebar';
+import { RunButton } from '../../molecules/RunButton';
+import { CribSearchResults } from '../../organisms/CribSearchResults';
+import { CribStructuralFallback } from '../../organisms/CribStructuralFallback';
+import { makeStyles } from './styles';
 
 const ALPHABET = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
 
@@ -75,359 +48,6 @@ const sanitizeInput = (text: string): string =>
     .split('')
     .filter((c) => ALPHABET.includes(c))
     .join('');
-
-const formatPositionAlignment = (
-  ciphertext: string,
-  crib: string,
-  position: number,
-): string => {
-  const padding = ' '.repeat(position);
-  return `${ciphertext}\n${padding}${crib}`;
-};
-
-const formatDerivedPlugboard = (plugboard: Record<string, string>): string => {
-  const pairs = Object.entries(plugboard)
-    .filter(([key, value]) => key < value)
-    .map(([key, value]) => `${key}↔${value}`);
-  return pairs.length > 0 ? pairs.join(', ') : '—';
-};
-
-const nlpBadgeColor = (score: number): string => {
-  if (score >= 70) return '#4CAF50';
-  if (score >= 40) return '#FFC107';
-  return '#F44336';
-};
-
-const makeStyles = (colors: ColorPalette, bottomInset: number = 0) =>
-  StyleSheet.create({
-    screen: {
-      flex: 1,
-      backgroundColor: colors.background,
-      padding: 16,
-    },
-    contentContainer: {
-      paddingBottom: 16 + bottomInset,
-    },
-    tabs: {
-      marginBottom: 16,
-    },
-    input: {
-      marginBottom: 12,
-      backgroundColor: colors.surface,
-    },
-    runButton: {
-      marginVertical: 12,
-    },
-    progressButton: {
-      height: 40,
-      borderRadius: 20,
-      marginVertical: 12,
-      overflow: 'hidden',
-      backgroundColor: colors.surface,
-      borderWidth: 1,
-      borderColor: colors.accent,
-      justifyContent: 'center',
-      alignItems: 'center',
-    },
-    progressButtonFill: {
-      position: 'absolute',
-      left: 0,
-      top: 0,
-      bottom: 0,
-      backgroundColor: colors.accent,
-    },
-    progressButtonLabel: {
-      fontSize: 13,
-      fontWeight: 'bold',
-      letterSpacing: 0.5,
-    },
-    progressButtonTextClip: {
-      position: 'absolute',
-      left: 0,
-      top: 0,
-      bottom: 0,
-      overflow: 'hidden',
-      justifyContent: 'center',
-    },
-    cancelButton: {
-      marginTop: 4,
-      borderColor: colors.border,
-    },
-    resultsTitle: {
-      color: colors.accent,
-      fontSize: 18,
-      fontWeight: 'bold',
-      marginTop: 16,
-      marginBottom: 8,
-    },
-    fallbackHeader: {
-      color: colors.textSecondary,
-      fontSize: 14,
-      fontStyle: 'italic',
-      marginTop: 16,
-      marginBottom: 4,
-    },
-    resultCard: {
-      backgroundColor: colors.surface,
-      borderRadius: 8,
-      padding: 12,
-      marginBottom: 8,
-      borderColor: colors.border,
-      borderWidth: 1,
-    },
-    resultText: {
-      color: colors.textPrimary,
-      fontSize: 14,
-      marginBottom: 4,
-    },
-    alignmentText: {
-      color: colors.textSecondary,
-      fontFamily: 'monospace',
-      fontSize: 12,
-      marginTop: 4,
-    },
-    hintText: {
-      color: colors.textSecondary,
-      fontSize: 12,
-      marginBottom: 8,
-    },
-    noResults: {
-      color: colors.textSecondary,
-      textAlign: 'center',
-      marginTop: 16,
-      fontSize: 14,
-    },
-    nlpBadge: {
-      borderRadius: 4,
-      paddingHorizontal: 8,
-      paddingVertical: 4,
-      alignSelf: 'flex-start',
-      marginTop: 4,
-    },
-    nlpBadgeText: {
-      color: colors.background,
-      fontSize: 12,
-      fontWeight: 'bold',
-    },
-    paginationRow: {
-      flexDirection: 'row',
-      justifyContent: 'center',
-      alignItems: 'center',
-      marginTop: 8,
-      marginBottom: 4,
-      gap: 12,
-    },
-    pageIndicator: {
-      color: colors.textSecondary,
-      fontSize: 14,
-    },
-  });
-
-const NlpBadge: FunctionComponent<{ score: number; testIdSuffix: string }> = ({
-  score,
-  testIdSuffix,
-}) => {
-  const colors = useThemeColors();
-  const styles = useMemo(() => makeStyles(colors), [colors]);
-  return (
-    <View style={[styles.nlpBadge, { backgroundColor: nlpBadgeColor(score) }]}>
-      <Text
-        testID={`${NLP_SCORE_DISPLAY}_${testIdSuffix}`}
-        style={styles.nlpBadgeText}
-      >
-        {NLP_CONFIDENCE_LABEL}: {score}%
-      </Text>
-    </View>
-  );
-};
-
-const RunButton: FunctionComponent<{
-  isSearching: boolean;
-  progress: number;
-  disabled: boolean;
-  onPress: () => void;
-}> = ({ isSearching, progress, disabled, onPress }) => {
-  const [buttonWidth, setButtonWidth] = useState(0);
-  const colors = useThemeColors();
-  const styles = useMemo(() => makeStyles(colors), [colors]);
-
-  if (isSearching) {
-    const statusLabel = progress >= 1 ? RANKING_RESULTS_LABEL : SEARCHING_LABEL;
-    const fillWidth = Math.min(Math.round(progress * buttonWidth), buttonWidth);
-    return (
-      <View
-        testID={RUN_ANALYSIS_BUTTON}
-        style={styles.progressButton}
-        onLayout={(e) => setButtonWidth(e.nativeEvent.layout.width)}
-      >
-        <Text
-          style={[styles.progressButtonLabel, { color: colors.textPrimary }]}
-        >
-          {statusLabel}
-        </Text>
-        <View
-          testID={PROGRESS_BAR}
-          style={[styles.progressButtonFill, { width: fillWidth }]}
-        />
-        <View style={[styles.progressButtonTextClip, { width: fillWidth }]}>
-          <View style={{ width: buttonWidth, alignItems: 'center' }}>
-            <Text
-              style={[styles.progressButtonLabel, { color: colors.background }]}
-            >
-              {statusLabel}
-            </Text>
-          </View>
-        </View>
-      </View>
-    );
-  }
-  return (
-    <Button
-      testID={RUN_ANALYSIS_BUTTON}
-      mode='contained'
-      onPress={onPress}
-      style={styles.runButton}
-      buttonColor={colors.accent}
-      textColor={colors.background}
-      disabled={disabled}
-      theme={{
-        colors: {
-          surfaceDisabled: colors.disabledSurface,
-          onSurfaceDisabled: colors.disabledText,
-        },
-      }}
-    >
-      {RUN_ANALYSIS}
-    </Button>
-  );
-};
-
-const RESULTS_PER_PAGE = 10;
-
-const CribSearchResults: FunctionComponent<{
-  results: CribSearchResult[];
-}> = ({ results }) => {
-  const [page, setPage] = useState(0);
-  const colors = useThemeColors();
-  const styles = useMemo(() => makeStyles(colors), [colors]);
-
-  const totalPages = Math.ceil(results.length / RESULTS_PER_PAGE);
-  const pageStart = page * RESULTS_PER_PAGE;
-  const pageResults = results.slice(pageStart, pageStart + RESULTS_PER_PAGE);
-
-  return (
-    <View>
-      <Text style={styles.resultsTitle}>{RESULTS_TITLE}</Text>
-      {pageResults.map((result, i) => {
-        const globalIndex = pageStart + i;
-        return (
-          <View
-            key={`${result.rotorIds.join('-')}-${result.reflectorName}-${result.startingPositions.join('-')}-${result.cribPosition}`}
-            testID={`${BRUTE_FORCE_RESULT_CARD}_${globalIndex}`}
-            style={styles.resultCard}
-          >
-            <Text style={styles.resultText}>
-              {POSITION_LABEL}: {result.cribPosition}
-            </Text>
-            <Text style={styles.resultText}>
-              {ROTOR_ORDER_LABEL}: {result.rotorIds.join(', ')}
-            </Text>
-            <Text style={styles.resultText}>
-              {REFLECTOR_LABEL}: {result.reflectorName}
-            </Text>
-            <Text style={styles.resultText}>
-              {POSITIONS_LABEL}:{' '}
-              {result.startingPositions.map((p) => ALPHABET[p]).join(', ')}
-            </Text>
-            <Text style={styles.resultText}>
-              {DERIVED_PLUGBOARD_LABEL}:{' '}
-              {formatDerivedPlugboard(result.derivedPlugboard)}
-            </Text>
-            <Text
-              testID={`${DECRYPTED_TEXT_DISPLAY}_${globalIndex}`}
-              style={styles.resultText}
-            >
-              {DECRYPTED_TEXT_LABEL}: {result.decryptedText}
-            </Text>
-            <NlpBadge
-              score={result.nlpScore}
-              testIdSuffix={String(globalIndex)}
-            />
-            <CopyButton
-              text={result.decryptedText}
-              testID={`${COPY_MESSAGE_BUTTON}_${globalIndex}`}
-            />
-          </View>
-        );
-      })}
-      {totalPages > 1 && (
-        <View style={styles.paginationRow}>
-          <Button
-            testID={PREVIOUS_PAGE_BUTTON}
-            mode='text'
-            onPress={() => setPage(page - 1)}
-            disabled={page === 0}
-            textColor={colors.accent}
-          >
-            {PREVIOUS_PAGE_LABEL}
-          </Button>
-          <Text testID={PAGE_INDICATOR} style={styles.pageIndicator}>
-            {PAGE_LABEL} {page + 1} / {totalPages}
-          </Text>
-          <Button
-            testID={NEXT_PAGE_BUTTON}
-            mode='text'
-            onPress={() => setPage(page + 1)}
-            disabled={page >= totalPages - 1}
-            textColor={colors.accent}
-          >
-            {NEXT_PAGE_LABEL}
-          </Button>
-        </View>
-      )}
-    </View>
-  );
-};
-
-const CribStructuralFallback: FunctionComponent<{
-  ciphertext: string;
-  crib: string;
-  expandedPosition: number | null;
-  onTogglePosition: (pos: number) => void;
-}> = ({ ciphertext, crib, expandedPosition, onTogglePosition }) => {
-  const positions = findCribPositions(ciphertext, crib);
-  const colors = useThemeColors();
-  const styles = useMemo(() => makeStyles(colors), [colors]);
-  return (
-    <View>
-      <Text style={styles.fallbackHeader}>{NO_CRIB_RESULTS_FALLBACK}</Text>
-      <Text style={styles.resultsTitle}>
-        {VALID_POSITIONS_LABEL} ({positions.length})
-      </Text>
-      <Text style={styles.hintText}>{TAP_TO_EXPAND}</Text>
-      {positions.map((pos) => (
-        <Pressable
-          key={pos}
-          testID={`${CRIB_POSITION_CARD}_${pos}`}
-          onPress={() => onTogglePosition(pos)}
-          style={styles.resultCard}
-        >
-          <Text style={styles.resultText}>
-            {POSITION_LABEL} {pos}
-          </Text>
-          {expandedPosition === pos && (
-            <Text
-              testID={`${CRIB_POSITION_CARD}_${pos}_alignment`}
-              style={styles.alignmentText}
-            >
-              {formatPositionAlignment(ciphertext, crib, pos)}
-            </Text>
-          )}
-        </Pressable>
-      ))}
-    </View>
-  );
-};
 
 export const BreakCipher: FunctionComponent = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -608,7 +228,7 @@ export const BreakCipher: FunctionComponent = () => {
                   testID={SAVE_RESULTS_BUTTON}
                   mode='contained'
                   onPress={handleSaveResults}
-                  style={styles.runButton}
+                  style={styles.saveButton}
                   buttonColor={colors.accent}
                   textColor={colors.background}
                 >
