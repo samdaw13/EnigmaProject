@@ -5,6 +5,7 @@ import { Modal } from 'react-native-paper';
 import { useDispatch, useSelector } from 'react-redux';
 
 import {
+  ALPHABET,
   SELECT_INPUT_LETTER,
   SELECT_INPUT_LETTER_DISPLAY,
   SELECT_OUTPUT_LETTER,
@@ -29,7 +30,7 @@ export const AddCableModal: FunctionComponent<AddCableModalProps> = ({
 
   const availableLetters = useMemo(
     () =>
-      [...'ABCDEFGHIJKLMNOPQRSTUVWXYZ'].filter(
+      [...ALPHABET].filter(
         (letter) => !JSON.stringify(plugboard).includes(letter),
       ),
     [plugboard],

@@ -4,6 +4,7 @@ import { Text, View } from 'react-native';
 import { Button } from 'react-native-paper';
 
 import type { CribSearchResult } from '../../../codebreaking';
+import { ALPHABET } from '../../../constants';
 import {
   DECRYPTED_TEXT_LABEL,
   DERIVED_PLUGBOARD_LABEL,
@@ -28,8 +29,6 @@ import { useThemeColors } from '../../../theme/useThemeColors';
 import { CopyButton } from '../../atoms/CopyButton';
 import { NlpBadge } from '../../molecules/NlpBadge';
 import { makeStyles } from './styles';
-
-const ALPHABET = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
 
 const formatDerivedPlugboard = (plugboard: Record<string, string>): string => {
   const pairs = Object.entries(plugboard)

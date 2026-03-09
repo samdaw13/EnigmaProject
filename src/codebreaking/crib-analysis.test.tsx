@@ -1,3 +1,4 @@
+import { ALPHABET } from '../constants';
 import { initialReflectorState } from '../features/reflector';
 import { initialRotorState } from '../features/rotors/features';
 import type { ReflectorState, RotorState } from '../types/interfaces';
@@ -19,7 +20,6 @@ const buildScramblerTableAt = (
   rotors: RotorState[],
   steps: number,
 ): string[] => {
-  const ALPHABET = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
   let current = rotors;
   for (let i = 0; i < steps; i++) {
     current = stepRotors(current);
@@ -38,7 +38,6 @@ describe('buildMenuEdges', () => {
     ];
     const tables: string[][] = [];
     let current = rotors;
-    const ALPHABET = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
     for (let k = 0; k < 4; k++) {
       current = stepRotors(current);
       tables.push(
@@ -84,8 +83,6 @@ describe('buildMenuEdges', () => {
 });
 
 describe('propagateMenuConstraints', () => {
-  const ALPHABET = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-
   const makeScramblerTable = (mapping: Record<string, string>): string[] =>
     ALPHABET.split('').map((l) => mapping[l] ?? l);
 

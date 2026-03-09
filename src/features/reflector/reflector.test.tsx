@@ -1,5 +1,6 @@
 import { configureStore } from '@reduxjs/toolkit';
 
+import { ALPHABET } from '../../constants';
 import reflectorReducer, { selectReflector } from './index';
 
 const createStore = () =>
@@ -35,7 +36,7 @@ describe('Reflector slice', () => {
   it('should have valid reflector mappings (26 chars, no letter maps to itself)', () => {
     const store = createStore();
     const { reflectors } = store.getState().reflector;
-    const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
+    const alphabet = ALPHABET.split('');
 
     Object.values(reflectors).forEach((reflector) => {
       const { mapping } = reflector.config;

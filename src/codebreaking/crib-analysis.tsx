@@ -1,7 +1,6 @@
+import { ALPHABET } from '../constants';
 import type { PlugboardCable } from '../types/interfaces';
 import { ALPHABET_SIZE, indexToLetter, letterToIndex } from './enigma-int';
-
-const ALPHABET = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
 
 export interface MenuEdge {
   letterA: string;

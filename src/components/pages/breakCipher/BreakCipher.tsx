@@ -6,6 +6,7 @@ import { Button, IconButton, TextInput } from 'react-native-paper';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useDispatch, useSelector } from 'react-redux';
 
+import { ALPHABET } from '../../../constants';
 import {
   CANCEL_LABEL,
   CIPHERTEXT_LABEL,
@@ -39,8 +40,6 @@ import { RunButton } from '../../molecules/RunButton';
 import { CribSearchResults } from '../../organisms/CribSearchResults';
 import { CribStructuralFallback } from '../../organisms/CribStructuralFallback';
 import { makeStyles } from './styles';
-
-const ALPHABET = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
 
 const sanitizeInput = (text: string): string =>
   text

@@ -4,6 +4,7 @@ import { ScrollView, Text, View } from 'react-native';
 import { Button } from 'react-native-paper';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
+import { ALPHABET } from '../../../constants';
 import {
   CRIB_PREFIX_LABEL,
   DECRYPTED_TEXT_LABEL,
@@ -31,8 +32,6 @@ import { deleteSavedAnalysis, loadSavedAnalyses } from '../../../utils/storage';
 import { ExpandableCard } from '../../molecules/ExpandableCard';
 import { NlpBadge } from '../../molecules/NlpBadge';
 import { makeStyles } from './styles';
-
-const ALPHABET = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
 
 const formatTimestamp = (timestamp: number): string =>
   new Date(timestamp).toLocaleDateString(undefined, {

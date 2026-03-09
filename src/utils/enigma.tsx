@@ -1,10 +1,9 @@
+import { ALPHABET } from '../constants';
 import type {
   PlugboardCable,
   ReflectorState,
   RotorState,
 } from '../types/interfaces';
-
-const ALPHABET = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
 
 const findDirectCableMapping = (
   letter: string,

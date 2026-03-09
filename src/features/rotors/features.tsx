@@ -1,6 +1,7 @@
 import type { PayloadAction } from '@reduxjs/toolkit';
 import { createSlice } from '@reduxjs/toolkit';
 
+import { ALPHABET } from '../../constants';
 import type {
   RotorsState,
   SelectedRotorAction,
@@ -14,7 +15,7 @@ export const initialRotorState: RotorsState = {
       isAvailable: true,
       config: {
         stepIndex: 16,
-        displayedLetters: 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split(''),
+        displayedLetters: ALPHABET.split(''),
         mappedLetters: 'JGDQOXUSCAMIFRVTPNEWKBLZYH'.split(''),
         currentIndex: 0,
       },
@@ -24,7 +25,7 @@ export const initialRotorState: RotorsState = {
       isAvailable: true,
       config: {
         stepIndex: 4,
-        displayedLetters: 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split(''),
+        displayedLetters: ALPHABET.split(''),
         mappedLetters: 'NTZPSFBOKMWRCJDIVLAEYUXHGQ'.split(''),
         currentIndex: 0,
       },
@@ -34,7 +35,7 @@ export const initialRotorState: RotorsState = {
       isAvailable: true,
       config: {
         stepIndex: 21,
-        displayedLetters: 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split(''),
+        displayedLetters: ALPHABET.split(''),
         mappedLetters: 'JVIUBHTCDYAKEQZPOSGXNRMWFL'.split(''),
         currentIndex: 0,
       },
@@ -44,7 +45,7 @@ export const initialRotorState: RotorsState = {
       isAvailable: true,
       config: {
         stepIndex: 9,
-        displayedLetters: 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split(''),
+        displayedLetters: ALPHABET.split(''),
         mappedLetters: 'QYHOGNECVPUZTFDJAXWMKISRBL'.split(''),
         currentIndex: 0,
       },
@@ -54,7 +55,7 @@ export const initialRotorState: RotorsState = {
       isAvailable: true,
       config: {
         stepIndex: 25,
-        displayedLetters: 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split(''),
+        displayedLetters: ALPHABET.split(''),
         mappedLetters: 'QWERTZUIOASDFGHJKPYXCVBNML'.split(''),
         currentIndex: 0,
       },

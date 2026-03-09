@@ -1,6 +1,7 @@
 import React from 'react';
 
 import {
+  ALPHABET,
   SELECT_INPUT_LETTER,
   SELECT_INPUT_LETTER_DISPLAY,
 } from '../../../constants';
@@ -15,7 +16,7 @@ describe(`SelectLetterButton`, () => {
       <SelectLetterButton
         setLetter={mockSetLetter}
         displayText={SELECT_INPUT_LETTER_DISPLAY}
-        availableLetters={[...'ABCDEFGHIJKLMNOPQRSTUVWXYZ']}
+        availableLetters={[...ALPHABET]}
         setAvailableLetters={mockSetAvailableLetteres}
         testID={SELECT_INPUT_LETTER}
       />,
