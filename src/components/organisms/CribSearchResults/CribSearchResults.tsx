@@ -4,7 +4,7 @@ import { Text, View } from 'react-native';
 import { Button } from 'react-native-paper';
 
 import type { CribSearchResult } from '../../../codebreaking';
-import { ALPHABET } from '../../../constants';
+import { ALPHABET, RESULTS_PER_PAGE } from '../../../constants';
 import {
   DECRYPTED_TEXT_LABEL,
   DERIVED_PLUGBOARD_LABEL,
@@ -36,8 +36,6 @@ const formatDerivedPlugboard = (plugboard: Record<string, string>): string => {
     .map(([key, value]) => `${key}↔${value}`);
   return pairs.length > 0 ? pairs.join(', ') : '—';
 };
-
-const RESULTS_PER_PAGE = 10;
 
 export const CribSearchResults: FunctionComponent<{
   results: CribSearchResult[];
