@@ -26,6 +26,7 @@ export const REFLECTOR_LABEL = 'Reflector';
 export const POSITIONS_LABEL = 'Positions';
 export const VALID_POSITIONS_LABEL = 'Valid crib positions';
 export const POSITION_LABEL = 'Position';
+export const CRIB_POSITION_LABEL = 'Crib position (optional)';
 export const COMMON_CRIBS_HINT = 'Common cribs: WETTER, KEINE, OBERKOMMANDO';
 export const TAP_TO_EXPAND = 'Tap a position to see alignment';
 export const DECRYPTED_TEXT_LABEL = 'Decrypted';
@@ -33,6 +34,9 @@ export const NLP_CONFIDENCE_LABEL = 'Confidence';
 export const NO_CRIB_RESULTS_FALLBACK =
   'No configurations found — showing structural positions only';
 export const RANKING_RESULTS_LABEL = 'Search complete, ranking results...';
+export const PAGE_LABEL = 'Page';
+export const PREVIOUS_PAGE_LABEL = 'Previous';
+export const NEXT_PAGE_LABEL = 'Next';
 export const CANCEL_LABEL = 'Cancel';
 export const SEARCH_RUNNING_BACKGROUND_LABEL = 'Search running in background';
 export const DERIVED_PLUGBOARD_LABEL = 'Plugboard';

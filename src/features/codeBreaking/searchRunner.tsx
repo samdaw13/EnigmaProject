@@ -1,5 +1,5 @@
+import { cribSearchAsync } from '../../codebreaking';
 import type { AppDispatch } from '../../store/store';
-import { cribSearchAsync } from '../../utils/codebreaking';
 import { initialReflectorState } from '../reflector';
 import { initialRotorState } from '../rotors/features';
 import { cribSearchCompleted, progressUpdated, searchStarted } from '.';
@@ -16,6 +16,7 @@ export const runCribAnalysis = (
   ciphertext: string,
   crib: string,
   dispatch: AppDispatch,
+  knownCribPosition?: number,
 ): void => {
   cancelled = false;
   dispatch(searchStarted());
@@ -26,6 +27,7 @@ export const runCribAnalysis = (
     initialReflectorState.reflectors,
     (p) => dispatch(progressUpdated(p)),
     isCancelled,
+    knownCribPosition,
   ).then((results) => {
     if (!cancelled)
       dispatch(cribSearchCompleted({ results, ciphertext, crib }));
