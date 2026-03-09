@@ -16,6 +16,7 @@ export const MESSAGE_DISPLAY = 'messageDisplay';
 export const CIPHERTEXT_INPUT = 'ciphertextInput';
 export const PLAINTEXT_INPUT = 'plaintextInput';
 export const CRIB_INPUT = 'cribInput';
+export const CRIB_POSITION_INPUT = 'cribPositionInput';
 export const RUN_ANALYSIS_BUTTON = 'runAnalysisButton';
 export const BRUTE_FORCE_TAB_BUTTON = 'bruteForceTab';
 export const CRIB_ANALYSIS_TAB_BUTTON = 'cribAnalysisTab';
@@ -28,6 +29,9 @@ export const DECRYPTED_TEXT_DISPLAY = 'decryptedTextDisplay';
 export const NLP_SCORE_DISPLAY = 'nlpScoreDisplay';
 export const CANCEL_SEARCH_BUTTON = 'cancelSearchButton';
 export const COPY_MESSAGE_BUTTON = 'copyMessageButton';
+export const PREVIOUS_PAGE_BUTTON = 'previousPageButton';
+export const NEXT_PAGE_BUTTON = 'nextPageButton';
+export const PAGE_INDICATOR = 'pageIndicator';
 
 export const SEARCH_BANNER = 'searchBanner';
 export const SEARCH_BANNER_CANCEL_BUTTON = 'searchBannerCancelButton';

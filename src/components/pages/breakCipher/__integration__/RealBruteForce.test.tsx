@@ -1,5 +1,6 @@
 import React from 'react';
 
+import { encryptString } from '../../../../codebreaking';
 import {
   CIPHERTEXT_INPUT,
   CRIB_INPUT,
@@ -12,7 +13,6 @@ import { initialReflectorState } from '../../../../features/reflector';
 import type * as RotorsFeaturesModule from '../../../../features/rotors/features';
 import { initialRotorState } from '../../../../features/rotors/features';
 import type { PlugboardCable } from '../../../../types';
-import { encryptString } from '../../../../utils/codebreaking';
 import {
   fireEvent,
   render,

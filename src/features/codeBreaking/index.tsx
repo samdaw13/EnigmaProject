@@ -1,6 +1,6 @@
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
 
-import type { CribSearchResult } from '../../utils/codebreaking';
+import type { CribSearchResult } from '../../codebreaking';
 
 export type SearchStatus = 'idle' | 'searching' | 'complete' | 'cancelled';
 

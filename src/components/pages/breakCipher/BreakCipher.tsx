@@ -6,19 +6,25 @@ import { Button, IconButton, TextInput } from 'react-native-paper';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useDispatch, useSelector } from 'react-redux';
 
+import type { CribSearchResult } from '../../../codebreaking';
+import { findCribPositions } from '../../../codebreaking';
 import {
   CANCEL_LABEL,
   CIPHERTEXT_LABEL,
   COMMON_CRIBS_HINT,
   CRIB_LABEL,
+  CRIB_POSITION_LABEL,
   DECRYPTED_TEXT_LABEL,
   DERIVED_PLUGBOARD_LABEL,
   INFO_CRIB_ANALYSIS_CONTENT,
   INFO_CRIB_ANALYSIS_TITLE,
+  NEXT_PAGE_LABEL,
   NLP_CONFIDENCE_LABEL,
   NO_CRIB_RESULTS_FALLBACK,
+  PAGE_LABEL,
   POSITION_LABEL,
   POSITIONS_LABEL,
+  PREVIOUS_PAGE_LABEL,
   RANKING_RESULTS_LABEL,
   REFLECTOR_LABEL,
   RESULTS_TITLE,
@@ -35,9 +41,13 @@ import {
   COPY_MESSAGE_BUTTON,
   CRIB_INPUT,
   CRIB_POSITION_CARD,
+  CRIB_POSITION_INPUT,
   DECRYPTED_TEXT_DISPLAY,
   INFO_BUTTON,
+  NEXT_PAGE_BUTTON,
   NLP_SCORE_DISPLAY,
+  PAGE_INDICATOR,
+  PREVIOUS_PAGE_BUTTON,
   PROGRESS_BAR,
   RESULTS_CONTAINER,
   RUN_ANALYSIS_BUTTON,
@@ -50,8 +60,6 @@ import {
 import type { AppDispatch, RootState } from '../../../store/store';
 import type { ColorPalette } from '../../../theme/colors';
 import { useThemeColors } from '../../../theme/useThemeColors';
-import type { CribSearchResult } from '../../../utils/codebreaking';
-import { findCribPositions } from '../../../utils/codebreaking';
 import { CopyButton } from '../../common';
 import { InfoSidebar } from '../../InfoSidebar';
 
@@ -197,6 +205,18 @@ const makeStyles = (colors: ColorPalette, bottomInset: number = 0) =>
       fontSize: 12,
       fontWeight: 'bold',
     },
+    paginationRow: {
+      flexDirection: 'row',
+      justifyContent: 'center',
+      alignItems: 'center',
+      marginTop: 8,
+      marginBottom: 4,
+      gap: 12,
+    },
+    pageIndicator: {
+      color: colors.textSecondary,
+      fontSize: 14,
+    },
   });
 
 const NlpBadge: FunctionComponent<{ score: number; testIdSuffix: string }> = ({
@@ -278,50 +298,89 @@ const RunButton: FunctionComponent<{
   );
 };
 
+const RESULTS_PER_PAGE = 10;
+
 const CribSearchResults: FunctionComponent<{
   results: CribSearchResult[];
 }> = ({ results }) => {
+  const [page, setPage] = useState(0);
   const colors = useThemeColors();
   const styles = useMemo(() => makeStyles(colors), [colors]);
+
+  const totalPages = Math.ceil(results.length / RESULTS_PER_PAGE);
+  const pageStart = page * RESULTS_PER_PAGE;
+  const pageResults = results.slice(pageStart, pageStart + RESULTS_PER_PAGE);
+
   return (
     <View>
       <Text style={styles.resultsTitle}>{RESULTS_TITLE}</Text>
-      {results.map((result, index) => (
-        <View
-          key={`${result.rotorIds.join('-')}-${result.reflectorName}-${result.startingPositions.join('-')}-${result.cribPosition}`}
-          testID={`${BRUTE_FORCE_RESULT_CARD}_${index}`}
-          style={styles.resultCard}
-        >
-          <Text style={styles.resultText}>
-            {POSITION_LABEL}: {result.cribPosition}
-          </Text>
-          <Text style={styles.resultText}>
-            {ROTOR_ORDER_LABEL}: {result.rotorIds.join(', ')}
-          </Text>
-          <Text style={styles.resultText}>
-            {REFLECTOR_LABEL}: {result.reflectorName}
-          </Text>
-          <Text style={styles.resultText}>
-            {POSITIONS_LABEL}:{' '}
-            {result.startingPositions.map((p) => ALPHABET[p]).join(', ')}
-          </Text>
-          <Text style={styles.resultText}>
-            {DERIVED_PLUGBOARD_LABEL}:{' '}
-            {formatDerivedPlugboard(result.derivedPlugboard)}
-          </Text>
-          <Text
-            testID={`${DECRYPTED_TEXT_DISPLAY}_${index}`}
-            style={styles.resultText}
+      {pageResults.map((result, i) => {
+        const globalIndex = pageStart + i;
+        return (
+          <View
+            key={`${result.rotorIds.join('-')}-${result.reflectorName}-${result.startingPositions.join('-')}-${result.cribPosition}`}
+            testID={`${BRUTE_FORCE_RESULT_CARD}_${globalIndex}`}
+            style={styles.resultCard}
           >
-            {DECRYPTED_TEXT_LABEL}: {result.decryptedText}
+            <Text style={styles.resultText}>
+              {POSITION_LABEL}: {result.cribPosition}
+            </Text>
+            <Text style={styles.resultText}>
+              {ROTOR_ORDER_LABEL}: {result.rotorIds.join(', ')}
+            </Text>
+            <Text style={styles.resultText}>
+              {REFLECTOR_LABEL}: {result.reflectorName}
+            </Text>
+            <Text style={styles.resultText}>
+              {POSITIONS_LABEL}:{' '}
+              {result.startingPositions.map((p) => ALPHABET[p]).join(', ')}
+            </Text>
+            <Text style={styles.resultText}>
+              {DERIVED_PLUGBOARD_LABEL}:{' '}
+              {formatDerivedPlugboard(result.derivedPlugboard)}
+            </Text>
+            <Text
+              testID={`${DECRYPTED_TEXT_DISPLAY}_${globalIndex}`}
+              style={styles.resultText}
+            >
+              {DECRYPTED_TEXT_LABEL}: {result.decryptedText}
+            </Text>
+            <NlpBadge
+              score={result.nlpScore}
+              testIdSuffix={String(globalIndex)}
+            />
+            <CopyButton
+              text={result.decryptedText}
+              testID={`${COPY_MESSAGE_BUTTON}_${globalIndex}`}
+            />
+          </View>
+        );
+      })}
+      {totalPages > 1 && (
+        <View style={styles.paginationRow}>
+          <Button
+            testID={PREVIOUS_PAGE_BUTTON}
+            mode='text'
+            onPress={() => setPage(page - 1)}
+            disabled={page === 0}
+            textColor={colors.accent}
+          >
+            {PREVIOUS_PAGE_LABEL}
+          </Button>
+          <Text testID={PAGE_INDICATOR} style={styles.pageIndicator}>
+            {PAGE_LABEL} {page + 1} / {totalPages}
           </Text>
-          <NlpBadge score={result.nlpScore} testIdSuffix={String(index)} />
-          <CopyButton
-            text={result.decryptedText}
-            testID={`${COPY_MESSAGE_BUTTON}_${index}`}
-          />
+          <Button
+            testID={NEXT_PAGE_BUTTON}
+            mode='text'
+            onPress={() => setPage(page + 1)}
+            disabled={page >= totalPages - 1}
+            textColor={colors.accent}
+          >
+            {NEXT_PAGE_LABEL}
+          </Button>
         </View>
-      ))}
+      )}
     </View>
   );
 };
@@ -385,6 +444,7 @@ export const BreakCipher: FunctionComponent = () => {
   const [infoVisible, setInfoVisible] = useState(false);
   const [ciphertext, setCiphertext] = useState('');
   const [crib, setCrib] = useState('');
+  const [cribPosition, setCribPosition] = useState('');
   const [expandedPosition, setExpandedPosition] = useState<number | null>(null);
 
   const colors = useThemeColors();
@@ -415,12 +475,24 @@ export const BreakCipher: FunctionComponent = () => {
     dispatch(searchCancelled());
   }, [dispatch]);
 
+  const parsedCribPosition = useMemo(() => {
+    const trimmed = cribPosition.trim();
+    if (trimmed === '') return undefined;
+    const parsed = parseInt(trimmed, 10);
+    return Number.isNaN(parsed) || parsed < 0 ? undefined : parsed;
+  }, [cribPosition]);
+
   const handleRun = useCallback(() => {
     const sanitizedCiphertext = sanitizeInput(ciphertext);
     const sanitizedCrib = sanitizeInput(crib);
     if (!sanitizedCiphertext || !sanitizedCrib) return;
-    runCribAnalysis(sanitizedCiphertext, sanitizedCrib, dispatch);
-  }, [ciphertext, crib, dispatch]);
+    runCribAnalysis(
+      sanitizedCiphertext,
+      sanitizedCrib,
+      dispatch,
+      parsedCribPosition,
+    );
+  }, [ciphertext, crib, dispatch, parsedCribPosition]);
 
   const toggleExpandedPosition = useCallback(
     (pos: number) => {
@@ -459,6 +531,20 @@ export const BreakCipher: FunctionComponent = () => {
         onChangeText={(text) => setCrib(sanitizeInput(text))}
         mode='outlined'
         autoCapitalize='characters'
+        style={styles.input}
+        textColor={colors.textPrimary}
+        outlineColor={colors.border}
+        activeOutlineColor={colors.accent}
+        theme={{ colors: { onSurfaceVariant: colors.textSecondary } }}
+      />
+
+      <TextInput
+        testID={CRIB_POSITION_INPUT}
+        label={CRIB_POSITION_LABEL}
+        value={cribPosition}
+        onChangeText={setCribPosition}
+        mode='outlined'
+        keyboardType='number-pad'
         style={styles.input}
         textColor={colors.textPrimary}
         outlineColor={colors.border}

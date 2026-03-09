@@ -1,5 +1,7 @@
 import React from 'react';
 
+import type { CribSearchResult } from '../../../codebreaking';
+import { cribSearchAsync } from '../../../codebreaking';
 import {
   BRUTE_FORCE_RESULT_CARD,
   CANCEL_SEARCH_BUTTON,
@@ -12,8 +14,6 @@ import {
   RESULTS_CONTAINER,
   RUN_ANALYSIS_BUTTON,
 } from '../../../constants/selectors';
-import type { CribSearchResult } from '../../../utils/codebreaking';
-import { cribSearchAsync } from '../../../utils/codebreaking';
 import {
   act,
   fireEvent,
@@ -33,8 +33,8 @@ jest.mock('@react-navigation/native', () => {
   };
 });
 
-jest.mock('../../../utils/codebreaking', () => {
-  const actual = jest.requireActual<object>('../../../utils/codebreaking');
+jest.mock('../../../codebreaking', () => {
+  const actual = jest.requireActual<object>('../../../codebreaking');
   return {
     ...actual,
     cribSearchAsync: jest.fn(
