@@ -6,7 +6,14 @@ import { StyleSheet, Text, View } from 'react-native';
 import { Button } from 'react-native-paper';
 import { useDispatch, useSelector } from 'react-redux';
 
-import { About, BreakCipher, Machine, Settings } from './components';
+import {
+  About,
+  BreakCipher,
+  Machine,
+  SavedAnalyses,
+  SavedMessages,
+  Settings,
+} from './components';
 import {
   CANCEL_LABEL,
   SEARCH_RUNNING_BACKGROUND_LABEL,
@@ -124,6 +131,16 @@ const App: FunctionComponent = () => {
           name='Break'
           component={BreakCipher}
           options={{ title: 'Break a cipher' }}
+        />
+        <Drawer.Screen
+          name='SavedMessages'
+          component={SavedMessages}
+          options={{ title: 'Saved messages' }}
+        />
+        <Drawer.Screen
+          name='SavedAnalyses'
+          component={SavedAnalyses}
+          options={{ title: 'Saved analyses' }}
         />
         <Drawer.Screen
           name='About'

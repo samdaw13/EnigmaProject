@@ -45,3 +45,13 @@ export const CLEAR_BUTTON = 'clearButton';
 export const PASTE_TEXT_BUTTON = 'pasteTextButton';
 export const PASTE_TEXT_INPUT = 'pasteTextInput';
 export const PASTE_CONFIRM_BUTTON = 'pasteConfirmButton';
+
+export const SAVE_MESSAGE_BUTTON = 'saveMessageButton';
+export const SAVE_MESSAGE_MODAL = 'saveMessageModal';
+export const SAVE_MESSAGE_INPUT = 'saveMessageInput';
+export const SAVE_MESSAGE_CONFIRM_BUTTON = 'saveMessageConfirmButton';
+export const SAVE_RESULTS_BUTTON = 'saveResultsButton';
+export const SAVED_MESSAGE_CARD = 'savedMessageCard';
+export const SAVED_ANALYSIS_CARD = 'savedAnalysisCard';
+export const DELETE_SAVED_BUTTON = 'deleteSavedButton';
+export const EMPTY_STATE_TEXT = 'emptyStateText';

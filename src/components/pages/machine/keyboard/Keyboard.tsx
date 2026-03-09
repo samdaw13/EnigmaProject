@@ -25,17 +25,26 @@ import {
   PASTE_TEXT_BUTTON,
   PASTE_TEXT_INPUT,
   PASTE_TEXT_PLACEHOLDER,
+  SAVE_MESSAGE_BUTTON,
+  SAVE_MESSAGE_CONFIRM_BUTTON,
+  SAVE_MESSAGE_INPUT,
+  SAVE_MESSAGE_LABEL,
+  SAVE_MESSAGE_MODAL,
+  SAVE_MESSAGE_PLACEHOLDER,
+  SAVE_MESSAGE_TITLE,
 } from '../../../../constants';
 import { updateRotorCurrentIndex } from '../../../../features/rotors/features';
 import type { RootState } from '../../../../store/store';
 import { makeKeyboardStyles } from '../../../../styles';
 import { useThemeColors } from '../../../../theme/useThemeColors';
+import type { SavedMessage } from '../../../../types/interfaces';
 import {
   encryptLetter,
   keyboardLetterButton,
   plugboardChipText,
   stepRotors,
 } from '../../../../utils';
+import { addSavedMessage } from '../../../../utils/storage';
 import { CopyButton } from '../../../common';
 import { InfoSidebar } from '../../../InfoSidebar';
 import { BackButton } from './BackButton';
@@ -69,6 +78,9 @@ export const Keyboard: FunctionComponent = () => {
   const [infoVisible, setInfoVisible] = useState(false);
   const [pasteVisible, setPasteVisible] = useState(false);
   const [pasteInput, setPasteInput] = useState('');
+  const [saveVisible, setSaveVisible] = useState(false);
+  const [saveLabel, setSaveLabel] = useState('');
+  const [startingPositions, setStartingPositions] = useState<number[]>([]);
 
   useFocusEffect(
     useCallback(() => {
@@ -89,11 +101,39 @@ export const Keyboard: FunctionComponent = () => {
   const allRotorsSelected = (): boolean =>
     selectedRotorIds.every((id) => id !== null);
 
+  const captureStartingPositions = () => {
+    if (message.length === 0) {
+      setStartingPositions(
+        selectedRotorIds.map((id) =>
+          id !== null ? rotors[id]!.config.currentIndex : 0,
+        ),
+      );
+    }
+  };
+
+  const handleSaveMessage = () => {
+    const saved: SavedMessage = {
+      id: Date.now().toString(),
+      label: saveLabel.trim() || message.slice(0, 20),
+      plaintext: '',
+      ciphertext: message,
+      rotorIds: selectedRotorIds.filter((id): id is number => id !== null),
+      rotorStartingPositions: startingPositions,
+      reflectorId: selectedReflectorId,
+      plugboardCables: { ...plugboard },
+      timestamp: Date.now(),
+    };
+    void addSavedMessage(saved);
+    setSaveVisible(false);
+    setSaveLabel('');
+  };
+
   const handleKeyPress = (key: string) => {
     if (!allRotorsSelected()) {
       return;
     }
 
+    captureStartingPositions();
     const orderedRotors = selectedRotorIds.map((id) => rotors[id as number]!);
     const steppedRotors = stepRotors(orderedRotors);
 
@@ -115,6 +155,7 @@ export const Keyboard: FunctionComponent = () => {
   const processTextInput = (text: string) => {
     if (!allRotorsSelected()) return;
 
+    captureStartingPositions();
     const orderedRotors = selectedRotorIds.map((id) => rotors[id as number]!);
     const reflector = reflectors[selectedReflectorId]!;
     let currentRotors = orderedRotors;
@@ -197,6 +238,54 @@ export const Keyboard: FunctionComponent = () => {
             </Button>
           </View>
         </Modal>
+        <Modal
+          testID={SAVE_MESSAGE_MODAL}
+          visible={saveVisible}
+          onDismiss={() => setSaveVisible(false)}
+          contentContainerStyle={keyboardStyles.pasteModal}
+        >
+          <Text
+            style={{
+              color: colors.textPrimary,
+              fontSize: 16,
+              fontWeight: 'bold',
+              marginBottom: 12,
+            }}
+          >
+            {SAVE_MESSAGE_TITLE}
+          </Text>
+          <TextInput
+            testID={SAVE_MESSAGE_INPUT}
+            label={SAVE_MESSAGE_PLACEHOLDER}
+            value={saveLabel}
+            onChangeText={setSaveLabel}
+            mode='outlined'
+            style={keyboardStyles.pasteInput}
+            textColor={colors.textPrimary}
+            outlineColor={colors.border}
+            activeOutlineColor={colors.accent}
+            theme={{ colors: { onSurfaceVariant: colors.textSecondary } }}
+          />
+          <View style={keyboardStyles.pasteButtonRow}>
+            <Button
+              mode='outlined'
+              textColor={colors.textSecondary}
+              style={{ borderColor: colors.border }}
+              onPress={() => setSaveVisible(false)}
+            >
+              {CANCEL_LABEL}
+            </Button>
+            <Button
+              testID={SAVE_MESSAGE_CONFIRM_BUTTON}
+              mode='contained'
+              buttonColor={colors.accent}
+              textColor={colors.background}
+              onPress={handleSaveMessage}
+            >
+              {SAVE_MESSAGE_LABEL}
+            </Button>
+          </View>
+        </Modal>
       </Portal>
       <View style={keyboardStyles.headerRow}>
         <BackButton />
@@ -234,7 +323,20 @@ export const Keyboard: FunctionComponent = () => {
         <Text testID={MESSAGE_DISPLAY} style={keyboardStyles.messageText}>
           {message}
         </Text>
-        {message.length > 0 && <CopyButton text={message} />}
+        {message.length > 0 && (
+          <>
+            <CopyButton text={message} />
+            <Button
+              testID={SAVE_MESSAGE_BUTTON}
+              mode='text'
+              compact={true}
+              textColor={colors.textPrimary}
+              onPress={() => setSaveVisible(true)}
+            >
+              {SAVE_MESSAGE_LABEL}
+            </Button>
+          </>
+        )}
       </View>
 
       {Object.keys(plugboard).length > 0 && (

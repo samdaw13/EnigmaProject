@@ -85,6 +85,16 @@ export const INFO_SETTINGS_TITLE = 'Machine Settings';
 export const INFO_SETTINGS_CONTENT =
   "Configure the Enigma machine before encrypting a message.\n\nRotors: choose which three rotors to use and set each one's starting letter. Order matters — the signal flows left-to-right through the rotors on every keypress, and each rotor steps forward like a digit on an odometer.\n\nPlugboard: add cable pairs to swap letters before and after the signal passes through the rotors. Up to 10 pairs can be connected.\n\nThe same settings that encrypt a message will also decrypt it — type the ciphertext with identical rotor positions and plugboard cables to recover the original text.";
 
+export const SAVE_MESSAGE_LABEL = 'Save';
+export const SAVE_MESSAGE_TITLE = 'Save message';
+export const SAVE_MESSAGE_PLACEHOLDER = 'Label (e.g. "Test message")';
+export const SAVE_RESULTS_LABEL = 'Save results';
+export const SAVED_MESSAGES_TITLE = 'Saved messages';
+export const SAVED_ANALYSES_TITLE = 'Saved analyses';
+export const EMPTY_SAVED_MESSAGES = 'No saved messages yet';
+export const EMPTY_SAVED_ANALYSES = 'No saved analyses yet';
+export const DELETE_LABEL = 'Delete';
+
 export const INFO_KEYBOARD_TITLE = 'Encrypting & Decrypting';
 export const INFO_KEYBOARD_CONTENT =
   'Press any letter key to encrypt it. The rotors step first, then the signal travels through the plugboard, the three rotors, the reflector, back through the rotors in reverse, and through the plugboard again.\n\nThe rotor windows at the top show the current letter for each rotor. The rightmost rotor advances one step on every keypress.\n\nTo decrypt, set the rotors to the same starting positions used when the message was encrypted, then type the ciphertext. The output will be the original plaintext.';
