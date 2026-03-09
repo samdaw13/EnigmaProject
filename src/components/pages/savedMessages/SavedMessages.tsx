@@ -4,6 +4,7 @@ import { ScrollView, Text, View } from 'react-native';
 import { Button } from 'react-native-paper';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
+import { ALPHABET } from '../../../constants';
 import {
   DELETE_LABEL,
   EMPTY_SAVED_MESSAGES,
@@ -17,29 +18,12 @@ import {
   EMPTY_STATE_TEXT,
   SAVED_MESSAGE_CARD,
 } from '../../../constants/selectors';
+import { formatPlugboard, formatTimestamp } from '../../../formatters';
 import { useThemeColors } from '../../../theme/useThemeColors';
 import type { SavedMessage } from '../../../types/interfaces';
 import { deleteSavedMessage, loadSavedMessages } from '../../../utils/storage';
 import { ExpandableCard } from '../../molecules/ExpandableCard';
 import { makeStyles } from './styles';
-
-const ALPHABET = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-
-const formatTimestamp = (timestamp: number): string =>
-  new Date(timestamp).toLocaleDateString(undefined, {
-    year: 'numeric',
-    month: 'short',
-    day: 'numeric',
-    hour: '2-digit',
-    minute: '2-digit',
-  });
-
-const formatPlugboard = (cables: Record<string, string>): string => {
-  const pairs = Object.entries(cables)
-    .filter(([key, value]) => key < value)
-    .map(([key, value]) => `${key}↔${value}`);
-  return pairs.length > 0 ? pairs.join(', ') : '—';
-};
 
 export const SavedMessages: FunctionComponent = () => {
   const [messages, setMessages] = useState<SavedMessage[]>([]);

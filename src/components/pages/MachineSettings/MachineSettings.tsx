@@ -7,6 +7,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useDispatch, useSelector } from 'react-redux';
 
 import {
+  ALPHABET,
   CLEAR_BUTTON,
   CLEAR_SETTINGS,
   ENCRYPT_MESSAGE,
@@ -16,6 +17,7 @@ import {
   INFO_SETTINGS_TITLE,
   RANDOMIZE_BUTTON,
   RANDOMIZE_SETTINGS,
+  ROTOR_IDS,
 } from '../../../constants';
 import { addCable, clearPlugboard } from '../../../features/plugboard';
 import {
@@ -31,9 +33,6 @@ import { InfoSidebar } from '../../molecules/InfoSidebar';
 import { Plugboard } from '../../organisms/Plugboard';
 import { Rotors } from '../../organisms/Rotors';
 import { makeStyles } from './styles';
-
-const ROTOR_IDS = [1, 2, 3, 4, 5];
-const ALPHABET = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
 
 const shuffleArray = <T,>(arr: T[]): T[] => {
   const result = [...arr];

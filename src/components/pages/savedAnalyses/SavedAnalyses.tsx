@@ -4,6 +4,7 @@ import { ScrollView, Text, View } from 'react-native';
 import { Button } from 'react-native-paper';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
+import { ALPHABET } from '../../../constants';
 import {
   CRIB_PREFIX_LABEL,
   DECRYPTED_TEXT_LABEL,
@@ -22,6 +23,7 @@ import {
   EMPTY_STATE_TEXT,
   SAVED_ANALYSIS_CARD,
 } from '../../../constants/selectors';
+import { formatPlugboard, formatTimestamp } from '../../../formatters';
 import { useThemeColors } from '../../../theme/useThemeColors';
 import type {
   SavedAnalysis,
@@ -31,24 +33,6 @@ import { deleteSavedAnalysis, loadSavedAnalyses } from '../../../utils/storage';
 import { ExpandableCard } from '../../molecules/ExpandableCard';
 import { NlpBadge } from '../../molecules/NlpBadge';
 import { makeStyles } from './styles';
-
-const ALPHABET = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-
-const formatTimestamp = (timestamp: number): string =>
-  new Date(timestamp).toLocaleDateString(undefined, {
-    year: 'numeric',
-    month: 'short',
-    day: 'numeric',
-    hour: '2-digit',
-    minute: '2-digit',
-  });
-
-const formatDerivedPlugboard = (plugboard: Record<string, string>): string => {
-  const pairs = Object.entries(plugboard)
-    .filter(([key, value]) => key < value)
-    .map(([key, value]) => `${key}↔${value}`);
-  return pairs.length > 0 ? pairs.join(', ') : '—';
-};
 
 const ResultCard: FunctionComponent<{
   result: SavedAnalysisResult;
@@ -69,8 +53,7 @@ const ResultCard: FunctionComponent<{
       {result.startingPositions.map((p) => ALPHABET[p]).join(', ')}
     </Text>
     <Text style={styles.text}>
-      {DERIVED_PLUGBOARD_LABEL}:{' '}
-      {formatDerivedPlugboard(result.derivedPlugboard)}
+      {DERIVED_PLUGBOARD_LABEL}: {formatPlugboard(result.derivedPlugboard)}
     </Text>
     <Text style={styles.text}>
       {DECRYPTED_TEXT_LABEL}: {result.decryptedText}

@@ -1,3 +1,4 @@
+import { ALPHABET } from '../constants';
 import type {
   PlugboardCable,
   ReflectorState,
@@ -16,7 +17,7 @@ const rotorI: RotorState = {
   isAvailable: true,
   config: {
     stepIndex: 16,
-    displayedLetters: 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split(''),
+    displayedLetters: ALPHABET.split(''),
     mappedLetters: 'JGDQOXUSCAMIFRVTPNEWKBLZYH'.split(''),
     currentIndex: 0,
   },
@@ -28,7 +29,7 @@ const rotorII: RotorState = {
   isAvailable: true,
   config: {
     stepIndex: 4,
-    displayedLetters: 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split(''),
+    displayedLetters: ALPHABET.split(''),
     mappedLetters: 'NTZPSFBOKMWRCJDIVLAEYUXHGQ'.split(''),
     currentIndex: 0,
   },
@@ -40,7 +41,7 @@ const rotorIII: RotorState = {
   isAvailable: true,
   config: {
     stepIndex: 21,
-    displayedLetters: 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split(''),
+    displayedLetters: ALPHABET.split(''),
     mappedLetters: 'JVIUBHTCDYAKEQZPOSGXNRMWFL'.split(''),
     currentIndex: 0,
   },
@@ -148,7 +149,7 @@ describe('encryptLetter', () => {
 
   it('a letter never encrypts to itself', () => {
     // Test all 26 letters
-    for (const letter of 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('')) {
+    for (const letter of ALPHABET.split('')) {
       const encrypted = encryptLetter(
         letter,
         rotors,
@@ -210,8 +211,8 @@ describe('stepRotors', () => {
     isAvailable: true,
     config: {
       stepIndex,
-      displayedLetters: 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split(''),
-      mappedLetters: 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split(''),
+      displayedLetters: ALPHABET.split(''),
+      mappedLetters: ALPHABET.split(''),
       currentIndex,
     },
     id,

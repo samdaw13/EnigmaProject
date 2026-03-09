@@ -1,6 +1,7 @@
 import React from 'react';
 
 import {
+  ALPHABET,
   COPY_MESSAGE_BUTTON,
   KEYBOARD_GO_BACK_BUTTON,
   MESSAGE_DISPLAY,
@@ -38,7 +39,7 @@ describe('Keyboard', () => {
               isAvailable: false,
               config: {
                 stepIndex: 16,
-                displayedLetters: 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split(''),
+                displayedLetters: ALPHABET.split(''),
                 mappedLetters: 'JGDQOXUSCAMIFRVTPNEWKBLZYH'.split(''),
                 currentIndex: 0,
               },
@@ -48,7 +49,7 @@ describe('Keyboard', () => {
               isAvailable: false,
               config: {
                 stepIndex: 4,
-                displayedLetters: 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split(''),
+                displayedLetters: ALPHABET.split(''),
                 mappedLetters: 'NTZPSFBOKMWRCJDIVLAEYUXHGQ'.split(''),
                 currentIndex: 0,
               },
@@ -58,7 +59,7 @@ describe('Keyboard', () => {
               isAvailable: false,
               config: {
                 stepIndex: 21,
-                displayedLetters: 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split(''),
+                displayedLetters: ALPHABET.split(''),
                 mappedLetters: 'JVIUBHTCDYAKEQZPOSGXNRMWFL'.split(''),
                 currentIndex: 0,
               },

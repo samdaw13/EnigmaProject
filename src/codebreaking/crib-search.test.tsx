@@ -1,3 +1,4 @@
+import { ALPHABET } from '../constants';
 import { initialReflectorState } from '../features/reflector';
 import { initialRotorState } from '../features/rotors/features';
 import type {
@@ -28,7 +29,6 @@ const buildScramblerTableAt = (
   rotors: RotorState[],
   steps: number,
 ): string[] => {
-  const ALPHABET = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
   let current = rotors;
   for (let i = 0; i < steps; i++) {
     current = stepRotors(current);

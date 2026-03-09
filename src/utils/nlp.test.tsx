@@ -1,3 +1,4 @@
+import { ALPHABET } from '../constants';
 import { computeIoC, nlpConfidence, scoreQuadgrams } from './nlp';
 
 // Gettysburg Address opening, letters only, uppercase — genuine English text
@@ -6,7 +7,7 @@ const ENGLISH_TEXT =
   'CONCEIVEDINLIBERTYANDDEDICATEDTOTHEPROPOSITIONTHATALLMENARECREATEDEQUAL';
 
 // Alphabet repeated 10 times — near-uniform letter distribution
-const RANDOM_TEXT = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.repeat(10);
+const RANDOM_TEXT = ALPHABET.repeat(10);
 
 describe('computeIoC', () => {
   it('returns near 0.065 for real English text', () => {
