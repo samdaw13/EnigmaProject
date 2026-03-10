@@ -10,7 +10,6 @@ import {
   Portal,
   TextInput,
 } from 'react-native-paper';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useDispatch, useSelector } from 'react-redux';
 
 import {
@@ -47,6 +46,7 @@ import { addSavedMessage } from '../../../utils/storage';
 import { BackButton } from '../../atoms/BackButton';
 import { CopyButton } from '../../atoms/CopyButton';
 import { InfoSidebar } from '../../molecules/InfoSidebar';
+import { Page } from '../../templates/Page';
 import { makeStyles } from './styles';
 
 export const Keyboard: FunctionComponent = () => {
@@ -66,11 +66,7 @@ export const Keyboard: FunctionComponent = () => {
   );
   const dispatch = useDispatch();
   const colors = useThemeColors();
-  const { bottom: bottomInset } = useSafeAreaInsets();
-  const keyboardStyles = useMemo(
-    () => makeStyles(colors, bottomInset),
-    [colors, bottomInset],
-  );
+  const keyboardStyles = useMemo(() => makeStyles(colors), [colors]);
 
   const navigation = useNavigation();
   const [outputLetter, setOutputLetter] = useState<string | null>(null);
@@ -191,7 +187,7 @@ export const Keyboard: FunctionComponent = () => {
   };
 
   return (
-    <View style={keyboardStyles.screen}>
+    <Page scrollable={false} style={keyboardStyles.noPadding}>
       <Portal>
         <Modal
           visible={pasteVisible}
@@ -382,6 +378,6 @@ export const Keyboard: FunctionComponent = () => {
         title={INFO_KEYBOARD_TITLE}
         content={INFO_KEYBOARD_CONTENT}
       />
-    </View>
+    </Page>
   );
 };

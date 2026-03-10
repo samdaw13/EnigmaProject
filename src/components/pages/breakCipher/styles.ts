@@ -2,16 +2,12 @@ import { StyleSheet } from 'react-native';
 
 import type { ColorPalette } from '../../../theme/colors';
 
-export const makeStyles = (colors: ColorPalette, bottomInset: number = 0) =>
+export const makeStyles = (colors: ColorPalette) =>
   StyleSheet.create({
-    screen: {
-      flex: 1,
-      backgroundColor: colors.background,
-      padding: 16,
+    scrollPadding: {
+      paddingVertical: 16,
     },
-    contentContainer: {
-      paddingBottom: 16 + bottomInset,
-    },
+    contentContainer: {},
     input: {
       marginBottom: 12,
       backgroundColor: colors.surface,
