@@ -11,17 +11,16 @@ const KEY_SIZE =
     KEY_MARGIN * 2 * KEYS_IN_TOP_ROW) /
   KEYS_IN_TOP_ROW;
 
-export const makeStyles = (colors: ColorPalette, bottomInset: number = 0) =>
+export const makeStyles = (colors: ColorPalette) =>
   StyleSheet.create({
-    screen: {
-      flex: 1,
-      backgroundColor: colors.background,
+    noPadding: {
+      paddingHorizontal: 0,
     },
     container: {
       flexDirection: 'column',
       alignItems: 'center',
       justifyContent: 'flex-end',
-      paddingBottom: 24 + bottomInset,
+      paddingBottom: 24,
     },
     horizontalRow: {
       flexDirection: 'row',

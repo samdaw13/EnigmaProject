@@ -1,8 +1,7 @@
 import type { FunctionComponent } from 'react';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
-import { ScrollView, Text, View } from 'react-native';
+import { Text, View } from 'react-native';
 import { Button } from 'react-native-paper';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { ALPHABET } from '../../../constants';
 import {
@@ -32,6 +31,7 @@ import type {
 import { deleteSavedAnalysis, loadSavedAnalyses } from '../../../utils/storage';
 import { ExpandableCard } from '../../molecules/ExpandableCard';
 import { NlpBadge } from '../../molecules/NlpBadge';
+import { Page } from '../../templates/Page';
 import { makeStyles } from './styles';
 
 const ResultCard: FunctionComponent<{
@@ -66,11 +66,7 @@ export const SavedAnalyses: FunctionComponent = () => {
   const [analyses, setAnalyses] = useState<SavedAnalysis[]>([]);
   const [expandedId, setExpandedId] = useState<string | null>(null);
   const colors = useThemeColors();
-  const { bottom: bottomInset } = useSafeAreaInsets();
-  const styles = useMemo(
-    () => makeStyles(colors, bottomInset),
-    [colors, bottomInset],
-  );
+  const styles = useMemo(() => makeStyles(colors), [colors]);
 
   useEffect(() => {
     void loadSavedAnalyses().then(setAnalyses);
@@ -91,10 +87,7 @@ export const SavedAnalyses: FunctionComponent = () => {
   );
 
   return (
-    <ScrollView
-      style={styles.screen}
-      contentContainerStyle={styles.scrollContent}
-    >
+    <Page contentContainerStyle={styles.scrollContent}>
       <Text style={styles.title}>{SAVED_ANALYSES_TITLE}</Text>
       {analyses.length === 0 && (
         <Text testID={EMPTY_STATE_TEXT} style={styles.emptyText}>
@@ -145,6 +138,6 @@ export const SavedAnalyses: FunctionComponent = () => {
           </Button>
         </ExpandableCard>
       ))}
-    </ScrollView>
+    </Page>
   );
 };

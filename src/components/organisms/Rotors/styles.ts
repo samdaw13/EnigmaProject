@@ -7,7 +7,6 @@ export const makeStyles = (_colors: ColorPalette) =>
     container: {
       flexDirection: 'column',
       justifyContent: 'space-evenly',
-      margin: 10,
-      paddingHorizontal: 0,
+      marginVertical: 10,
     },
   });

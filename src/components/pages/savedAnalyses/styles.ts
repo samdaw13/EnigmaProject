@@ -2,15 +2,10 @@ import { StyleSheet } from 'react-native';
 
 import type { ColorPalette } from '../../../theme/colors';
 
-export const makeStyles = (colors: ColorPalette, bottomInset: number = 0) =>
+export const makeStyles = (colors: ColorPalette) =>
   StyleSheet.create({
-    screen: {
-      flex: 1,
-      backgroundColor: colors.background,
-    },
     scrollContent: {
-      padding: 16,
-      paddingBottom: 16 + bottomInset,
+      paddingVertical: 16,
     },
     title: {
       color: colors.accent,

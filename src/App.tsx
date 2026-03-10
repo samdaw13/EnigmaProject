@@ -4,6 +4,7 @@ import type { FunctionComponent } from 'react';
 import React, { useEffect, useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { Button } from 'react-native-paper';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { useDispatch, useSelector } from 'react-redux';
 
 import {
@@ -69,29 +70,34 @@ const SearchBanner: FunctionComponent<{ currentRoute: string | null }> = ({
   const pct = Math.round(progress * 100);
 
   return (
-    <View
-      testID={SEARCH_BANNER}
-      style={[
-        bannerStyles.container,
-        {
-          backgroundColor: colors.surface,
-          borderTopColor: colors.border,
-        },
-      ]}
+    <SafeAreaView
+      edges={['bottom']}
+      style={{ backgroundColor: colors.surface }}
     >
-      <Text style={[bannerStyles.label, { color: colors.textPrimary }]}>
-        {SEARCH_RUNNING_BACKGROUND_LABEL} — {pct}%
-      </Text>
-      <Button
-        testID={SEARCH_BANNER_CANCEL_BUTTON}
-        mode='text'
-        compact
-        onPress={handleCancel}
-        textColor={colors.textSecondary}
+      <View
+        testID={SEARCH_BANNER}
+        style={[
+          bannerStyles.container,
+          {
+            backgroundColor: colors.surface,
+            borderTopColor: colors.border,
+          },
+        ]}
       >
-        {CANCEL_LABEL}
-      </Button>
-    </View>
+        <Text style={[bannerStyles.label, { color: colors.textPrimary }]}>
+          {SEARCH_RUNNING_BACKGROUND_LABEL} — {pct}%
+        </Text>
+        <Button
+          testID={SEARCH_BANNER_CANCEL_BUTTON}
+          mode='text'
+          compact
+          onPress={handleCancel}
+          textColor={colors.textSecondary}
+        >
+          {CANCEL_LABEL}
+        </Button>
+      </View>
+    </SafeAreaView>
   );
 };
 

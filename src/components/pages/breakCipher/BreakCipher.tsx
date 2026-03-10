@@ -1,9 +1,8 @@
 import { useNavigation } from '@react-navigation/native';
 import type { FunctionComponent } from 'react';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
-import { ScrollView, Text, View } from 'react-native';
+import { Text, View } from 'react-native';
 import { Button, IconButton, TextInput } from 'react-native-paper';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { ALPHABET } from '../../../constants';
@@ -39,6 +38,7 @@ import { InfoSidebar } from '../../molecules/InfoSidebar';
 import { RunButton } from '../../molecules/RunButton';
 import { CribSearchResults } from '../../organisms/CribSearchResults';
 import { CribStructuralFallback } from '../../organisms/CribStructuralFallback';
+import { Page } from '../../templates/Page';
 import { makeStyles } from './styles';
 
 const sanitizeInput = (text: string): string =>
@@ -71,11 +71,7 @@ export const BreakCipher: FunctionComponent = () => {
   const [expandedPosition, setExpandedPosition] = useState<number | null>(null);
 
   const colors = useThemeColors();
-  const { bottom: bottomInset } = useSafeAreaInsets();
-  const styles = useMemo(
-    () => makeStyles(colors, bottomInset),
-    [colors, bottomInset],
-  );
+  const styles = useMemo(() => makeStyles(colors), [colors]);
 
   useEffect(() => {
     navigation.setOptions({
@@ -149,8 +145,8 @@ export const BreakCipher: FunctionComponent = () => {
   const runAnalysisButtonDisabled = !isCribReady || isSearching;
 
   return (
-    <ScrollView
-      style={styles.screen}
+    <Page
+      style={styles.scrollPadding}
       contentContainerStyle={styles.contentContainer}
     >
       <TextInput
@@ -250,6 +246,6 @@ export const BreakCipher: FunctionComponent = () => {
         title={INFO_CRIB_ANALYSIS_TITLE}
         content={INFO_CRIB_ANALYSIS_CONTENT}
       />
-    </ScrollView>
+    </Page>
   );
 };

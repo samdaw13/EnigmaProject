@@ -3,7 +3,6 @@ import type { FunctionComponent } from 'react';
 import React, { useCallback, useMemo, useState } from 'react';
 import { ScrollView, View } from 'react-native';
 import { Button, IconButton } from 'react-native-paper';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useDispatch, useSelector } from 'react-redux';
 
 import {
@@ -32,6 +31,7 @@ import type { NextScreenNavigationProp } from '../../../types';
 import { InfoSidebar } from '../../molecules/InfoSidebar';
 import { Plugboard } from '../../organisms/Plugboard';
 import { Rotors } from '../../organisms/Rotors';
+import { Page } from '../../templates/Page';
 import { makeStyles } from './styles';
 
 const shuffleArray = <T,>(arr: T[]): T[] => {
@@ -46,11 +46,7 @@ const shuffleArray = <T,>(arr: T[]): T[] => {
 export const MachineSettings: FunctionComponent = () => {
   const navigation = useNavigation<NextScreenNavigationProp>();
   const colors = useThemeColors();
-  const { bottom: bottomInset } = useSafeAreaInsets();
-  const styles = useMemo(
-    () => makeStyles(colors, bottomInset),
-    [colors, bottomInset],
-  );
+  const styles = useMemo(() => makeStyles(), []);
   const [infoVisible, setInfoVisible] = useState(false);
   const dispatch = useDispatch();
   const selectedSlots = useSelector(
@@ -109,7 +105,7 @@ export const MachineSettings: FunctionComponent = () => {
   };
 
   return (
-    <View style={styles.screen}>
+    <Page scrollable={false}>
       <ScrollView style={styles.content}>
         <Rotors />
         <Plugboard />
@@ -158,6 +154,6 @@ export const MachineSettings: FunctionComponent = () => {
         title={INFO_SETTINGS_TITLE}
         content={INFO_SETTINGS_CONTENT}
       />
-    </View>
+    </Page>
   );
 };
