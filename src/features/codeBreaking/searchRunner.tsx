@@ -41,6 +41,12 @@ const runSearchInBackground = (
       crib,
       ...(knownCribPosition !== undefined && { knownCribPosition }),
     },
+    progressBar: {
+      max: 100,
+      indeterminate: false,
+      value: 0,
+    },
+    linkingURI: 'enigma://search',
   };
 
   const backgroundTask = async (
@@ -57,11 +63,15 @@ const runSearchInBackground = (
         dispatch(progressUpdated(p));
         void BackgroundService.updateNotification({
           taskDesc: `Searching... ${Math.round(p * 100)}%`,
+          progressBar: {
+            value: Math.round(p * 100),
+            max: 100,
+            indeterminate: false,
+          },
         });
       },
       isCancelled,
       taskData.knownCribPosition,
-      true,
     );
 
     if (!cancelled) {

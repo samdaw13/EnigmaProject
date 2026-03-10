@@ -1,4 +1,5 @@
 import { createDrawerNavigator } from '@react-navigation/drawer';
+import type { LinkingOptions } from '@react-navigation/native';
 import { NavigationContainer } from '@react-navigation/native';
 import type { FunctionComponent } from 'react';
 import React, { useEffect, useState } from 'react';
@@ -31,7 +32,25 @@ import { getColors } from './theme/colors';
 import { useResolvedTheme } from './theme/useResolvedTheme';
 import { useThemeColors } from './theme/useThemeColors';
 
-const Drawer = createDrawerNavigator();
+type RootStackParamList = {
+  Enigma: undefined;
+  Break: undefined;
+  SavedMessages: undefined;
+  SavedAnalyses: undefined;
+  About: undefined;
+  Settings: undefined;
+};
+
+const Drawer = createDrawerNavigator<RootStackParamList>();
+
+const linking: LinkingOptions<RootStackParamList> = {
+  prefixes: ['enigma://'],
+  config: {
+    screens: {
+      Break: 'search',
+    },
+  },
+};
 
 const bannerStyles = StyleSheet.create({
   container: {
@@ -116,6 +135,7 @@ const App: FunctionComponent = () => {
       onStateChange={(state) => {
         setCurrentRoute(state?.routes[state.index]?.name ?? null);
       }}
+      linking={linking}
     >
       <Drawer.Navigator
         initialRouteName='Enigma'
