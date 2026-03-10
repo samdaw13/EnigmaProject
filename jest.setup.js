@@ -12,6 +12,14 @@ jest.mock('@react-native-async-storage/async-storage', () =>
   require('@react-native-async-storage/async-storage/jest/async-storage-mock'),
 );
 
+jest.mock('react-native-background-actions', () => ({
+  start: jest.fn(() => Promise.resolve()),
+  stop: jest.fn(() => Promise.resolve()),
+  updateNotification: jest.fn(() => Promise.resolve()),
+  isRunning: jest.fn(() => false),
+  on: jest.fn(),
+}));
+
 jest.mock('react-native-paper', () => {
   const RealModule = jest.requireActual('react-native-paper');
   const React = require('react');

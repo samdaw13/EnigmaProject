@@ -331,6 +331,7 @@ export const cribSearchAsync = (
   onProgress: (progress: number) => void,
   isCancelled?: () => boolean,
   knownCribPosition?: number,
+  synchronous?: boolean,
 ): Promise<CribSearchResult[]> => {
   const validPositions =
     knownCribPosition !== undefined
@@ -393,23 +394,21 @@ export const cribSearchAsync = (
       lInv = ctx.rotorIntTables[lId]!.inv;
     };
 
-    const processSlice = () => {
+    const processSlice = (): boolean => {
       if (isCancelled?.() === true) {
         resolve([]);
-        return;
+        return true;
       }
 
       if (permIndex >= ctx.permutations.length) {
         onProgress(1);
-        setTimeout(() => {
-          if (isCancelled?.() === true) {
-            resolve([]);
-            return;
-          }
-          allResults.sort((a, b) => b.nlpScore - a.nlpScore);
-          resolve(allResults.slice(0, MAX_CRIB_RESULTS));
-        }, 0);
-        return;
+        if (isCancelled?.() === true) {
+          resolve([]);
+          return true;
+        }
+        allResults.sort((a, b) => b.nlpScore - a.nlpScore);
+        resolve(allResults.slice(0, MAX_CRIB_RESULTS));
+        return true;
       }
 
       syncPermCache();
@@ -481,9 +480,17 @@ export const cribSearchAsync = (
       }
       onProgress(ticksDone / totalTicks);
 
-      setTimeout(processSlice, 0);
+      return false;
     };
 
-    setTimeout(processSlice, 0);
+    if (synchronous === true) {
+      // eslint-disable-next-line no-empty
+      while (!processSlice()) {}
+    } else {
+      const scheduleSlice = () => {
+        if (!processSlice()) setTimeout(scheduleSlice, 0);
+      };
+      setTimeout(scheduleSlice, 0);
+    }
   });
 };
