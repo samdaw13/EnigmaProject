@@ -14,6 +14,7 @@ interface BackgroundTaskData {
 }
 
 let cancelled = false;
+let dispatch: AppDispatch | null = null;
 
 export const cancelSearch = (): void => {
   cancelled = true;
@@ -22,14 +23,67 @@ export const cancelSearch = (): void => {
   }
 };
 
-const isCancelled = (): boolean => cancelled || !BackgroundService.isRunning();
+const isCancelled = (): boolean => cancelled;
 
-const runSearchInBackground = (
+const updateNotificationProgress = (progress: number): void => {
+  if (!BackgroundService.isRunning()) return;
+
+  void BackgroundService.updateNotification({
+    taskDesc: `Searching... ${Math.round(progress * 100)}%`,
+    progressBar: {
+      value: Math.round(progress * 100),
+      max: 100,
+      indeterminate: false,
+    },
+  });
+};
+
+const requestNotificationPermission = async (): Promise<void> => {
+  if (Platform.OS !== 'android' || Platform.Version < 33) return;
+  await PermissionsAndroid.request(
+    'android.permission.POST_NOTIFICATIONS' as typeof PermissionsAndroid.PERMISSIONS.POST_NOTIFICATIONS,
+  );
+};
+
+const backgroundTask = async (taskData?: BackgroundTaskData): Promise<void> => {
+  if (taskData === undefined || dispatch === null) return;
+
+  const results = await cribSearchAsync(
+    taskData.ciphertext,
+    taskData.crib,
+    initialRotorState.available,
+    initialReflectorState.reflectors,
+    (p) => {
+      dispatch!(progressUpdated(p));
+      updateNotificationProgress(p);
+    },
+    isCancelled,
+    taskData.knownCribPosition,
+  );
+
+  if (!cancelled) {
+    dispatch(
+      cribSearchCompleted({
+        results,
+        ciphertext: taskData.ciphertext,
+        crib: taskData.crib,
+      }),
+    );
+  }
+
+  if (BackgroundService.isRunning()) {
+    await BackgroundService.stop();
+  }
+};
+
+const runSearchOnAndroid = (
   ciphertext: string,
   crib: string,
-  dispatch: AppDispatch,
+  appDispatch: AppDispatch,
   knownCribPosition?: number,
 ): void => {
+  dispatch = appDispatch;
+
   const taskOptions = {
     taskName: 'CribSearch',
     taskTitle: 'Enigma Crib Search',
@@ -49,92 +103,44 @@ const runSearchInBackground = (
     linkingURI: 'enigma://search',
   };
 
-  const backgroundTask = async (
-    taskData?: BackgroundTaskData,
-  ): Promise<void> => {
-    if (taskData === undefined) return;
-
-    const results = await cribSearchAsync(
-      taskData.ciphertext,
-      taskData.crib,
-      initialRotorState.available,
-      initialReflectorState.reflectors,
-      (p) => {
-        dispatch(progressUpdated(p));
-        void BackgroundService.updateNotification({
-          taskDesc: `Searching... ${Math.round(p * 100)}%`,
-          progressBar: {
-            value: Math.round(p * 100),
-            max: 100,
-            indeterminate: false,
-          },
-        });
-      },
-      isCancelled,
-      taskData.knownCribPosition,
-    );
-
-    if (!cancelled) {
-      dispatch(
-        cribSearchCompleted({
-          results,
-          ciphertext: taskData.ciphertext,
-          crib: taskData.crib,
-        }),
-      );
-    }
-
-    if (BackgroundService.isRunning()) {
-      await BackgroundService.stop();
-    }
-  };
-
   void requestNotificationPermission().then(() => {
     void BackgroundService.start(backgroundTask, taskOptions);
   });
 };
 
-const requestNotificationPermission = async (): Promise<void> => {
-  if (Platform.OS !== 'android' || Platform.Version < 33) return;
-  await PermissionsAndroid.request(
-    'android.permission.POST_NOTIFICATIONS' as typeof PermissionsAndroid.PERMISSIONS.POST_NOTIFICATIONS,
-  );
-};
-
-const runSearchInForeground = (
+const runSearchOnIos = (
   ciphertext: string,
   crib: string,
-  dispatch: AppDispatch,
+  appDispatch: AppDispatch,
   knownCribPosition?: number,
 ): void => {
-  const foregroundIsCancelled = (): boolean => cancelled;
-
   void cribSearchAsync(
     ciphertext,
     crib,
     initialRotorState.available,
     initialReflectorState.reflectors,
-    (p) => dispatch(progressUpdated(p)),
-    foregroundIsCancelled,
+    (p) => appDispatch(progressUpdated(p)),
+    isCancelled,
     knownCribPosition,
   ).then((results) => {
-    if (!cancelled)
-      dispatch(cribSearchCompleted({ results, ciphertext, crib }));
+    if (!cancelled) {
+      appDispatch(cribSearchCompleted({ results, ciphertext, crib }));
+    }
   });
 };
 
 export const runCribAnalysis = (
   ciphertext: string,
   crib: string,
-  dispatch: AppDispatch,
+  appDispatch: AppDispatch,
   knownCribPosition?: number,
 ): void => {
   cancelled = false;
-  dispatch(searchStarted());
+  appDispatch(searchStarted());
 
   if (Platform.OS === 'android') {
-    runSearchInBackground(ciphertext, crib, dispatch, knownCribPosition);
+    runSearchOnAndroid(ciphertext, crib, appDispatch, knownCribPosition);
   } else {
-    runSearchInForeground(ciphertext, crib, dispatch, knownCribPosition);
+    runSearchOnIos(ciphertext, crib, appDispatch, knownCribPosition);
   }
 };
