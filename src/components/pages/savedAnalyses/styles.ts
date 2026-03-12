@@ -4,9 +4,7 @@ import type { ColorPalette } from '../../../theme/colors';
 
 export const makeStyles = (colors: ColorPalette) =>
   StyleSheet.create({
-    scrollContent: {
-      paddingVertical: 16,
-    },
+    scrollContent: {},
     title: {
       color: colors.accent,
       fontSize: 20,

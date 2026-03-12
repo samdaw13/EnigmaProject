@@ -28,6 +28,12 @@ export const VALID_POSITIONS_LABEL = 'Valid crib positions';
 export const POSITION_LABEL = 'Position';
 export const CRIB_PREFIX_LABEL = 'Crib';
 export const CRIB_POSITION_LABEL = 'Crib position (optional)';
+export const CRIB_POSITION_BUTTON_LABEL = 'Set crib position (optional)';
+export const CRIB_POSITION_MODAL_TITLE = 'Slide crib to position';
+export const CRIB_POSITION_CONFIRM = 'Confirm';
+export const CRIB_POSITION_CLEAR = 'Clear';
+export const CRIB_POSITION_CONFLICT_HINT =
+  'Invalid — a letter cannot encrypt to itself';
 export const COMMON_CRIBS_HINT = 'Common cribs: WETTER, KEINE, OBERKOMMANDO';
 export const TAP_TO_EXPAND = 'Tap a position to see alignment';
 export const DECRYPTED_TEXT_LABEL = 'Decrypted';

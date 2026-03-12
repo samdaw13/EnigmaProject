@@ -4,13 +4,11 @@ import type { ColorPalette } from '../../../theme/colors';
 
 export const makeStyles = (colors: ColorPalette) =>
   StyleSheet.create({
-    scrollPadding: {
-      paddingVertical: 16,
+    contentContainer: {
+      height: '100%',
     },
-    contentContainer: {},
     input: {
       marginBottom: 12,
-      backgroundColor: colors.surface,
     },
     cancelButton: {
       marginTop: 4,
@@ -18,6 +16,10 @@ export const makeStyles = (colors: ColorPalette) =>
     },
     saveButton: {
       marginVertical: 12,
+    },
+    positionButton: {
+      marginBottom: 12,
+      borderColor: colors.border,
     },
     hintText: {
       color: colors.textSecondary,
