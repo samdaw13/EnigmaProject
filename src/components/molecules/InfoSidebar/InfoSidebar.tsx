@@ -65,7 +65,7 @@ export const InfoSidebar: FunctionComponent<InfoSidebarProps> = ({
       onRequestClose={dismiss}
     >
       <View style={styles.overlay}>
-        <Pressable style={styles.backdrop} onPress={dismiss} />
+        <Pressable style={styles.backdrop} onPress={dismiss} role='none' />
         <Animated.View
           testID={INFO_SIDEBAR}
           style={[styles.sidebar, { transform: [{ translateX }] }]}

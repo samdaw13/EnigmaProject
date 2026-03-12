@@ -16,7 +16,12 @@ export const ExpandableCard: FunctionComponent<{
   const styles = useMemo(() => makeStyles(colors), [colors]);
 
   return (
-    <Pressable testID={testID} style={styles.card} onPress={onPress}>
+    <Pressable
+      testID={testID}
+      style={styles.card}
+      onPress={onPress}
+      role='button'
+    >
       {header}
       {expanded && <View>{children}</View>}
     </Pressable>

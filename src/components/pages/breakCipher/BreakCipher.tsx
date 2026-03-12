@@ -156,6 +156,7 @@ export const BreakCipher: FunctionComponent = () => {
             background: cribModalVisible ? 'transparent' : colors.surface,
           },
         }}
+        role='textbox'
       />
 
       <TextInput
@@ -175,6 +176,7 @@ export const BreakCipher: FunctionComponent = () => {
             background: cribModalVisible ? 'transparent' : colors.surface,
           },
         }}
+        role='textbox'
       />
 
       <Button
