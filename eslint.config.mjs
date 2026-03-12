@@ -4,6 +4,7 @@ import jest from 'eslint-plugin-jest';
 import prettier from 'eslint-plugin-prettier/recommended';
 import react from 'eslint-plugin-react';
 import reactHooks from 'eslint-plugin-react-hooks';
+import reactNativeA11y from 'eslint-plugin-react-native-a11y';
 import simpleImportSort from 'eslint-plugin-simple-import-sort';
 import testingLibrary from 'eslint-plugin-testing-library';
 import tseslint from 'typescript-eslint';
@@ -57,6 +58,24 @@ export default tseslint.config(
       'react-hooks/set-state-in-effect': 'warn',
       'react/no-array-index-key': 'error',
       'react/self-closing-comp': 'error',
+    },
+  },
+  {
+    plugins: {
+      'react-native-a11y': reactNativeA11y,
+    },
+    rules: {
+      'react-native-a11y/has-accessibility-hint': 'off',
+      'react-native-a11y/has-accessibility-props': 'error',
+      'react-native-a11y/has-valid-accessibility-actions': 'error',
+      'react-native-a11y/has-valid-accessibility-descriptors': 'error',
+      'react-native-a11y/has-valid-accessibility-ignores-invert-colors': 'error',
+      'react-native-a11y/has-valid-accessibility-live-region': 'error',
+      'react-native-a11y/has-valid-accessibility-role': 'error',
+      'react-native-a11y/has-valid-accessibility-state': 'error',
+      'react-native-a11y/has-valid-accessibility-value': 'error',
+      'react-native-a11y/has-valid-important-for-accessibility': 'error',
+      'react-native-a11y/no-nested-touchables': 'error',
     },
   },
   {

@@ -44,6 +44,7 @@ export const CribStructuralFallback: FunctionComponent<{
           testID={`${CRIB_POSITION_CARD}_${pos}`}
           onPress={() => onTogglePosition(pos)}
           style={styles.resultCard}
+          role='button'
         >
           <Text style={styles.resultText}>
             {POSITION_LABEL} {pos}
