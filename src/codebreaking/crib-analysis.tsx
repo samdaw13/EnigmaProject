@@ -8,6 +8,20 @@ export interface MenuEdge {
   scramblerTable: string[];
 }
 
+export const findConflictIndices = (
+  ciphertext: string,
+  crib: string,
+  position: number,
+): number[] => {
+  const conflicts: number[] = [];
+  for (let i = 0; i < crib.length; i++) {
+    if (crib[i] === ciphertext[position + i]) {
+      conflicts.push(i);
+    }
+  }
+  return conflicts;
+};
+
 export const findCribPositions = (
   ciphertext: string,
   crib: string,

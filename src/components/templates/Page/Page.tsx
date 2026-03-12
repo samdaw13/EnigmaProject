@@ -10,6 +10,7 @@ const PAGE_HORIZONTAL_PADDING = 16;
 
 const styles = StyleSheet.create({
   scrollFlex: { flex: 1 },
+  contentPadding: { padding: PAGE_HORIZONTAL_PADDING },
 });
 
 interface PageProps {
@@ -31,7 +32,6 @@ export const Page: FunctionComponent<PageProps> = ({
     () => ({
       flex: 1 as const,
       backgroundColor: colors.background,
-      paddingHorizontal: PAGE_HORIZONTAL_PADDING,
     }),
     [colors.background],
   );
@@ -41,7 +41,7 @@ export const Page: FunctionComponent<PageProps> = ({
       <SafeAreaView style={screenStyle} edges={['bottom']}>
         <ScrollView
           style={[styles.scrollFlex, style]}
-          contentContainerStyle={contentContainerStyle}
+          contentContainerStyle={[styles.contentPadding, contentContainerStyle]}
         >
           {children}
         </ScrollView>
@@ -50,7 +50,10 @@ export const Page: FunctionComponent<PageProps> = ({
   }
 
   return (
-    <SafeAreaView style={[screenStyle, style]} edges={['bottom']}>
+    <SafeAreaView
+      style={[screenStyle, styles.contentPadding, style]}
+      edges={['bottom']}
+    >
       {children}
     </SafeAreaView>
   );

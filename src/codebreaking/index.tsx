@@ -1,6 +1,7 @@
 export type { MenuEdge } from './crib-analysis';
 export {
   buildMenuEdges,
+  findConflictIndices,
   findCribPositions,
   propagateMenuConstraints,
 } from './crib-analysis';

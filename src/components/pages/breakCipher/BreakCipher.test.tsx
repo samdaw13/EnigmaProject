@@ -8,7 +8,11 @@ import {
   CIPHERTEXT_INPUT,
   COPY_MESSAGE_BUTTON,
   CRIB_INPUT,
+  CRIB_POSITION_BUTTON,
   CRIB_POSITION_CARD,
+  CRIB_POSITION_CONFIRM_BUTTON,
+  CRIB_POSITION_MODAL,
+  CRIB_POSITION_RIGHT_ARROW,
   DECRYPTED_TEXT_DISPLAY,
   PROGRESS_BAR,
   RESULTS_CONTAINER,
@@ -263,5 +267,47 @@ describe('BreakCipher', () => {
     await render(<BreakCipher />);
     await fireEvent.changeText(screen.getByTestId(CRIB_INPUT), 'cr1b!');
     expect(screen.getByTestId(CRIB_INPUT).props['value']).toBe('CRB');
+  });
+
+  it('crib position button is disabled when ciphertext or crib is empty', async () => {
+    await render(<BreakCipher />);
+    const button = screen.getByTestId(CRIB_POSITION_BUTTON);
+    expect(
+      (button.props as { accessibilityState?: { disabled?: boolean } })
+        .accessibilityState?.disabled,
+    ).toBe(true);
+  });
+
+  it('crib position button is enabled when ciphertext and crib are filled', async () => {
+    await render(<BreakCipher />);
+    await fireEvent.changeText(screen.getByTestId(CIPHERTEXT_INPUT), 'ABCDEF');
+    await fireEvent.changeText(screen.getByTestId(CRIB_INPUT), 'XY');
+    const button = screen.getByTestId(CRIB_POSITION_BUTTON);
+    expect(
+      (button.props as { accessibilityState?: { disabled?: boolean } })
+        .accessibilityState?.disabled,
+    ).toBe(false);
+  });
+
+  it('opens crib position modal on button press', async () => {
+    await render(<BreakCipher />);
+    await fireEvent.changeText(screen.getByTestId(CIPHERTEXT_INPUT), 'ABCDEF');
+    await fireEvent.changeText(screen.getByTestId(CRIB_INPUT), 'XY');
+    await fireEvent.press(screen.getByTestId(CRIB_POSITION_BUTTON));
+    expect(screen.getByTestId(CRIB_POSITION_MODAL)).toBeTruthy();
+  });
+
+  it('confirms crib position from modal and updates button label', async () => {
+    await render(<BreakCipher />);
+    await fireEvent.changeText(screen.getByTestId(CIPHERTEXT_INPUT), 'ABCDEF');
+    await fireEvent.changeText(screen.getByTestId(CRIB_INPUT), 'XY');
+    await fireEvent.press(screen.getByTestId(CRIB_POSITION_BUTTON));
+    await fireEvent.press(screen.getByTestId(CRIB_POSITION_RIGHT_ARROW));
+    await fireEvent.press(screen.getByTestId(CRIB_POSITION_RIGHT_ARROW));
+    await fireEvent.press(screen.getByTestId(CRIB_POSITION_CONFIRM_BUTTON));
+
+    await waitFor(() => {
+      expect(screen.getByText(/Position: 3/)).toBeTruthy();
+    });
   });
 });

@@ -9,6 +9,9 @@ export interface ColorPalette {
   destructive: string;
   disabledSurface: string;
   disabledText: string;
+  surfaceDisabled: string;
+  onSurfaceDisabled: string;
+  backdrop: string;
 }
 
 export const darkColors: ColorPalette = {
@@ -22,6 +25,9 @@ export const darkColors: ColorPalette = {
   destructive: '#9c2a2a',
   disabledSurface: '#3a3a3a',
   disabledText: '#666666',
+  surfaceDisabled: 'rgba(245, 240, 232, 0.12)',
+  onSurfaceDisabled: 'rgba(245, 240, 232, 0.38)',
+  backdrop: 'rgba(0, 0, 0, 0.6)',
 };
 
 export const lightColors: ColorPalette = {
@@ -35,6 +41,9 @@ export const lightColors: ColorPalette = {
   destructive: '#9c2a2a',
   disabledSurface: '#C5BAA8',
   disabledText: '#7A6A5A',
+  surfaceDisabled: 'rgba(245, 240, 232, 0.12)',
+  onSurfaceDisabled: 'rgba(245, 240, 232, 0.38)',
+  backdrop: 'rgba(0, 0, 0, 0.6)',
 };
 
 export const nlpColors = {

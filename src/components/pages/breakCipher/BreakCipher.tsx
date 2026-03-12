@@ -11,16 +11,17 @@ import {
   CIPHERTEXT_LABEL,
   COMMON_CRIBS_HINT,
   CRIB_LABEL,
-  CRIB_POSITION_LABEL,
+  CRIB_POSITION_BUTTON_LABEL,
   INFO_CRIB_ANALYSIS_CONTENT,
   INFO_CRIB_ANALYSIS_TITLE,
+  POSITION_LABEL,
   SAVE_RESULTS_LABEL,
 } from '../../../constants/labels';
 import {
   CANCEL_SEARCH_BUTTON,
   CIPHERTEXT_INPUT,
   CRIB_INPUT,
-  CRIB_POSITION_INPUT,
+  CRIB_POSITION_BUTTON,
   INFO_BUTTON,
   RESULTS_CONTAINER,
   SAVE_RESULTS_BUTTON,
@@ -34,6 +35,7 @@ import type { AppDispatch, RootState } from '../../../store/store';
 import { useThemeColors } from '../../../theme/useThemeColors';
 import type { SavedAnalysis } from '../../../types/interfaces';
 import { addSavedAnalysis } from '../../../utils/storage';
+import { CribPositionModal } from '../../molecules/CribPositionModal';
 import { InfoSidebar } from '../../molecules/InfoSidebar';
 import { RunButton } from '../../molecules/RunButton';
 import { CribSearchResults } from '../../organisms/CribSearchResults';
@@ -67,7 +69,10 @@ export const BreakCipher: FunctionComponent = () => {
   const [infoVisible, setInfoVisible] = useState(false);
   const [ciphertext, setCiphertext] = useState('');
   const [crib, setCrib] = useState('');
-  const [cribPosition, setCribPosition] = useState('');
+  const [cribPosition, setCribPosition] = useState<number | undefined>(
+    undefined,
+  );
+  const [cribModalVisible, setCribModalVisible] = useState(false);
   const [expandedPosition, setExpandedPosition] = useState<number | null>(null);
 
   const colors = useThemeColors();
@@ -94,24 +99,12 @@ export const BreakCipher: FunctionComponent = () => {
     dispatch(searchCancelled());
   }, [dispatch]);
 
-  const parsedCribPosition = useMemo(() => {
-    const trimmed = cribPosition.trim();
-    if (trimmed === '') return undefined;
-    const parsed = parseInt(trimmed, 10);
-    return Number.isNaN(parsed) || parsed < 0 ? undefined : parsed;
-  }, [cribPosition]);
-
   const handleRun = useCallback(() => {
     const sanitizedCiphertext = sanitizeInput(ciphertext);
     const sanitizedCrib = sanitizeInput(crib);
     if (!sanitizedCiphertext || !sanitizedCrib) return;
-    runCribAnalysis(
-      sanitizedCiphertext,
-      sanitizedCrib,
-      dispatch,
-      parsedCribPosition,
-    );
-  }, [ciphertext, crib, dispatch, parsedCribPosition]);
+    runCribAnalysis(sanitizedCiphertext, sanitizedCrib, dispatch, cribPosition);
+  }, [ciphertext, crib, dispatch, cribPosition]);
 
   const toggleExpandedPosition = useCallback(
     (pos: number) => {
@@ -145,10 +138,7 @@ export const BreakCipher: FunctionComponent = () => {
   const runAnalysisButtonDisabled = !isCribReady || isSearching;
 
   return (
-    <Page
-      style={styles.scrollPadding}
-      contentContainerStyle={styles.contentContainer}
-    >
+    <Page contentContainerStyle={styles.contentContainer}>
       <TextInput
         testID={CIPHERTEXT_INPUT}
         label={CIPHERTEXT_LABEL}
@@ -160,7 +150,12 @@ export const BreakCipher: FunctionComponent = () => {
         textColor={colors.textPrimary}
         outlineColor={colors.border}
         activeOutlineColor={colors.accent}
-        theme={{ colors: { onSurfaceVariant: colors.textSecondary } }}
+        theme={{
+          colors: {
+            onSurfaceVariant: colors.textSecondary,
+            background: cribModalVisible ? 'transparent' : colors.surface,
+          },
+        }}
       />
 
       <TextInput
@@ -174,22 +169,37 @@ export const BreakCipher: FunctionComponent = () => {
         textColor={colors.textPrimary}
         outlineColor={colors.border}
         activeOutlineColor={colors.accent}
-        theme={{ colors: { onSurfaceVariant: colors.textSecondary } }}
+        theme={{
+          colors: {
+            onSurfaceVariant: colors.textSecondary,
+            background: cribModalVisible ? 'transparent' : colors.surface,
+          },
+        }}
       />
 
-      <TextInput
-        testID={CRIB_POSITION_INPUT}
-        label={CRIB_POSITION_LABEL}
-        value={cribPosition}
-        onChangeText={setCribPosition}
+      <Button
+        testID={CRIB_POSITION_BUTTON}
         mode='outlined'
-        keyboardType='number-pad'
-        style={styles.input}
+        onPress={() => setCribModalVisible(true)}
+        disabled={!isCribReady}
+        style={styles.positionButton}
         textColor={colors.textPrimary}
-        outlineColor={colors.border}
-        activeOutlineColor={colors.accent}
-        theme={{ colors: { onSurfaceVariant: colors.textSecondary } }}
-      />
+        icon={
+          cribPosition !== undefined
+            ? 'check-circle-outline'
+            : 'cursor-default-click-outline'
+        }
+        theme={{
+          colors: {
+            surfaceDisabled: colors.disabledSurface,
+            onSurfaceDisabled: colors.disabledText,
+          },
+        }}
+      >
+        {cribPosition !== undefined
+          ? `${POSITION_LABEL}: ${cribPosition + 1}`
+          : CRIB_POSITION_BUTTON_LABEL}
+      </Button>
 
       <Text style={styles.hintText}>{COMMON_CRIBS_HINT}</Text>
 
@@ -245,6 +255,16 @@ export const BreakCipher: FunctionComponent = () => {
         onDismiss={() => setInfoVisible(false)}
         title={INFO_CRIB_ANALYSIS_TITLE}
         content={INFO_CRIB_ANALYSIS_CONTENT}
+      />
+
+      <CribPositionModal
+        visible={cribModalVisible}
+        onDismiss={() => setCribModalVisible(false)}
+        ciphertext={sanitizeInput(ciphertext)}
+        crib={sanitizeInput(crib)}
+        currentPosition={cribPosition}
+        onConfirm={setCribPosition}
+        onClear={() => setCribPosition(undefined)}
       />
     </Page>
   );
