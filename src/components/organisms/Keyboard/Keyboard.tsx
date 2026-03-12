@@ -206,7 +206,7 @@ export const Keyboard: FunctionComponent = () => {
             outlineColor={colors.border}
             activeOutlineColor={colors.accent}
             theme={{ colors: { onSurfaceVariant: colors.textSecondary } }}
-            role='searchbox'
+            accessibilityRole='search'
           />
           <View style={keyboardStyles.pasteButtonRow}>
             <Button
@@ -262,7 +262,7 @@ export const Keyboard: FunctionComponent = () => {
             outlineColor={colors.border}
             activeOutlineColor={colors.accent}
             theme={{ colors: { onSurfaceVariant: colors.textSecondary } }}
-            role='textbox'
+            accessibilityRole='text'
           />
           <View style={keyboardStyles.pasteButtonRow}>
             <Button
